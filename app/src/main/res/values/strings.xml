@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">COVID-19 Alert App</string>
+
+    <string name="notification_channel_name">default notification channel</string>
+    <string name="notification_channel_description">Common channel for all the notifications</string>
+
+    <string name="track_start_button_text">Turn On</string>
+
+    <string name="trackingNotificationTitle">Tracker Active</string>
+    <string name="trackingNotificationContent">COVID-19AlertApp is tracking your location</string>
+
+    <string name="promptToTrackNotificationTitle">Location Tracking Off!</string>
+    <string name="promptToTrackNotificationContent">Tap to enable location tracker</string>
+
+    <string name="tracker_Notification_Label">Location Tracking</string>
+    <string name="permissions_dialogbox_title">Permissions Explanation</string>
+    <string name="permissions_dialogbox_positive">Ok, I understand</string>
+    <string name="permissions_dialogbox_negative">Deny</string>
+    <string name="permissions_dialogbox_explanation">We need background location tracking. You can stop this anytime int Settings. Your locations are being saved locally on your device.  If and when you give us your explicit consent we will upload keeping your identity anonymous.</string>
+</resources>
