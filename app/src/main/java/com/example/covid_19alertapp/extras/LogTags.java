@@ -11,7 +11,7 @@ public abstract class LogTags {
     public static final String Worker_TAG  = "worker_tag";
     public static final String Location_TAG  = "location_tag";
     public static final String Permissions_TAG  = "permission_tag";
-    public static final String Map_TAG  = "permission_tag";
+    public static final String Map_TAG  = "map_tag";
 
 
 }

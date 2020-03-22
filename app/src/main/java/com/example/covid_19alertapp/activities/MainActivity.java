@@ -23,7 +23,8 @@ public class MainActivity extends AppCompatActivity {
     private Permissions permissions;
     private static final String[] permissionStrings = {
             Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_BACKGROUND_LOCATION
+            Manifest.permission.ACCESS_BACKGROUND_LOCATION,
+            Manifest.permission.ACCESS_WIFI_STATE
     };
 
     @Override

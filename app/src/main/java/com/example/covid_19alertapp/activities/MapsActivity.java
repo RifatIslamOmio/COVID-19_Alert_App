@@ -55,7 +55,7 @@ public class MapsActivity extends FragmentActivity implements
 
         // Add a marker in Dhaka and move the camera
         LatLng dhaka = new LatLng(23.7805733, 90.2792376);
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(dhaka));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(dhaka, 10.0f));
 
         // check if all are needed
         mMap.setMyLocationEnabled(true);
@@ -63,6 +63,8 @@ public class MapsActivity extends FragmentActivity implements
         mMap.setOnMyLocationClickListener(this);
         mMap.setOnMyLocationButtonClickListener(this);
         mMap.setOnMapLongClickListener(this);
+
+        Log.d(LogTags.Map_TAG, "onMapReady: map ready");
     }
 
     @Override
@@ -148,6 +150,10 @@ public class MapsActivity extends FragmentActivity implements
          */
 
         Log.d(LogTags.Map_TAG, "confirmClicked: location taken = "+homeLocation.toString());
+
+        Toast.makeText(this, "Your home location was saved!", Toast.LENGTH_SHORT)
+                .show();
+        finish();
 
     }
 }
