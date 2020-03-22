@@ -65,9 +65,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void removeThisButton(View view) {
-
         Intent intent = new Intent(this, TrackerSettingsActivity.class);
         startActivity(intent);
+    }
 
+    public void pickHomeClick(View view) {
+        Intent intent = new Intent(this, MapsActivity.class);
+        startActivity(intent);
     }
 }

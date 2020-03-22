@@ -94,10 +94,10 @@ public class TrackerSettingsActivity extends AppCompatActivity {
                 else
                 {
                     try {
-                        //stop location tracker
+                        // stop location tracker
                         stopService(new Intent(getApplicationContext(),BackgroundLocationTracker.class));
 
-                        //enqueue TrackerUserPromptWorker
+                        // enqueue TrackerUserPromptWorker
                         startWorker();
 
                     }catch (Exception e){
