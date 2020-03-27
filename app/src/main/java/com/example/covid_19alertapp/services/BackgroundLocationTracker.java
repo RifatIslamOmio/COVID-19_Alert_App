@@ -15,7 +15,9 @@ import com.example.covid_19alertapp.extras.LogTags;
 import com.example.covid_19alertapp.extras.Notifications;
 
 public class BackgroundLocationTracker extends Service {
-
+/*
+service to track location on bacckground
+ */
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -55,13 +57,13 @@ public class BackgroundLocationTracker extends Service {
         // stop the TrackerUserPromptWorker
         WorkManager.getInstance(getApplicationContext()).cancelAllWorkByTag(Constants.trackerPrompt_WorkerTag);
 
-        //set tracking settings preference to true
+        // set tracking settings preference to true
         SharedPreferences sharedPreferences = getSharedPreferences(Constants.SHARED_PREFERENCES, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(Constants.notification_switch_pref, true);
         editor.apply();
 
-        //TODO: (check!) track location inside Worker
+        //TODO: (check on upgraded API!) track location inside Worker
         LocationFetch.setup(getApplicationContext());
         LocationFetch.startLocationUpdates();
 

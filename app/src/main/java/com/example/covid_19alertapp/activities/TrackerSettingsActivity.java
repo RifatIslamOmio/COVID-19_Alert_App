@@ -75,6 +75,7 @@ public class TrackerSettingsActivity extends AppCompatActivity {
                             // start tracker service
                             Log.d(LogTags.Location_TAG, "onClick: location found enabled");
 
+                            // start BackgroundLocationTracker
                             startTrackerService();
                         }
 
@@ -83,7 +84,7 @@ public class TrackerSettingsActivity extends AppCompatActivity {
                             Log.d(LogTags.Location_TAG, "onClick: location found disabled");
 
                             notification_switch.setChecked(false);
-                            Toast.makeText(getApplicationContext(), "Turn On Location Please", Toast.LENGTH_LONG)
+                            Toast.makeText(getApplicationContext(), "Turn on location or press again please", Toast.LENGTH_LONG)
                                     .show();
                             save_preferences(false);
                         }
@@ -154,7 +155,7 @@ public class TrackerSettingsActivity extends AppCompatActivity {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForegroundService(new Intent(getApplicationContext(), BackgroundLocationTracker.class));
-            Log.d(LogTags.TrackerSettings_TAG, "onClick: newer version phone");
+            Log.d(LogTags.TrackerSettings_TAG, "onClick: newer version phones foreground service stared");
         } else
             startService(new Intent(getApplicationContext(), BackgroundLocationTracker.class));
 
