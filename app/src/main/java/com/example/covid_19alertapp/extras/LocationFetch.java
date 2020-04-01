@@ -24,6 +24,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.concurrent.Executor;
 
 public abstract class LocationFetch {
@@ -39,6 +40,96 @@ public abstract class LocationFetch {
     // for virtual container
     private static final double CONTAINER_RADIUS = 20.0f; // meters
     private static final int TIME_WINDOW = 15; // minutes
+
+    public static HashMap getDiagonalRangePoints(Double lat,Double lon,String country)
+    {
+        Double latDevider=0.0,lonDevider=0.0,latX,lony;
+        HashMap<String,Double> diagonalRangePoint =new HashMap<> ();
+        if( country=="Bangladesh"){
+            latDevider=.0002000;
+            lonDevider=.0002000;
+
+        }
+        //lat=lat*10000;
+        //lon=lon*10000;
+        latX=Math.floor(lat/latDevider)*latDevider;
+        lony=Math.floor(lon/lonDevider)*lonDevider;
+        //upper left            upper right
+        Double boxA_X,boxA_Y,boxC_X,boxC_Y;                 //upper box
+        boxA_X=latX;                                       //#### C(x,y)
+        boxA_Y=lony;                     //left           // #  #   right box
+        boxC_X=latX+latDevider;                          //  #  #
+        boxC_Y=lony+lonDevider;                         //(A)####
+        //    #  #   lower box
+        diagonalRangePoint.put("Box A X",boxA_X);     //     #  #
+        diagonalRangePoint.put("Box A Y",boxA_Y);    //      ####
+        diagonalRangePoint.put("Box C X",boxC_X);//lower left            //lower right
+        diagonalRangePoint.put("Box C Y",boxC_Y);
+        //System.out.println(boxC_X+" boxc "+latX+" lat x "+latDevider+" lat latDevider "+ latX+latDevider);
+        if(lat- boxA_X<latDevider/2){
+            //lower box's diagonal points are to be inserted
+            diagonalRangePoint.put("Lower Box C X",boxC_X);
+            diagonalRangePoint.put("Lower Box C Y",boxA_Y);
+            diagonalRangePoint.put("Lower Box A X",boxA_X);
+            diagonalRangePoint.put("Lower Box A Y",boxA_Y- lonDevider);
+        }
+        else if(boxC_X-lat<latDevider/2){
+            //Upper box's diagonal points are to be inserted
+            diagonalRangePoint.put("Upper Box C X",boxC_X);
+            diagonalRangePoint.put("Upper Box C Y",boxC_Y+lonDevider);
+            diagonalRangePoint.put("Upper Box A X",boxA_X);
+            diagonalRangePoint.put("Upper Box A Y",boxC_Y);
+        }
+        if(lon- boxA_Y<=latDevider/2){
+            //left box's diagonal points are to be inserted
+            diagonalRangePoint.put("Left Box A X",boxA_X- latDevider);
+            diagonalRangePoint.put("Left Box A Y",boxA_Y);
+            diagonalRangePoint.put("Left Box C X",boxA_X);
+            diagonalRangePoint.put("Left Box C Y",boxC_Y);
+        }
+        if(boxC_Y-lon<lonDevider/2){
+            //Right box's diagonal points are to be inserted
+            diagonalRangePoint.put("Right Box A X",boxC_X);
+            diagonalRangePoint.put("Right Box A Y",boxA_Y);
+            diagonalRangePoint.put("Right Box C X",boxC_X+latDevider);
+            diagonalRangePoint.put("Right Box C Y",boxC_Y);
+        }
+        if(boxC_X-lat <latDevider/2 && boxC_Y-lon<lonDevider/2){
+            //Upper Right  box's diagonal points are to be inserted
+            diagonalRangePoint.put("Upper right Box A X",boxC_X);
+            diagonalRangePoint.put("Upper right Box A Y",boxC_Y);
+            diagonalRangePoint.put("Upper right Box C X",boxC_X+latDevider);
+            diagonalRangePoint.put("Upper right Box C Y",boxC_Y+lonDevider);
+        }
+        else if(lat- boxA_X <latDevider/2 && lon- boxA_Y<lonDevider/2){
+            //Lower left box's diagonal points are to be inserted
+            diagonalRangePoint.put("Lower left Box C X",boxA_X);
+            diagonalRangePoint.put("Lower left Box C Y",boxA_Y);
+            diagonalRangePoint.put("Lower left Box A X",boxA_X-latDevider);
+            diagonalRangePoint.put("Lower left Box A Y",boxA_Y-lonDevider);
+        }
+        else if(lat- boxA_X <latDevider/2 && lon- boxA_Y<lonDevider/2){
+            //Upper Left  box's diagonal points are to be inserted
+            diagonalRangePoint.put("Upper left Box C X",boxA_X);
+            diagonalRangePoint.put("Upper left Box C Y",boxA_Y+2*lonDevider);
+            diagonalRangePoint.put("Upper left Box A X",boxC_X-2*latDevider);
+            diagonalRangePoint.put("Upper left Box A Y",boxC_Y);
+        }
+        else if(lat- boxA_X <latDevider/2 && lon- boxA_Y<lonDevider/2){
+            //Lower Right  box's diagonal points are to be inserted
+            diagonalRangePoint.put("Lower right Box C X",boxA_X+2*lonDevider);
+            diagonalRangePoint.put("Lower right Box C Y",boxA_Y);
+            diagonalRangePoint.put("Lower right Box A X",boxC_X);
+            diagonalRangePoint.put("Lower right Box A Y",boxC_Y-2*lonDevider);
+        }
+
+
+
+        return diagonalRangePoint;
+
+
+    }
+
 
     //location request needs to be defined for checkNotificationsSettings() to work
     private static final int MINIMUM_ACCURACY = 30, UPDATE_INTERVAL_MILLIS = 10000;
