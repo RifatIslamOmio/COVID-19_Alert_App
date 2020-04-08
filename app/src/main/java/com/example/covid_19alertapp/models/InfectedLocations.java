@@ -4,7 +4,8 @@ public class InfectedLocations {
 /*
  firebase model
  */
-    private double uLatitude, uLongitude, lLatitude, lLongitude;
+
+    private int count;
     private String address = null, dateTime;
 
     public InfectedLocations() {
@@ -13,36 +14,13 @@ public class InfectedLocations {
          */
     }
 
-    public double getuLatitude() {
-        return uLatitude;
+
+    public int getCount() {
+        return count;
     }
 
-    public void setuLatitude(double uLatitude) {
-        this.uLatitude = uLatitude;
-    }
-
-    public double getuLongitude() {
-        return uLongitude;
-    }
-
-    public void setuLongitude(double uLongitude) {
-        this.uLongitude = uLongitude;
-    }
-
-    public double getlLatitude() {
-        return lLatitude;
-    }
-
-    public void setlLatitude(double lLatitude) {
-        this.lLatitude = lLatitude;
-    }
-
-    public double getlLongitude() {
-        return lLongitude;
-    }
-
-    public void setlLongitude(double lLongitude) {
-        this.lLongitude = lLongitude;
+    public void setCount(int count) {
+        this.count = count;
     }
 
     public String getAddress() {
@@ -53,11 +31,8 @@ public class InfectedLocations {
         this.address = address;
     }
 
-    public String getDateTime() {
-        return dateTime;
-    }
+    public String getDateTime() { return dateTime; }
 
-    public void setDateTime(String dateTime) {
-        this.dateTime = dateTime;
-    }
+    public void setDateTime(String dateTime) { this.dateTime = dateTime; }
+
 }
