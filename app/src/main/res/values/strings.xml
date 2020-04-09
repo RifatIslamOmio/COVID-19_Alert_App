@@ -7,7 +7,7 @@
     <string name="track_start_button_text">Turn On</string>
 
     <string name="trackingNotificationTitle">COVID-19AlertApp Tracker Active</string>
-    <string name="trackingNotificationContent">please keep your location is enabled. tap to see settings</string>
+    <string name="trackingNotificationContent">please keep your Location On</string>
 
     <string name="promptToTrackNotificationTitle">Location Tracking Off!</string>
     <string name="promptToTrackNotificationContent">Tap to enable location tracker</string>
@@ -16,7 +16,11 @@
     <string name="permissions_dialogbox_title">Permissions Explanation</string>
     <string name="permissions_dialogbox_positive">Ok, I understand</string>
     <string name="permissions_dialogbox_negative">Deny</string>
-    <string name="permissions_dialogbox_explanation">We need background location tracking. You can stop this anytime int Settings. Your locations are being saved locally on your device.  If and when you give us your explicit consent we will upload keeping your identity anonymous.</string>
+    <string name="permissions_dialogbox_explanation">
+        We need background location tracking.You can stop this anytime int Settings.
+        Your locations are being saved locally on your device.
+        If and when you give us your explicit consent we will upload keeping your identity anonymous.
+    </string>
     <string name="title_activity_maps">Map</string>
 
     <string name="map_text">
