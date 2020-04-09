@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "911040231786",
+    "firebase_url": "https://covid19alertapp-12103.firebaseio.com",
+    "project_id": "covid19alertapp-12103",
+    "storage_bucket": "covid19alertapp-12103.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:911040231786:android:caf14cf232d4dc65e10d13",
+        "android_client_info": {
+          "package_name": "com.example.covid_19alertapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "911040231786-uuvf4keb3j02gjgvct5e16ufp4b29btf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.covid_19alertapp",
+            "certificate_hash": "770c96482dc90cff563d0c50e3f7f718f9e1d75a"
+          }
+        },
+        {
+          "client_id": "911040231786-kakcbdd77l1ntf58sv22mhvu3gg1kovd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPgV5AyoiFctKWP5c7j6bROkUih_HOJgc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "911040231786-kakcbdd77l1ntf58sv22mhvu3gg1kovd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
