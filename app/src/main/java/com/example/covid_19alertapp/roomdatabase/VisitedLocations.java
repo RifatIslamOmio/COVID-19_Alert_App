@@ -26,6 +26,14 @@ public class VisitedLocations {
         this.count = count;
     }
 
+    @Ignore
+    public String[] splitPrimaryKey(String conatainerDateTimeComposite){
+        /*
+        returns 'latLon' and 'dateTime'
+         */
+        return conatainerDateTimeComposite.split("_");
+    }
+
     public void setConatainerDateTimeComposite(String conatainerDateTimeComposite) {
         this.conatainerDateTimeComposite = conatainerDateTimeComposite;
     }

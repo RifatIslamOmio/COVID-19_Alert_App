@@ -17,5 +17,6 @@ public abstract class Constants {
     public static final String trackerPrompt_WorkerTag = "switch_1";
 
     public static final int LOCATION_CHECK_CODE = 101;
-    public static final int PERMISSION_CODE = 101;
+    public static final int PERMISSION_CODE = 102;
+
 }
