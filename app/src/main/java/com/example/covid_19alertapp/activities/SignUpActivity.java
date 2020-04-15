@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -18,7 +17,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
@@ -30,12 +28,12 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.concurrent.TimeUnit;
 
-public class SignUp extends AppCompatActivity {
+public class SignUpActivity extends AppCompatActivity {
     FirebaseAuth auth;
-    EditText phoneNoEdit, enteredCodeEdit;
+    EditText phoneNoEdit, enteredCodeEdit,countrCode;
 
-    String phoneNumberString,verification,enterededCodeString,uid;
-
+    String verification,enterededCodeString,uid;
+    private static String phoneNumberString ="";
     SharedPreferences sp; //sp is going to be used to keep users logged in
 
     PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
@@ -45,6 +43,7 @@ public class SignUp extends AppCompatActivity {
         setContentView(R.layout.activity_sign_up);
         phoneNoEdit =findViewById(R.id.mobileNo);
         enteredCodeEdit =findViewById(R.id.verificationCode);
+        countrCode=findViewById(R.id.countr_code);
         auth=FirebaseAuth.getInstance();
         sp = getSharedPreferences("login",MODE_PRIVATE);
 
@@ -82,18 +81,18 @@ public class SignUp extends AppCompatActivity {
     }
     //SendSms Button
     public void sendSms(View view){
-        phoneNumberString=phoneNoEdit.getText().toString();
+        phoneNumberString="+880"+phoneNoEdit.getText().toString();
         if(TextUtils.isEmpty(phoneNumberString)){
-            Toast.makeText(SignUp.this, "Please enter your mobile number ", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SignUpActivity.this, "Please enter your mobile number ", Toast.LENGTH_SHORT).show();
             return;
         }
-        if(!phoneNumberString.contains("+880") || phoneNumberString.length()!=14){
-            Toast.makeText(SignUp.this, "Please enter your valid phone number using +880", Toast.LENGTH_SHORT).show();
+        if( phoneNumberString.length()!=14){
+            Toast.makeText(SignUpActivity.this, "Please enter your valid phone number ", Toast.LENGTH_SHORT).show();
             return;
 
         }
 
-        Toast.makeText(getApplicationContext(),"number "+phoneNumberString,Toast.LENGTH_SHORT).show();
+
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
                 phoneNumberString,        // Phone number to verify
                 60,                 // Timeout duration
@@ -101,6 +100,8 @@ public class SignUp extends AppCompatActivity {
                 this,               // Activity (for callback binding)
                 mCallbacks         // OnVerificationStateChangedCallbacks
         );
+        phoneNoEdit.setEnabled(false);
+        countrCode.setEnabled(false);
            // OnVerificationStateChangedCallbacks
 
 
@@ -137,7 +138,7 @@ public class SignUp extends AppCompatActivity {
     public void verify(View v){
         enterededCodeString=enteredCodeEdit.getText().toString();
         if(TextUtils.isEmpty(enterededCodeString)){
-            Toast.makeText(SignUp.this, "Please enter the varification code", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SignUpActivity.this, "Please enter the varification code", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -172,7 +173,7 @@ public class SignUp extends AppCompatActivity {
                 }
                 else {
 
-                    startActivity(new Intent(getApplicationContext(),UserInfoForm.class));
+                    startActivity(new Intent(getApplicationContext(), UserInfoFormActivity.class));
                 }
 
             }
@@ -188,5 +189,8 @@ public class SignUp extends AppCompatActivity {
 
     public void goToMainActivity(){
         startActivity(new Intent(getApplicationContext(),MainActivity.class));
+    }
+    public  String getPhoneNumber() {
+        return phoneNumberString;
     }
 }
