@@ -40,15 +40,16 @@ public abstract class Notifications {
         }
     }
 
-    public static Notification showNotification(int notification_id, Context context, boolean notify){
+    public static Notification showNotification(int notification_id, Context context, Class newActivity, boolean notify)
+    {
 
         String title, content;
         Intent intent;
         PendingIntent pendingIntent;
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, Constants.NOTIFICATION_CHANNEL_ID);
 
-        //start TrackerSettingsActivity on notification tap
-        intent = new Intent(context, TrackerSettingsActivity.class);
+        //start NewActivity on notification tap
+        intent = new Intent(context, newActivity);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -104,13 +105,40 @@ public abstract class Notifications {
 
                 break;
 
+            case Constants.DangerNotification_ID:
+                /*
+                show danger notification on infectedLocation visit
+                 */
+
+                title = context.getString(R.string.dangerNotificationTitle);
+                content = context.getString(R.string.dangerNotificationContent);
+
+                // build notification
+                builder.setContentTitle(title)
+                        .setContentText(content)
+                        //TODO: set custom icons
+                        .setSmallIcon(R.drawable.ic_launcher_background)
+                        .setPriority(NotificationCompat.PRIORITY_HIGH)
+                        // Intent(Activity) that will start when the user taps the button
+                        .setContentIntent(pendingIntent)
+                        .setOngoing(true)
+                        .setAutoCancel(false);
+
+                Log.d(LogTags.Notification_TAG, "DangerNotification: notification builder created");
+
+
+                break;
+
+
         }
 
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         Notification notification = builder.build();
 
-        if(notification_id == Constants.TrackingLocationNotification_ID) {
+        if(notification_id == Constants.TrackingLocationNotification_ID
+                || notification_id == Constants.DangerNotification_ID)
+        {
             //makes notification persistent
             notification.flags = Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT;
         }
@@ -121,7 +149,7 @@ public abstract class Notifications {
 
         Log.d(LogTags.Notification_TAG, "PromptToTrackNotification: notification showed");
 
-        //return for newer version to start on Foreground
+        //return to start on Foreground (for newer version)
         return notification;
 
     }

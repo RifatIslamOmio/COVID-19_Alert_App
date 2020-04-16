@@ -10,6 +10,7 @@ public abstract class Constants {
     public static final String NOTIFICATION_CHANNEL_ID = "all_notifications";
     public static final int PromptTrackerNotification_ID = 274;
     public static final int TrackingLocationNotification_ID = 905;
+    public static final int DangerNotification_ID = 540;
 
     public static final String SHARED_PREFERENCES="sharedPrefs";
     public static final String notification_switch_pref = "switch_1";

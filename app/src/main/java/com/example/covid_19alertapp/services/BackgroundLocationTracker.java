@@ -9,6 +9,7 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.work.WorkManager;
 
+import com.example.covid_19alertapp.activities.TrackerSettingsActivity;
 import com.example.covid_19alertapp.extras.Constants;
 import com.example.covid_19alertapp.extras.LocationFetch;
 import com.example.covid_19alertapp.extras.LogTags;
@@ -41,13 +42,18 @@ service to track location on bacckground
             //since api26 need to use startForeground() to run services
             startForeground(
                     1,
-                    Notifications.showNotification(Constants.TrackingLocationNotification_ID, this, false)
+                    Notifications.showNotification(
+                            Constants.TrackingLocationNotification_ID,
+                            this,
+                            TrackerSettingsActivity.class,
+                            false)
             );
         }catch (Exception e){
             // probably older api version or no foreground permission
             Notifications.showNotification(
                     Constants.TrackingLocationNotification_ID,
                     this,
+                    TrackerSettingsActivity.class,
                     true
             );
 

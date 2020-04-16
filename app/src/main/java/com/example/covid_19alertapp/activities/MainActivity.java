@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.example.covid_19alertapp.R;
 import com.example.covid_19alertapp.extras.Constants;
@@ -75,6 +74,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void pickHomeClick(View view) {
         Intent intent = new Intent(this, MapsActivity.class);
+        startActivity(intent);
+    }
+
+    public void uploadClick(View view) {
+        Intent intent = new Intent(this, UploadLocationsActivity.class);
         startActivity(intent);
     }
 }

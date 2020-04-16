@@ -11,9 +11,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.covid_19alertapp.R;
+import com.example.covid_19alertapp.extras.Internet;
 import com.example.covid_19alertapp.extras.LogTags;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -44,6 +46,17 @@ public class MapsActivity extends FragmentActivity implements
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        if(!Internet.isInternetAvailable(this)) {
+            // no internet, map not visible
+
+            Toast.makeText(this, "No internet! Failed to load map.", Toast.LENGTH_LONG)
+                    .show();
+
+            TextView textView = findViewById(R.id.userHelperText);
+            textView.setText(getString(R.string.map_no_internet_text));
+
+        }
 
         confirmButton = findViewById(R.id.confirm_button);
     }

@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
+import com.example.covid_19alertapp.activities.TrackerSettingsActivity;
 import com.example.covid_19alertapp.extras.Constants;
 import com.example.covid_19alertapp.extras.LogTags;
 import com.example.covid_19alertapp.extras.Notifications;
@@ -25,6 +26,7 @@ public class TrackerUserPromptWorker extends Worker {
         Notifications.showNotification(
                 Constants.PromptTrackerNotification_ID,
                 getApplicationContext(),
+                TrackerSettingsActivity.class,
                 true
         );
 

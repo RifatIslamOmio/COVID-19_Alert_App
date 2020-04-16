@@ -44,7 +44,7 @@ public abstract class LocalDBContainer {
             String conatainerDateTimeComposite = drp+"_"+dateTime;
 
             visitedLocationList.add(
-                    new VisitedLocations(conatainerDateTimeComposite, 0)
+                    new VisitedLocations(conatainerDateTimeComposite, 1)
             );
 
         }
