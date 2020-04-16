@@ -1,19 +1,27 @@
 package com.example.covid_19alertapp.dataStorage;
 
 public class UserInfoData {
-    String name,dob,workAddress,home;
+    String name,dob,workAddress,home, contactNumber;
 
-    public UserInfoData(String name, String dob, String workAddress, String home) {
+    public UserInfoData(String name, String dob, String workAddress, String home,String contactNumber) {
         this.name = name;
         this.dob = dob;
         this.workAddress = workAddress;
         this.home = home;
+        this.contactNumber = contactNumber;
+
+
     }
 
-    public UserInfoData(String name, String dob, String home) {
+    public UserInfoData(String name, String dob, String home,String contactNumber) {
         this.name = name;
         this.dob = dob;
         this.home = home;
+        this.contactNumber = contactNumber;
+    }
+
+    public String getContactNumber() {
+        return contactNumber;
     }
 
     public String getName() {
