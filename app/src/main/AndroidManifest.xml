@@ -20,9 +20,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".activities.UserInfoForm"></activity>
+        <activity android:name=".activities.UserInfoFormActivity"></activity>
         <activity android:name=".activities.UploadLocationsActivity"></activity>
-        <activity android:name=".activities.SignUp">
+        <activity android:name=".activities.SignUpActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
