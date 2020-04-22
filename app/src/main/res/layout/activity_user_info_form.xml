@@ -41,7 +41,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginTop="30dp"
-            android:paddingBottom="30dp">
+            android:paddingBottom="40dp">
 
             <TextView
                 android:id="@+id/textView2"

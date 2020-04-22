@@ -21,14 +21,14 @@
         android:theme="@style/AppTheme">
 
 
-        <activity android:name=".activities.SignUpActivity" android:windowSoftInputMode="stateHidden"/>
-        <activity android:name=".activities.UserInfoFormActivity"/>
-        <activity android:name=".activities.VerificationPageActivity"/>
+
+        <activity android:name=".activities.UserInfoFormActivity" android:windowSoftInputMode="stateHidden"/>
+        <activity android:name=".activities.VerificationPageActivity" android:windowSoftInputMode="stateHidden"/>
 
 
-        <activity android:name=".activities.UserInfoFormActivityOLD"></activity>
-        <activity android:name=".activities.UploadLocationsActivity"></activity>
-        <activity android:name=".activities.SignUpActivityOLD">
+        <activity android:name=".activities.UserInfoFormActivityOLD"/>
+        <activity android:name=".activities.UploadLocationsActivity"/>
+        <activity android:name=".activities.SignUpActivity" android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
