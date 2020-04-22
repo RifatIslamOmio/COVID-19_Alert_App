@@ -21,7 +21,7 @@
         android:theme="@style/AppTheme">
 
 
-        <activity android:name=".activities.SignUpActivity"/>
+        <activity android:name=".activities.SignUpActivity" android:windowSoftInputMode="stateHidden"/>
         <activity android:name=".activities.UserInfoFormActivity"/>
         <activity android:name=".activities.VerificationPageActivity"/>
 
