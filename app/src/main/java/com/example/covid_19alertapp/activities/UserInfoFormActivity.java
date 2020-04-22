@@ -15,7 +15,7 @@ public class UserInfoFormActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_form);
+        setContentView(R.layout.activity_user_info_form);
 
         dobText=  findViewById(R.id.dateOfBirth);
         userName = findViewById(R.id.userName);

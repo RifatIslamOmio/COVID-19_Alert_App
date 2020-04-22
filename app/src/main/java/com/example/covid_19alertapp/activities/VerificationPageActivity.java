@@ -196,6 +196,6 @@ public class VerificationPageActivity extends AppCompatActivity {
                 textView.setEnabled(true);
                 textView.setTextColor(getResources().getColor(R.color.colorActive));
             }
-        }, 10000);
+        }, 20000);
     }
 }
