@@ -33,7 +33,7 @@ public abstract class LocationFetch {
     private static LocationCallback locationCallback;
 
     //location request needs to be defined for checkNotificationsSettings() to work
-    private static final int MINIMUM_ACCURACY = 30, UPDATE_INTERVAL_MILLIS = 10000;
+    private static final int MINIMUM_ACCURACY = 20, UPDATE_INTERVAL_MILLIS = 10000;
     private static LocationRequest locationRequest = LocationRequest.create()
             .setInterval(UPDATE_INTERVAL_MILLIS)
             .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);

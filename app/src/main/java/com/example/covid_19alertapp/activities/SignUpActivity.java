@@ -1,196 +1,140 @@
 package com.example.covid_19alertapp.activities;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.TextUtils;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.example.covid_19alertapp.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseException;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.PhoneAuthCredential;
-import com.google.firebase.auth.PhoneAuthProvider;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
-import java.util.concurrent.TimeUnit;
 
 public class SignUpActivity extends AppCompatActivity {
-    FirebaseAuth auth;
-    EditText phoneNoEdit, enteredCodeEdit,countrCode;
 
-    String verification,enterededCodeString,uid;
-    private static String phoneNumberString ="";
-    SharedPreferences sp; //sp is going to be used to keep users logged in
-
-    PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
+    Button btnContinue,btnHomeSignup,btnForwardSignup;
+    EditText phoneNumber;
+    TextView textViewTermsCond;
+    public static String PHONE_NUMBER;
+    public static boolean ISRETURNEDFROMVERLAYOUT;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
-        phoneNoEdit =findViewById(R.id.mobileNo);
-        enteredCodeEdit =findViewById(R.id.verificationCode);
-        countrCode=findViewById(R.id.countr_code);
-        auth=FirebaseAuth.getInstance();
-        sp = getSharedPreferences("login",MODE_PRIVATE);
 
-        if(sp.getBoolean("logged",false)){
-            goToMainActivity();
-        }
+        phoneNumber = findViewById(R.id.editText_phoneNumber);
+        btnContinue = findViewById(R.id.btn_continue);
+        textViewTermsCond = findViewById(R.id.TextViewTerm);
+        btnHomeSignup = findViewById(R.id.home_button_signup_page);
+        btnForwardSignup = findViewById(R.id.forward_button_signup_page);
 
-        mCallbacks=new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+        if(ISRETURNEDFROMVERLAYOUT)
+        {
+            phoneNumber.setText(PHONE_NUMBER);
+            ISRETURNEDFROMVERLAYOUT = false;
+            btnHomeSignup.setVisibility(View.INVISIBLE);
+            btnForwardSignup.setVisibility(View.VISIBLE);
 
-
-            @Override
-            public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
-
-               // Toast.makeText(getApplicationContext(),"Code ",Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onVerificationFailed(@NonNull FirebaseException e) {
-                e.printStackTrace();
-                System.out.println(e+" exceptions");
-                Toast.makeText(getApplicationContext(),"Please try again later ",Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
-                super.onCodeSent(s, forceResendingToken);
-                verification=s;
-                System.out.println(s +" verification "+ verification);
-
-                Toast.makeText(getApplicationContext(),"Code Sent to the Number",Toast.LENGTH_SHORT).show();
-            }
-        };
-
-
-    }
-    //SendSms Button
-    public void sendSms(View view){
-        phoneNumberString="+880"+phoneNoEdit.getText().toString();
-        if(TextUtils.isEmpty(phoneNumberString)){
-            Toast.makeText(SignUpActivity.this, "Please enter your mobile number ", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if( phoneNumberString.length()!=14){
-            Toast.makeText(SignUpActivity.this, "Please enter your valid phone number ", Toast.LENGTH_SHORT).show();
-            return;
-
-        }
-
-
-        PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                phoneNumberString,        // Phone number to verify
-                60,                 // Timeout duration
-                TimeUnit.SECONDS,   // Unit of timeout
-                this,               // Activity (for callback binding)
-                mCallbacks         // OnVerificationStateChangedCallbacks
-        );
-        phoneNoEdit.setEnabled(false);
-        countrCode.setEnabled(false);
-           // OnVerificationStateChangedCallbacks
-
-
-
-    }
-
-    private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
-        auth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            //Log.d(TAG, "signInWithCredential:success");
-                            //System.out.println("Successful");
-                            FirebaseUser user = task.getResult().getUser();
-                            uid=FirebaseAuth.getInstance().getCurrentUser().getUid();
-                            ifDataExist(uid);
-
-                            Toast.makeText(getApplicationContext(),"User Signed In Successfully",Toast.LENGTH_SHORT).show();
-                            sp.edit().putBoolean("logged",true).apply();
-
-                        } else {
-                            //System.out.println(task.getException()+" task exception");
-                            Toast.makeText(getApplicationContext(),"Please use the valid code",Toast.LENGTH_SHORT).show();
-                            // Sign in failed, display a message and update the UI
-
-
-                        }
-                    }
-                });
-    }
-    //verify button
-    public void verify(View v){
-        enterededCodeString=enteredCodeEdit.getText().toString();
-        if(TextUtils.isEmpty(enterededCodeString)){
-            Toast.makeText(SignUpActivity.this, "Please enter the varification code", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-
-        verfyPhoneNumber(verification,enterededCodeString);
-    }
-
-    private void verfyPhoneNumber(String verification, String enterededCodeString) {
-
-        PhoneAuthCredential phoneAuthCredential=PhoneAuthProvider.getCredential(verification,enterededCodeString);
-        signInWithPhoneAuthCredential(phoneAuthCredential);
-    }
-
-
-
-    public void ifDataExist(final String uid){
-
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-
-
-
-
-        DatabaseReference ref = database.getReference().child("UserInfo");
-
-        ValueEventListener valueEventListener = new ValueEventListener() {
-            {System.out.println("method");}
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.child(uid).exists()){
-
-                    startActivity(new Intent(getApplicationContext(),MainActivity.class));
+            btnForwardSignup.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(getApplicationContext(), VerificationPageActivity.class));
+                    finish();
                 }
-                else {
+            });
+        }
 
-                    startActivity(new Intent(getApplicationContext(), UserInfoFormActivity.class));
+        phoneNumber.clearFocus();
+        phoneNumber.setSelection(phoneNumber.getText().toString().length());
+        phoneNumber.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            int countB=phoneNumber.getText().toString().length(),countA=0;
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                if(phoneNumber.getText().toString().length()<5)
+                {
+                    phoneNumber.setText("+880 ");
+                    phoneNumber.setSelection(phoneNumber.getText().toString().length());
                 }
 
-            }
+                countA = phoneNumber.getText().toString().length();
 
+                if(phoneNumber.getText().toString().length()==9 && countA>countB)
+                {
+                    phoneNumber.setText(phoneNumber.getText().toString()+"-");
+                    phoneNumber.setSelection(phoneNumber.getText().toString().length());
+                }
+                countB = countA;
+                if(phoneNumber.getText().toString().length()==16)
+                {
+                    hideSoftInput();
+                }
+            }
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            public void afterTextChanged(Editable s) { }
+        });
 
+        phoneNumber.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus) phoneNumber.setCursorVisible(true);
+                else phoneNumber.setCursorVisible(false);
             }
-        };
-        ref.addListenerForSingleValueEvent(valueEventListener);
+        });
+
+        btnContinue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(phoneNumber.getText().toString().length()==16)  //Write a function to check phone number validity
+                {
+                    PHONE_NUMBER = phoneNumber.getText().toString();
+                    startActivity(new Intent(getApplicationContext(), VerificationPageActivity.class));
+                    finish();
+                    //Write OTP Request Function
+                }
+                else
+                {
+                    phoneNumber.setError("Invalid Number!");
+                }
+            }
+        });
+
+        textViewTermsCond.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Write Terms and Condition Page Function
+                textViewTermsCond.setTextColor(getResources().getColor(R.color.colorInactive));
+            }
+        });
+
+
+        btnHomeSignup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
 
     }
 
-    public void goToMainActivity(){
-        startActivity(new Intent(getApplicationContext(),MainActivity.class));
-    }
-    public  String getPhoneNumber() {
-        return phoneNumberString;
+    public void hideSoftInput() {
+        View view1 = this.getCurrentFocus();
+        if(view1!= null){
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view1.getWindowToken(), 0);
+        }
     }
 }

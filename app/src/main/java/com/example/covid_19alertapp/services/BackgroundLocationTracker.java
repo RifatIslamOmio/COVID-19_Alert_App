@@ -60,16 +60,14 @@ service to track location on bacckground
             Log.d(LogTags.Service_TAG, "onStartCommand: "+e.getMessage());
         }
 
-        // stop the TrackerUserPromptWorker
-        WorkManager.getInstance(getApplicationContext()).cancelAllWorkByTag(Constants.trackerPrompt_WorkerTag);
-
         // set tracking settings preference to true
-        SharedPreferences sharedPreferences = getSharedPreferences(Constants.SHARED_PREFERENCES, MODE_PRIVATE);
+        SharedPreferences sharedPreferences =
+                getSharedPreferences(Constants.LOCATION_SETTINGS_SHARED_PREFERENCES, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean(Constants.notification_switch_pref, true);
+        editor.putBoolean(Constants.location_tracker_state, true);
         editor.apply();
 
-        //TODO: (check on upgraded API!) track location inside Worker
+        //TODO: (check on upgraded API!)
         LocationFetch.setup(getApplicationContext());
         LocationFetch.startLocationUpdates();
 

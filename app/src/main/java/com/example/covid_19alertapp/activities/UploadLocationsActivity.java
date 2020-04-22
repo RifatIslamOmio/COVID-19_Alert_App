@@ -171,7 +171,7 @@ implement verification by medical report photo here
 
                     // sleep, give time to upload properly?
                     try {
-                        Thread.sleep(1000);
+                        Thread.sleep(100);
                     } catch (InterruptedException e) {
                         Log.d(LogTags.Upload_TAG, "run: thread just had coffee and isn't tired rn");
                         e.printStackTrace();

@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.UserInfoFormActivity">
+    android:background="@drawable/gradient"
+    tools:context=".activities.UserInfoFormActivityOLD">
 
     <TextView
         android:id="@+id/textView"
@@ -18,6 +20,7 @@
         android:fontFamily="sans-serif-smallcaps"
         android:text="Fill up the form"
         android:textColor="#000000"
+        android:textCursorDrawable="@drawable/common_full_open_on_phone"
         android:textSize="32sp"
         android:visibility="visible" />
 
@@ -78,6 +81,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="7"
                 android:hint="Tab here"
+                android:onClick="setHomeAddress"
                 android:inputType="text"
                 android:textColor="#000"
                 android:textSize="14sp" />
@@ -107,6 +111,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="7"
                 android:hint="Tab here (optional)"
+                android:onClick="setWorkAddress"
                 android:inputType="text"
                 android:textColor="#164E0F"
                 android:textSize="14sp" />
@@ -171,8 +176,9 @@
             android:layout_alignParentBottom="true"
             android:layout_marginHorizontal="270dp"
             android:text="Done"
+            android:onClick="done"
             android:layout_marginBottom="11dp"
-
+            android:background="@drawable/btn_round"
             android:backgroundTint="#564321"
             android:textColor="#000"
             ></Button>
@@ -181,3 +187,9 @@
 
 
 </RelativeLayout>
+
+
+
+
+
+
