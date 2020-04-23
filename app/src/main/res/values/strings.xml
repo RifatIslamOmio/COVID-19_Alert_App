@@ -12,6 +12,9 @@
     <string name="promptToTrackNotificationTitle">Location Tracking Off!</string>
     <string name="promptToTrackNotificationContent">Tap to enable location tracker</string>
 
+    <string name="dangerNotificationTitle">INFECTED AREA NEARBY!</string>
+    <string name="dangerNotificationContent">Tap to see danger level</string>
+
     <string name="tracker_Notification_Label">Location Tracking</string>
     <string name="permissions_dialogbox_title">Permissions Explanation</string>
     <string name="permissions_dialogbox_positive">Ok, I understand</string>
@@ -26,6 +29,17 @@
     <string name="map_text">
         Long press on map to set <b>Home Address</b>
     </string>
-
+    <string name="map_no_internet_text">Failed to load Map!</string>
     <string name="map_confirm_button_text">confirm</string>
+
+    <string name="title_activity_login">Sign in</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+
 </resources>

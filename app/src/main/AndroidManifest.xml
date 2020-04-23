@@ -19,8 +19,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.UserInfoFormActivity"></activity>
-        <activity android:name=".activities.SignUpActivity">
+
+
+
+        <activity android:name=".activities.UserInfoFormActivity" android:windowSoftInputMode="stateHidden"/>
+        <activity android:name=".activities.VerificationPageActivity" android:windowSoftInputMode="stateHidden"/>
+
+
+        <activity android:name=".activities.UserInfoFormActivityOLD"/>
+        <activity android:name=".activities.UploadLocationsActivity"/>
+        <activity android:name=".activities.SignUpActivity" android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

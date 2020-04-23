@@ -1,14 +1,11 @@
 package com.example.covid_19alertapp.activities;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.Observer;
-import androidx.work.Constraints;
-import androidx.work.PeriodicWorkRequest;
-import androidx.work.WorkInfo;
-import androidx.work.WorkManager;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -24,24 +21,30 @@ import com.example.covid_19alertapp.extras.Constants;
 import com.example.covid_19alertapp.extras.LocationFetch;
 import com.example.covid_19alertapp.extras.LogTags;
 import com.example.covid_19alertapp.extras.Notifications;
+import com.example.covid_19alertapp.extras.Permissions;
 import com.example.covid_19alertapp.services.BackgroundLocationTracker;
-import com.example.covid_19alertapp.services.TrackerUserPromptWorker;
-
-import java.util.concurrent.TimeUnit;
 
 public class TrackerSettingsActivity extends AppCompatActivity {
+/*
+settings (currently only contains location on/off)
+ */
 
     Toolbar toolbar;
     Switch notification_switch;
     private static boolean switch_status;
 
+    // for location permission
+    private Permissions permissions;
+    private static final String[] permissionStrings = {
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_BACKGROUND_LOCATION,
+            Manifest.permission.ACCESS_WIFI_STATE
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tracker_settings);
-
-        //setup and start the Worker
-        startWorker();
 
         //start notification channel(do this is MainActivity
         Notifications.createNotificationChannel(this);
@@ -89,7 +92,17 @@ public class TrackerSettingsActivity extends AppCompatActivity {
                             save_preferences(false);
                         }
                     }catch (Exception e){
-                        Log.d(LogTags.TrackerSettings_TAG, "onClick: error occured!");
+
+                        // set switch off
+                        notification_switch.setChecked(false);
+
+                        // set shared preferences false
+                        save_preferences(false);
+
+                        // most probable reason for error is permission not granted
+                        promptPermissions();
+
+                        Log.d(LogTags.TrackerSettings_TAG, "onClick: error starting background location service! permission taken?");
                     }
                 }
                 else
@@ -97,9 +110,6 @@ public class TrackerSettingsActivity extends AppCompatActivity {
                     try {
                         // stop location tracker
                         stopService(new Intent(getApplicationContext(),BackgroundLocationTracker.class));
-
-                        // enqueue TrackerUserPromptWorker
-                        startWorker();
 
                     }catch (Exception e){
                         Log.d(LogTags.TrackerSettings_TAG, "onClick: error occured!");
@@ -109,46 +119,6 @@ public class TrackerSettingsActivity extends AppCompatActivity {
         });
         loadData();
         updateViews();
-    }
-
-    private void startWorker() {
-
-        //get tracker status from sharedPreferences
-        SharedPreferences sharedPreferences = getSharedPreferences(Constants.SHARED_PREFERENCES, MODE_PRIVATE);
-        boolean trackerState = sharedPreferences.getBoolean(Constants.notification_switch_pref,false);
-
-        if(!trackerState) {
-            //Enqueue the worker
-
-            Constraints constraints = new Constraints.Builder()
-                    .setRequiresBatteryNotLow(true)
-                    .setRequiresCharging(false)
-                    .build();
-
-            PeriodicWorkRequest promptNotificationWork =
-                    new PeriodicWorkRequest.Builder(TrackerUserPromptWorker.class, 1, TimeUnit.HOURS)
-                            .setConstraints(constraints)
-                            .addTag(Constants.trackerPrompt_WorkerTag)
-                            .build();
-
-            WorkManager.getInstance(getApplicationContext()).getWorkInfoByIdLiveData(promptNotificationWork.getId())
-                    .observe(this, new Observer<WorkInfo>() {
-                        @Override
-                        public void onChanged(@Nullable WorkInfo workInfo) {
-                            if (workInfo != null && workInfo.getState() == WorkInfo.State.ENQUEUED) {
-                                Log.d(LogTags.Worker_TAG, "onChanged: worker is enqueued");
-                            }
-
-                            if (workInfo != null && workInfo.getState() == WorkInfo.State.CANCELLED) {
-                                Log.d(LogTags.Worker_TAG, "onChanged: worker was stopped");
-                            }
-                        }
-                    });
-
-
-            WorkManager.getInstance(getApplicationContext())
-                    .enqueue(promptNotificationWork);
-        }
     }
 
     private void startTrackerService(){
@@ -161,18 +131,29 @@ public class TrackerSettingsActivity extends AppCompatActivity {
 
     }
 
+    private void promptPermissions() {
+
+        permissions = new Permissions(this, permissionStrings, Constants.PERMISSION_CODE);
+
+        if(!permissions.checkPermissions())
+            permissions.askPermissions();
+
+    }
+
 
     public void save_preferences(boolean state)
     {
-        SharedPreferences sharedPreferences = getSharedPreferences(Constants.SHARED_PREFERENCES, MODE_PRIVATE);
+        SharedPreferences sharedPreferences =
+                getSharedPreferences(Constants.LOCATION_SETTINGS_SHARED_PREFERENCES, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean(Constants.notification_switch_pref,state);
+        editor.putBoolean(Constants.location_tracker_state,state);
         editor.apply();
     }
     public void loadData()
     {
-        SharedPreferences sharedPreferences = getSharedPreferences(Constants.SHARED_PREFERENCES, MODE_PRIVATE);
-        switch_status = sharedPreferences.getBoolean(Constants.notification_switch_pref,false);
+        SharedPreferences sharedPreferences =
+                getSharedPreferences(Constants.LOCATION_SETTINGS_SHARED_PREFERENCES, MODE_PRIVATE);
+        switch_status = sharedPreferences.getBoolean(Constants.location_tracker_state,false);
         updateViews();
     }
 
@@ -213,6 +194,25 @@ public class TrackerSettingsActivity extends AppCompatActivity {
                     LocationFetch.isLocationEnabled = false;
                 }
 
+                break;
+
+        }
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        //resolve unresolved permissions
+
+        switch (requestCode){
+
+            case Constants.PERMISSION_CODE:
+
+                try {
+                    this.permissions.resolvePermissions(permissions, grantResults);
+                }catch (Exception e){
+                    Log.d(LogTags.Permissions_TAG, "onRequestPermissionsResult: "+e.getMessage());
+                }
 
                 break;
 

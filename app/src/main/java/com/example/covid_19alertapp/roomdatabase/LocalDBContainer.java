@@ -1,9 +1,10 @@
-package com.example.covid_19alertapp.extras;
+package com.example.covid_19alertapp.roomdatabase;
 
 import android.content.Context;
 import android.location.Location;
 import android.util.Log;
 
+import com.example.covid_19alertapp.extras.LogTags;
 import com.example.covid_19alertapp.roomdatabase.VisitedLocations;
 import com.example.covid_19alertapp.roomdatabase.VisitedLocationsDao;
 import com.example.covid_19alertapp.roomdatabase.VisitedLocationsDatabase;
@@ -12,6 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class LocalDBContainer {
+    /*
+    fit location in container
+    insert to local DB
+     */
 
     private static VisitedLocationsDatabase database;
     private static VisitedLocationsDao visitedLocationsDao;
@@ -25,8 +30,9 @@ public abstract class LocalDBContainer {
         // get the current container
         calculateContainer(location.getLatitude(), location.getLongitude(), "Bangladesh");
 
-
         // now send container and dateTime to RoomDB
+
+        // get the database config stuff
         database = VisitedLocationsDatabase.getDatabase(context);
         visitedLocationsDao = database.visitedLocationsDao();
 
@@ -38,7 +44,7 @@ public abstract class LocalDBContainer {
             String conatainerDateTimeComposite = drp+"_"+dateTime;
 
             visitedLocationList.add(
-                    new VisitedLocations(conatainerDateTimeComposite, 0)
+                    new VisitedLocations(conatainerDateTimeComposite, 1)
             );
 
         }

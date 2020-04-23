@@ -20,5 +20,7 @@ public interface VisitedLocationsDao {
     @Query("SELECT * FROM visitedlocations")
     List<VisitedLocations> fetchAll();
 
+    @Delete
+    void deleteLocation(VisitedLocations visitedLocations);
 
 }

@@ -12,7 +12,7 @@ public class VisitedLocations {
     @NonNull
     private String conatainerDateTimeComposite;
 
-    private int count;
+    private long count;
 
     public VisitedLocations() {
         /*
@@ -21,16 +21,24 @@ public class VisitedLocations {
     }
 
     @Ignore
-    public VisitedLocations(String conatainerDateTimeComposite, int count) {
+    public VisitedLocations(String conatainerDateTimeComposite, long count) {
         this.conatainerDateTimeComposite = conatainerDateTimeComposite;
         this.count = count;
+    }
+
+    @Ignore
+    public String[] splitPrimaryKey(String conatainerDateTimeComposite){
+        /*
+        returns 'latLon' and 'dateTime'
+         */
+        return conatainerDateTimeComposite.split("_");
     }
 
     public void setConatainerDateTimeComposite(String conatainerDateTimeComposite) {
         this.conatainerDateTimeComposite = conatainerDateTimeComposite;
     }
 
-    public void setCount(int count) {
+    public void setCount(long count) {
         this.count = count;
     }
 
@@ -38,7 +46,7 @@ public class VisitedLocations {
         return conatainerDateTimeComposite;
     }
 
-    public int getCount() {
+    public long getCount() {
         return count;
     }
 

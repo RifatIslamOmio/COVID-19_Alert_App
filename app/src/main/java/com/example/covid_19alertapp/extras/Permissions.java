@@ -79,7 +79,6 @@ public class Permissions {
     }
 
 
-
     public void resolvePermissions(String[] permissions, int[] grantResults){
 
         HashMap<String, Integer> permissionResult = new HashMap<>();
