@@ -53,16 +53,16 @@ public class TrackerSettingsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_arrow_back));
+
+        notification_switch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
-
-        notification_switch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
                 save_preferences(notification_switch.isChecked());
                 if(notification_switch.isChecked())
