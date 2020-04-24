@@ -1,4 +1,4 @@
-package com.example.covid_19alertapp.activities;
+package com.example.covid_19alertapp.oldActivities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.covid_19alertapp.R;
+import com.example.covid_19alertapp.activities.MainActivity;
 import com.example.covid_19alertapp.dataStorage.UserInfoData;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -66,7 +67,7 @@ public class UserInfoFormActivityOLD extends AppCompatActivity {
         userInfoRef = database.getReference(path).child(uid);
         userInfoRef.setValue(userInfoData);
 
-        startActivity(new Intent(getApplicationContext(),MainActivity.class));
+        startActivity(new Intent(getApplicationContext(), MainActivity.class));
 
 
 
