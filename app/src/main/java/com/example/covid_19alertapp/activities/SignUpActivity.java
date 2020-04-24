@@ -1,10 +1,12 @@
 package com.example.covid_19alertapp.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -13,8 +15,14 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.covid_19alertapp.R;
+import com.google.firebase.FirebaseException;
+import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthProvider;
+
+import java.util.concurrent.TimeUnit;
 
 
 public class SignUpActivity extends AppCompatActivity {
@@ -22,8 +30,10 @@ public class SignUpActivity extends AppCompatActivity {
     Button btnContinue,btnHomeSignup,btnForwardSignup;
     EditText phoneNumber;
     TextView textViewTermsCond;
-    public static String PHONE_NUMBER;
+    public static String PHONE_NUMBER,verification;
     public static boolean ISRETURNEDFROMVERLAYOUT;
+    public static SharedPreferences loginSp;
+    PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +44,41 @@ public class SignUpActivity extends AppCompatActivity {
         textViewTermsCond = findViewById(R.id.TextViewTerm);
         btnHomeSignup = findViewById(R.id.home_button_signup_page);
         btnForwardSignup = findViewById(R.id.forward_button_signup_page);
+
+        loginSp = getSharedPreferences("login",MODE_PRIVATE);
+
+
+        if(loginSp.getBoolean("logged",false)){
+
+            startActivity(new Intent(getApplicationContext(), VerificationPageActivity.class));
+            finish();
+        }
+
+        mCallbacks=new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+            @Override
+            public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
+                Toast.makeText(getApplicationContext(),"SuccessFul",Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onVerificationFailed(@NonNull FirebaseException e) {
+
+                Toast.makeText(getApplicationContext(),"Check Your  Internet Connection",Toast.LENGTH_SHORT).show();
+
+            }
+            @Override
+            public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+                super.onCodeSent(s, forceResendingToken);
+                verification=s;
+
+
+                Toast.makeText(getApplicationContext(),"Code Sent to the Number",Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(getApplicationContext(), VerificationPageActivity.class));
+                loginSp.edit().putBoolean("logged",true).apply();
+                finish();
+            }
+
+        };
 
         if(ISRETURNEDFROMVERLAYOUT)
         {
@@ -100,8 +145,13 @@ public class SignUpActivity extends AppCompatActivity {
                 if(phoneNumber.getText().toString().length()==16)  //Write a function to check phone number validity
                 {
                     PHONE_NUMBER = phoneNumber.getText().toString();
-                    startActivity(new Intent(getApplicationContext(), VerificationPageActivity.class));
-                    finish();
+                    PHONE_NUMBER=PHONE_NUMBER.replaceAll("\\s+","");
+
+                    System.out.println(PHONE_NUMBER);
+                    sendSms(PHONE_NUMBER);
+                    //startActivity(new Intent(getApplicationContext(), VerificationPageActivity.class));
+                    //finish();
+
                     //Write OTP Request Function
                 }
                 else
@@ -137,4 +187,22 @@ public class SignUpActivity extends AppCompatActivity {
             imm.hideSoftInputFromWindow(view1.getWindowToken(), 0);
         }
     }
+
+    public void sendSms(String phoneNo){
+
+
+
+        PhoneAuthProvider.getInstance().verifyPhoneNumber(
+                phoneNo,        // Phone number to verify
+                60,                 // Timeout duration
+                TimeUnit.SECONDS,   // Unit of timeout
+                this,               // Activity (for callback binding)
+                mCallbacks         // OnVerificationStateChangedCallbacks
+        );
+
+
+
+
+    }
+
 }

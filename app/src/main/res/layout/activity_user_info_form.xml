@@ -1,183 +1,182 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".activities.UserInfoFormActivity">
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="match_parent"
-        android:layout_height="47dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="0dp"
-        android:background="#564321"
-        android:fontFamily="sans-serif-smallcaps"
-        android:text="Fill up the form"
-        android:textColor="#000000"
-        android:textSize="32sp"
-        android:visibility="visible" />
-
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <RelativeLayout
+            android:id="@+id/layout"
+            android:layout_width="match_parent"
+            android:layout_height="235dp"
+            android:background="@color/color_top_part_background">
+
+            <include
+                layout="@layout/toolbar_user_info_form_page"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="85dp"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/ic_user_info_icon" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbarFadeDuration="@android:integer/config_mediumAnimTime"
+        android:scrollbarAlwaysDrawVerticalTrack="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginTop="60dp"
-            android:orientation="horizontal"
-            android:weightSum="10">
+            android:orientation="vertical"
+            android:layout_marginTop="30dp"
+            android:paddingBottom="40dp">
 
             <TextView
-                android:layout_width="0dp"
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:text="Name"
-                android:textColor="#000"
-                android:textSize="14sp" />
+                android:fontFamily="@font/roboto_medium"
+                android:text="Complete User Profile"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textColor="#031739"
+                android:textSize="22sp" />
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginEnd="40dp"
+                android:fontFamily="@font/roboto"
+                android:text="You must have to provide accurate information"
+                android:textAlignment="center"
+                android:textColor="#010E55"
+                android:textSize="15sp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:layout_marginEnd="40dp"
+                android:fontFamily="@font/roboto"
+                android:text="Please provide them below"
+                android:textAlignment="center"
+                android:textColor="#010E55"
+                android:textSize="15sp"
+                />
 
             <EditText
-                android:id="@+id/name"
-                android:layout_width="0dp"
+                android:id="@+id/userName"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="7"
-                android:inputType="text"
-                android:textColor="#000"
-                android:textSize="14sp" />
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginRight="40dp"
+                android:layout_marginBottom="5dp"
+                android:drawableLeft="@drawable/ic_fullname"
+                android:drawablePadding="5dp"
+                android:ems="10"
+                android:fontFamily="@font/roboto"
+                android:hint="Full Name"
+                android:inputType="textPersonName"
+                android:textColorHint="@color/color_user_info_edit_text" />
 
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginTop="60dp"
-            android:orientation="horizontal"
-            android:weightSum="10">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:text="Home Address"
-                android:textColor="#000"
-                android:textSize="14sp" />
 
             <EditText
                 android:id="@+id/homeAddress"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="7"
-                android:hint="Tab here"
-                android:inputType="text"
-                android:textColor="#000"
-                android:textSize="14sp" />
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="40dp"
+                android:layout_marginBottom="5dp"
+                android:drawableLeft="@drawable/ic_home_address"
+                android:drawablePadding="5dp"
+                android:ems="10"
+                android:hint="Home Address"
+                android:onClick="setHomeAddress"
+                android:inputType="textPostalAddress"
+                android:textColorHint="@color/color_user_info_edit_text" />
 
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginTop="60dp"
-            android:orientation="horizontal"
-            android:weightSum="10">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:text="Work Address"
-                android:textColor="#000"
-                android:textSize="14sp" />
 
             <EditText
                 android:id="@+id/workAdress"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="7"
-                android:hint="Tab here (optional)"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="40dp"
+                android:layout_marginBottom="5dp"
+                android:drawableLeft="@drawable/ic_mobile_phone"
+                android:drawablePadding="5dp"
+                android:ems="10"
+                android:fontFamily="@font/roboto"
+                android:hint="Work Address (Optional)"
+                android:onClick="setWorkAddress"
                 android:inputType="text"
-                android:textColor="#164E0F"
-                android:textSize="14sp" />
+                android:textColorHint="@color/color_user_info_edit_text" />
+
+
+            <EditText
+                android:id="@+id/dateOfBirth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="40dp"
+                android:layout_marginBottom="5dp"
+                android:clickable="true"
+                android:drawableLeft="@drawable/ic_date"
+                android:drawablePadding="5dp"
+                android:ems="10"
+                android:fontFamily="@font/roboto"
+                android:hint="Date of Birth"
+                android:inputType="date"
+                android:textColorHint="@color/color_user_info_edit_text" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:paddingBottom="45dp"
+                android:paddingTop="5dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+
+                <Button
+                    android:id="@+id/SaveProfButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/custom_save_button"
+                    android:fontFamily="@font/roboto_bold"
+                    android:paddingStart="50dp"
+                    android:paddingEnd="50dp"
+                    android:paddingTop="18dp"
+                    android:paddingBottom="18dp"
+                    android:text="Save"
+                    android:textSize="16sp"
+                    android:textColor="#FFF" />
+
+            </LinearLayout>
 
         </LinearLayout>
+    </ScrollView>
 
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="60dp"
-            android:orientation="horizontal"
-            android:weightSum="10">
-
-            <TextView
-
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:text="Date of Birth"
-                android:textColor="#000"
-                android:textSize="14sp" />
-
-            <EditText
-                android:id="@+id/day"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:inputType="number"
-                android:hint="dd "
-                android:textColor="#000"
-                android:textSize="14sp" />
-
-            <EditText
-                android:id="@+id/month"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:hint="mm "
-                android:inputType="number"
-                android:textColor="#000"
-                android:textSize="14sp" />
-
-            <EditText
-                android:id="@+id/year"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:inputType="number"
-                android:hint="yyyy "
-                android:textColor="#164E0F"
-                android:textSize="14sp" />
-
-
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/done"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_alignParentBottom="true"
-            android:layout_marginHorizontal="270dp"
-            android:text="Done"
-            android:layout_marginBottom="11dp"
-
-            android:backgroundTint="#564321"
-            android:textColor="#000"
-            ></Button>
-
-    </LinearLayout>
-
-
-</RelativeLayout>
+</LinearLayout>
