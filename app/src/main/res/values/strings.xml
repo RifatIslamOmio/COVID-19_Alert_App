@@ -12,7 +12,7 @@
     <string name="promptToTrackNotificationTitle">Location Tracking Off!</string>
     <string name="promptToTrackNotificationContent">Tap to enable location tracker</string>
 
-    <string name="dangerNotificationTitle">INFECTED AREA NEARBY!</string>
+    <string name="dangerNotificationTitle">YOU MIGHT BE INFECTED!</string>
     <string name="dangerNotificationContent">Tap to see danger level</string>
 
     <string name="tracker_Notification_Label">Location Tracking</string>
@@ -24,6 +24,9 @@
         Your locations are being saved locally on your device.
         If and when you give us your explicit consent we will upload keeping your identity anonymous.
     </string>
+
+    <string name="no_internet_toast">No Internet!</string>
+
     <string name="title_activity_maps">Map</string>
 
     <string name="map_text">

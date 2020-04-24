@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.media.RingtoneManager;
 import android.os.Build;
 import android.util.Log;
 
@@ -40,19 +41,21 @@ public abstract class Notifications {
         }
     }
 
-    public static Notification showNotification(int notification_id, Context context, Class newActivity, boolean notify)
+    public static Notification showNotification(
+            int notification_id, Context context, Intent newActivityIntent, boolean notify)
     {
 
         String title, content;
-        Intent intent;
-        PendingIntent pendingIntent;
+        PendingIntent pendingIntent = null;
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, Constants.NOTIFICATION_CHANNEL_ID);
 
         //start NewActivity on notification tap
-        intent = new Intent(context, newActivity);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
+        try {
+            newActivityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            pendingIntent = PendingIntent.getActivity(context, 0, newActivityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        }catch (NullPointerException e){
+            Log.d(LogTags.Notification_TAG, "showNotification: no intent specified");
+        }
         switch (notification_id){
 
             case Constants.PromptTrackerNotification_ID:
@@ -121,11 +124,12 @@ public abstract class Notifications {
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
                         // Intent(Activity) that will start when the user taps the button
                         .setContentIntent(pendingIntent)
+                        // play default device notification tone //TODO: add custom tone
+                        .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                         .setOngoing(true)
                         .setAutoCancel(false);
 
                 Log.d(LogTags.Notification_TAG, "DangerNotification: notification builder created");
-
 
                 break;
 
@@ -143,13 +147,13 @@ public abstract class Notifications {
             notification.flags = Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT;
         }
 
-        //show notification here for older version
+        //show notification here for older version and normal notifications
         if(notify)
             notificationManager.notify(notification_id, notification);
 
         Log.d(LogTags.Notification_TAG, "PromptToTrackNotification: notification showed");
 
-        //return to start on Foreground (for newer version)
+        //return to start on Foreground (for services in newer version)
         return notification;
 
     }

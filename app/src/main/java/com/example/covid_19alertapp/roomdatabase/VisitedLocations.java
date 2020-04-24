@@ -27,11 +27,23 @@ public class VisitedLocations {
     }
 
     @Ignore
-    public String[] splitPrimaryKey(String conatainerDateTimeComposite){
+    public String[] splitPrimaryKey(){
         /*
         returns 'latLon' and 'dateTime'
          */
         return conatainerDateTimeComposite.split("_");
+    }
+
+    @Ignore
+    public String getATencodedlatlon(){
+        /*
+        return latlon in firebase KEY format
+         */
+
+        String[] splited = conatainerDateTimeComposite.split("_");
+
+        return splited[0].replaceAll("\\.","@");
+
     }
 
     public void setConatainerDateTimeComposite(String conatainerDateTimeComposite) {

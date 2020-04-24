@@ -96,6 +96,7 @@ public abstract class LocationFetch {
 
                             // get current time
                             Calendar cal = Calendar.getInstance();
+                            //TODO: add year
                             String dateTime = (cal.get(Calendar.MONTH)+1) +"-" // Calender.MONTH is 0 based -_- why tf?
                                     + cal.get(Calendar.DATE) +"-"
                                     + cal.get(Calendar.HOUR);

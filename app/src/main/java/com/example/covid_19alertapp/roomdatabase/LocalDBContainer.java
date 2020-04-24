@@ -82,15 +82,15 @@ public abstract class LocalDBContainer {
 
     private static void calculateContainer(Double lat, Double lon, String country)
     {
-        Double latDevider=0.0,lonDevider=0.0,latX,lony;
+        Double latDevider=0.000000d, lonDevider=0.000000d, latX, lony;
 
         // reset the previous list
         diagonalRangePoint =new ArrayList<>();
 
         // this is so nice
         if(country.equals("Bangladesh")){
-            latDevider=.0002000;
-            lonDevider=.0002000;
+            latDevider=.0002000d;
+            lonDevider=.0002000d;
 
         }
 

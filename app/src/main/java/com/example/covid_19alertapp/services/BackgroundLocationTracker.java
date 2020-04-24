@@ -37,6 +37,9 @@ service to track location on bacckground
                 this
         );
 
+        // TrackerSettingsActivity as notification tap intent
+        Intent notificationIntent = new Intent(this, TrackerSettingsActivity.class);
+
         //show tracking notification
         try {
             //since api26 need to use startForeground() to run services
@@ -45,7 +48,7 @@ service to track location on bacckground
                     Notifications.showNotification(
                             Constants.TrackingLocationNotification_ID,
                             this,
-                            TrackerSettingsActivity.class,
+                            notificationIntent,
                             false)
             );
         }catch (Exception e){
@@ -53,7 +56,7 @@ service to track location on bacckground
             Notifications.showNotification(
                     Constants.TrackingLocationNotification_ID,
                     this,
-                    TrackerSettingsActivity.class,
+                    notificationIntent,
                     true
             );
 

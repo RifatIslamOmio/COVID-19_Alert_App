@@ -40,7 +40,7 @@ public class SignUpActivityOLD extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_up);
+        setContentView(R.layout.activity_sign_up_old);
         phoneNoEdit =findViewById(R.id.mobileNo);
         enteredCodeEdit =findViewById(R.id.verificationCode);
         countrCode=findViewById(R.id.countr_code);
