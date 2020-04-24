@@ -29,7 +29,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.concurrent.TimeUnit;
 
 public class SignUpActivityOLD extends AppCompatActivity {
-    FirebaseAuth auth;
+    public static FirebaseAuth auth;
     EditText phoneNoEdit, enteredCodeEdit,countrCode;
 
     String verification,enterededCodeString,uid;

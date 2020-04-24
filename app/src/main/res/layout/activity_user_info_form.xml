@@ -106,6 +106,7 @@
                 android:drawablePadding="5dp"
                 android:ems="10"
                 android:hint="Home Address"
+                android:onClick="setHomeAddress"
                 android:inputType="textPostalAddress"
                 android:textColorHint="@color/color_user_info_edit_text" />
 
@@ -123,6 +124,7 @@
                 android:ems="10"
                 android:fontFamily="@font/roboto"
                 android:hint="Work Address (Optional)"
+                android:onClick="setWorkAddress"
                 android:inputType="text"
                 android:textColorHint="@color/color_user_info_edit_text" />
 
