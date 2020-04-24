@@ -49,7 +49,10 @@ public class MainActivity extends AppCompatActivity {
 
         // ask for permissions start of app
         promptPermissions();
-        userInfo = getSharedPreferences("info",MODE_PRIVATE);  //initializing the info named shared preference
+
+
+        //initializing the info named shared preference
+        userInfo = getSharedPreferences("info",MODE_PRIVATE);
 
 
         // start background worker for always

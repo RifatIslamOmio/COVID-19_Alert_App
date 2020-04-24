@@ -21,12 +21,10 @@
         android:theme="@style/AppTheme">
 
 
-
         <activity android:name=".activities.UserInfoFormActivity" android:windowSoftInputMode="stateHidden"/>
         <activity android:name=".activities.VerificationPageActivity" android:windowSoftInputMode="stateHidden"/>
 
 
-        <activity android:name=".activities.UserInfoFormActivityOLD"/>
         <activity android:name=".activities.UploadLocationsActivity"/>
         <activity android:name=".activities.SignUpActivity" android:windowSoftInputMode="stateHidden">
             <intent-filter>
