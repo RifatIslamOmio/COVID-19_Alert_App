@@ -63,4 +63,11 @@
     <string name="backPressed_during_upload">Please wait. Uploading has not finished. Thank you for your patience.</string>
     <string name="backPressed_during_upload_positive">Okay</string>
 
+    <string name="address_picked_text">address taken!</string>
+    <string name="full_name_hint">Full Name</string>
+    <string name="home_address_hint">Tap to pick home address</string>
+    <string name="work_address_hint">Tap to pick work address (optional)</string>
+    <string name="dob_hint">Date of birth</string>
+    <string name="save_button_text">Save</string>
+
 </resources>

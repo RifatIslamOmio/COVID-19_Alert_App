@@ -26,7 +26,7 @@ public abstract class Constants {
     /*
     user information preferences
      */
-    public static final String USER_INFO_SHARED_PREFERENCES = "Userinfo";
+    public static final String USER_INFO_SHARED_PREFERENCES = "info";
 
     public static final String user_exists_preference = "Userinfo";
     public static final String username_preference = "name";

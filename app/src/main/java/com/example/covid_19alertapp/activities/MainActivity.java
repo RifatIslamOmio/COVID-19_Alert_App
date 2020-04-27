@@ -33,21 +33,10 @@ public class MainActivity extends AppCompatActivity {
     overwrite or edit this later, keeping the permission codes
      */
 
-
-    private Permissions permissions;
-    private static final String[] permissionStrings = {
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_BACKGROUND_LOCATION,
-            Manifest.permission.ACCESS_WIFI_STATE
-    };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        // ask for permissions start of app
-        promptPermissions();
 
 
         //initializing the info named shared preference
@@ -102,35 +91,6 @@ public class MainActivity extends AppCompatActivity {
 
             WorkManager.getInstance(getApplicationContext())
                     .enqueue(promptNotificationWork);
-
-        }
-
-    }
-
-    private void promptPermissions() {
-
-        permissions = new Permissions(this, permissionStrings, Constants.PERMISSION_CODE);
-
-        if(!permissions.checkPermissions())
-            permissions.askPermissions();
-
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        //resolve unresolved permissions
-
-        switch (requestCode){
-
-            case Constants.PERMISSION_CODE:
-
-                try {
-                    this.permissions.resolvePermissions(permissions, grantResults);
-                }catch (Exception e){
-                    Log.d(LogTags.Permissions_TAG, "onRequestPermissionsResult: "+e.getMessage());
-                }
-
-                break;
 
         }
 

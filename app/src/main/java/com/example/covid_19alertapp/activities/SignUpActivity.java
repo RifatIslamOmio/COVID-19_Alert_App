@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -20,7 +21,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.covid_19alertapp.R;
+import com.example.covid_19alertapp.extras.Constants;
 import com.example.covid_19alertapp.extras.LogTags;
+import com.example.covid_19alertapp.extras.Permissions;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
@@ -42,6 +45,9 @@ public class SignUpActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+
+        // ask permissions
+        promptPermissions();
 
         phoneNumber = findViewById(R.id.editText_phoneNumber);
         btnContinue = findViewById(R.id.btn_continue);
@@ -194,8 +200,6 @@ public class SignUpActivity extends AppCompatActivity {
 
     public void sendSms(String phoneNo){
 
-
-
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
                 phoneNo,        // Phone number to verify
                 60,                 // Timeout duration
@@ -204,8 +208,45 @@ public class SignUpActivity extends AppCompatActivity {
                 mCallbacks         // OnVerificationStateChangedCallbacks
         );
 
+    }
 
+    /*
+    permission needed at start of app
+     */
 
+    private Permissions permissions;
+    private static final String[] permissionStrings = {
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_BACKGROUND_LOCATION,
+            Manifest.permission.ACCESS_WIFI_STATE
+    };
+
+    private void promptPermissions() {
+
+        permissions = new Permissions(this, permissionStrings, Constants.PERMISSION_CODE);
+
+        if(!permissions.checkPermissions())
+            permissions.askPermissions();
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        //resolve unresolved permissions
+
+        switch (requestCode){
+
+            case Constants.PERMISSION_CODE:
+
+                try {
+                    this.permissions.resolvePermissions(permissions, grantResults);
+                }catch (Exception e){
+                    Log.d(LogTags.Permissions_TAG, "onRequestPermissionsResult: "+e.getMessage());
+                }
+
+                break;
+
+        }
 
     }
 }

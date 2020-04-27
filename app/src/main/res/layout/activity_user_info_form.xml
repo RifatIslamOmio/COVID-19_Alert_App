@@ -91,7 +91,7 @@
                 android:drawablePadding="5dp"
                 android:ems="10"
                 android:fontFamily="@font/roboto"
-                android:hint="Full Name"
+                android:hint="@string/full_name_hint"
                 android:inputType="textPersonName"
                 android:textColorHint="@color/color_user_info_edit_text" />
 
@@ -107,7 +107,7 @@
                 android:drawableLeft="@drawable/ic_home_address"
                 android:drawablePadding="5dp"
                 android:ems="10"
-                android:hint="Home Address"
+                android:hint="@string/home_address_hint"
                 android:inputType="textPostalAddress"
                 android:textColorHint="@color/color_user_info_edit_text" />
 
@@ -124,7 +124,7 @@
                 android:drawablePadding="5dp"
                 android:ems="10"
                 android:fontFamily="@font/roboto"
-                android:hint="Work Address (Optional)"
+                android:hint="@string/work_address_hint"
                 android:inputType="text"
                 android:textColorHint="@color/color_user_info_edit_text" />
 
@@ -142,7 +142,7 @@
                 android:drawablePadding="5dp"
                 android:ems="10"
                 android:fontFamily="@font/roboto"
-                android:hint="Date of Birth"
+                android:hint="@string/dob_hint"
                 android:inputType="date"
                 android:textColorHint="@color/color_user_info_edit_text" />
 
@@ -164,12 +164,12 @@
                     android:background="@drawable/custom_save_button"
                     android:fontFamily="@font/roboto_bold"
                     android:paddingStart="50dp"
-                    android:paddingEnd="50dp"
                     android:paddingTop="18dp"
+                    android:paddingEnd="50dp"
                     android:paddingBottom="18dp"
-                    android:text="Save"
-                    android:textSize="16sp"
-                    android:textColor="#FFF" />
+                    android:text="@string/save_button_text"
+                    android:textColor="#FFF"
+                    android:textSize="16sp" />
 
             </LinearLayout>
 
