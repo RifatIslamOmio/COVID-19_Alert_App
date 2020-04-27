@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
+import com.example.covid_19alertapp.activities.MainActivity;
 import com.example.covid_19alertapp.activities.ShowMatchedLocationsActivity;
 import com.example.covid_19alertapp.activities.TrackerSettingsActivity;
 import com.example.covid_19alertapp.extras.Constants;
@@ -57,10 +58,10 @@ public class BackgroundWorker extends Worker {
                 // INFECTED LOCATION MATCH FOUND!
 
                 // remove turn location on prompt
-                Notifications.removeNotification(Constants.TrackingLocationNotification_ID, getApplicationContext());
+                Notifications.removeNotification(Constants.PromptTrackerNotification_ID, getApplicationContext());
 
-                //TODO: design notification tap intent Activity
-                Intent notificationIntent = new Intent(getApplicationContext(), ShowMatchedLocationsActivity.class);
+                // open ShowMatchedLocationsActivity on notification tap
+                Intent notificationIntent = new Intent(getApplicationContext(), MainActivity.class);
 
                 // show notification
                 Notifications.showNotification(
@@ -73,7 +74,7 @@ public class BackgroundWorker extends Worker {
                 Log.d(LogTags.Worker_TAG, "onDataChange: match found. notified.");
 
                 // try to break loop
-                matchFound = false;
+                matchFound = true;
 
                 // remove listener after finding any match (will show all through another activity)
                 refToMatch.removeEventListener(findMatch);
@@ -167,6 +168,12 @@ public class BackgroundWorker extends Worker {
             // query in firebase
             refToMatch = FirebaseDatabase.getInstance().getReference().child("infectedLocations").child(key).child(dateTime);
             refToMatch.addListenerForSingleValueEvent(findMatch);
+
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                Log.d(LogTags.Worker_TAG, "doWork: "+e.getMessage());
+            }
 
         }
 

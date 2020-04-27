@@ -23,4 +23,19 @@ public abstract class Constants {
     public static final int LOCATION_CHECK_CODE = 101;
     public static final int PERMISSION_CODE = 102;
 
+    /*
+    user information preferences
+     */
+    public static final String USER_INFO_SHARED_PREFERENCES = "Userinfo";
+
+    public static final String user_exists_preference = "Userinfo";
+    public static final String username_preference = "name";
+    public static final String uid_preference = "uid";
+    public static final String user_dob_preference = "dob";
+    public static final String user_home_address_preference = "home";
+    public static final String user_work_address_preference = "workAddress";
+    public static final String user_phone_no_preference = "contactNumber";
+
+
+
 }

@@ -3,16 +3,22 @@ package com.example.covid_19alertapp.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.covid_19alertapp.R;
+import com.example.covid_19alertapp.extras.AddressReceiver;
 import com.example.covid_19alertapp.extras.Constants;
 import com.example.covid_19alertapp.extras.LogTags;
 import com.example.covid_19alertapp.extras.Notifications;
-import com.example.covid_19alertapp.models.InfectedLocations;
+import com.example.covid_19alertapp.models.MatchedLocation;
 import com.example.covid_19alertapp.roomdatabase.VisitedLocations;
 import com.example.covid_19alertapp.roomdatabase.VisitedLocationsDao;
 import com.example.covid_19alertapp.roomdatabase.VisitedLocationsDatabase;
@@ -25,10 +31,14 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ShowMatchedLocationsActivity extends AppCompatActivity {
+public class ShowMatchedLocationsActivity extends AppCompatActivity implements AddressReceiver.AddressView {
+
+    // matched locations model (for recycler-view)
+    List<MatchedLocation> matchedLocations = new ArrayList<>();
+    int matchedLocationPosition = 0;
 
     // firebase
-    private DatabaseReference firbaseReference;
+    private DatabaseReference firebaseReference;
 
     // local db
     private VisitedLocationsDatabase roomDatabase;
@@ -41,10 +51,20 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity {
     private double currProgress = 0;
     private int dataCount=0,dataSize;
 
+    // Address Fetch
+    AddressReceiver addressReceiver = new AddressReceiver(new Handler(), this, this);
+
+    // UI stuff
+    ProgressBar progressBar;
+    TextView progressBarText;
+    Button retryButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_matched_locations);
+
+        setUI();
 
         Notifications.removeNotification(Constants.DangerNotification_ID, this);
 
@@ -55,25 +75,33 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity {
         visitedLocationsDao = roomDatabase.visitedLocationsDao();
 
         // firebase
-        firbaseReference = FirebaseDatabase.getInstance().getReference();
+        firebaseReference = FirebaseDatabase.getInstance().getReference();
 
-        retrieveFromLocalDb();
+        findMatchedLocations();
 
     }
 
-    private void retrieveFromLocalDb() {
+    private void setUI() {
+
+        progressBar = findViewById(R.id.progressBar);
+        progressBarText = findViewById(R.id.progressBar_text);
+        retryButton = findViewById(R.id.retry_btn);
+
+    }
+
+    private void findMatchedLocations() {
 
         roomDatabase.databaseWriteExecutor.execute(new Runnable() {
             @Override
             public void run() {
-
-                firbaseReference = FirebaseDatabase.getInstance().getReference();
 
                 // fetch from local db and query firebase
                 retrievedDatas = visitedLocationsDao.fetchAll();
 
                 // retrieval from localDB done (50%)
                 currProgress = 50;
+                progressBar.setProgress((int) currProgress);
+
                 dataSize = retrievedDatas.size();
 
                 for (VisitedLocations currentEntry: retrievedDatas)
@@ -86,18 +114,31 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity {
                     final String dateTime = splitter[1];
 
                     // query in firebase
-                    firbaseReference = FirebaseDatabase.getInstance().getReference().child("infectedLocations").child(key).child(dateTime);
-                    firbaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    firebaseReference = FirebaseDatabase.getInstance().getReference().child("infectedLocations").child(key).child(dateTime);
+                    firebaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            if(dataSnapshot.getValue()!=null){
+                            if(dataSnapshot.exists()){
                                 // INFECTED LOCATION MATCH FOUND!
 
                                 // TODO: add to list/recycler view
-                                String latLon = key.replace('@', '.');
-                                String date = dateTime;
+
+                                String latLon = key;
                                 long count = (long) dataSnapshot.child("count").getValue();
-                                Log.d(LogTags.MatchFound_TAG, "onDataChange: matched data = location:"+latLon+"date: "+date+" count:"+count);
+
+                                MatchedLocation matchedLocation = new MatchedLocation(latLon, dateTime, count);
+                                matchedLocations.add(matchedLocation);
+
+                                // start address fetch service
+                                addressReceiver.startAddressFetchService(
+                                        matchedLocation.getLatitude(),
+                                        matchedLocation.getLongitude(),
+                                        matchedLocationPosition
+                                );
+
+                                matchedLocationPosition++;
+
+                                Log.d(LogTags.MatchFound_TAG, "onDataChange: matched data = "+ matchedLocation.toString());
 
                             }
 
@@ -119,17 +160,51 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity {
 
                     // keep track of upload progress (50%-100%)
                     currProgress += (double) 50/dataSize;
+                    if(currProgress<=100)
+                        progressBar.setProgress((int) currProgress);
 
                     dataCount++;
                     if(dataCount==dataSize){
                         // remove progressbar
 
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                retryButton.setEnabled(true);
+                                progressBarText.setText(getText(R.string.finished_progressbar_text));
+                                progressBar.setVisibility(View.GONE);
+
+                            }
+                        });
                     }
 
                 }
 
             }
         });
+
+    }
+
+    public void retryClicked(View view) {
+
+        progressBar.setProgress(0);
+        progressBar.setVisibility(View.VISIBLE);
+        progressBarText.setText(getText(R.string.loading_progressbar_text));
+        findMatchedLocations();
+
+    }
+
+    @Override
+    public void updateAddress(String address, int listPosition) {
+
+        /*
+        address received here
+         */
+
+        matchedLocations.get(listPosition).setAddress(address);
+
 
     }
 }

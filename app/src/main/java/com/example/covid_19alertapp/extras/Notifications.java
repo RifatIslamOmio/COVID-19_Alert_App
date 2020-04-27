@@ -151,7 +151,7 @@ public abstract class Notifications {
         if(notify)
             notificationManager.notify(notification_id, notification);
 
-        Log.d(LogTags.Notification_TAG, "PromptToTrackNotification: notification showed");
+        Log.d(LogTags.Notification_TAG, "showNotification: notification showed");
 
         //return to start on Foreground (for services in newer version)
         return notification;

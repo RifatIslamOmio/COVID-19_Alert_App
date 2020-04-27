@@ -42,5 +42,22 @@
             android:layout_height="wrap_content"
             android:onClick="uploadClicked"
             android:text="Upload My Locations" />
+
+        <TextView
+            android:id="@+id/uploadProgressText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/loading_progressbar_text"
+            android:textAlignment="center"
+            android:visibility="invisible" />
+
+        <ProgressBar
+            android:id="@+id/uploadProgressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:visibility="invisible" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

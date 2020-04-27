@@ -24,7 +24,7 @@
         <activity android:name=".activities.UserInfoFormActivity" android:windowSoftInputMode="stateHidden"/>
         <activity android:name=".activities.VerificationPageActivity" android:windowSoftInputMode="stateHidden"/>
 
-
+        <activity android:name=".activities.ShowMatchedLocationsActivity"/>
         <activity android:name=".activities.UploadLocationsActivity"/>
         <activity android:name=".activities.SignUpActivity" android:windowSoftInputMode="stateHidden">
             <intent-filter>
@@ -46,7 +46,7 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".activities.MapsActivity"
+            android:name=".activities.AddressPickerMapsActivity"
             android:label="@string/title_activity_maps" />
         <activity android:name=".activities.TrackerSettingsActivity" />
 

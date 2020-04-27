@@ -22,7 +22,6 @@ import com.example.covid_19alertapp.extras.Constants;
 import com.example.covid_19alertapp.extras.LogTags;
 import com.example.covid_19alertapp.extras.Permissions;
 import com.example.covid_19alertapp.services.BackgroundWorker;
-import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.concurrent.TimeUnit;
 
@@ -143,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void pickHomeClick(View view) {
-        Intent intent = new Intent(this, MapsActivity.class);
+        Intent intent = new Intent(this, AddressPickerMapsActivity.class);
         startActivity(intent);
     }
 
@@ -155,6 +154,13 @@ public class MainActivity extends AppCompatActivity {
     public void testUIClick(View view) {
 
         startActivity(new Intent(getApplicationContext(), SignUpActivity.class));
+
+    }
+
+    public void removethisOnClick(View view) {
+
+        Intent intent = new Intent(getApplicationContext(), ShowMatchedLocationsActivity.class);
+        startActivity(intent);
 
     }
 }

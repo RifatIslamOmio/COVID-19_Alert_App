@@ -1,13 +1,18 @@
 package com.example.covid_19alertapp.activities;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.covid_19alertapp.R;
@@ -87,14 +92,6 @@ implement verification by medical report photo here
                                         "new data inserted to firebase.");
                             }
 
-                            // keep track of upload progress (50%-100%)
-                            currProgress += (double) 50/dataSize;
-
-                            dataCount++;
-                            if(dataCount==dataSize){
-                                // remove progressbar
-
-                            }
                         }
 
                         @Override
@@ -112,10 +109,20 @@ implement verification by medical report photo here
         }
     };
 
+    // UI stuff
+    ProgressBar uploadProgressBar;
+    TextView uploadProgressText;
+    Button uploadButton;
+
+    // back press during uploading
+    boolean uploading = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload_locations);
+
+        setUpUI();
 
         // set firebase database offline capability, set firebase reference
         if(firbaseReference == null) {
@@ -137,12 +144,57 @@ implement verification by medical report photo here
 
     }
 
+
+    @Override
+    public void onBackPressed() {
+
+
+        if(uploading) {
+
+            // show dialog
+            Log.d(LogTags.Upload_TAG, "onBackPressed: back pressed during uploading");
+
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            builder.setMessage(getText(R.string.backPressed_during_upload))
+                    .setCancelable(false)
+                    .setPositiveButton(getText(R.string.backPressed_during_upload_positive), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            Log.d(LogTags.Upload_TAG, "onClick: uploading resumes");
+                        }
+                    });
+
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+
+        }
+        else
+            super.onBackPressed();
+
+    }
+
+    private void setUpUI() {
+
+        uploadProgressBar = findViewById(R.id.uploadProgressBar);
+        uploadProgressText = findViewById(R.id.uploadProgressText);
+        uploadButton = findViewById(R.id.upload_btn);
+
+    }
+
     private void retrieveUploadDelete() {
         /*
         retrive from local database,
         upload to firebase,
         delete from local databse
          */
+
+        // save the uploading state
+        uploading = true;
+        uploadProgressText.setVisibility(View.VISIBLE);
+        uploadProgressBar.setVisibility(View.VISIBLE);
 
         roomDatabase.databaseWriteExecutor.execute(new Runnable() {
             @Override
@@ -185,6 +237,25 @@ implement verification by medical report photo here
                     Log.d(LogTags.Upload_TAG, "onCreate: deleting room entry = "
                             +roomEntry.getConatainerDateTimeComposite());
 
+                    // keep track of upload progress (50%-100%)
+                    currProgress += (double) 50/dataSize;
+                    uploadProgressBar.setProgress((int) currProgress);
+
+                    dataCount++;
+                    if(dataCount==dataSize){
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                // remove progressbar
+                                uploadProgressText.setText(getText(R.string.uploadFinished_progressbar_text));
+                                uploadProgressBar.setVisibility(View.GONE);
+                            }
+                        });
+
+                        // uploading done
+                        uploading = false;
+                    }
 
                     // sleep, give time to upload properly?
                     try {
@@ -205,6 +276,40 @@ implement verification by medical report photo here
         upload button click
          */
 
-        retrieveUploadDelete();
+        // show dialog before uploading
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle(getText(R.string.upload_confirmation_title))
+                .setMessage(getText(R.string.upload_confirmation_message))
+                .setCancelable(false)
+                .setPositiveButton(getText(R.string.upload_confirmation_positive), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+
+                        Log.d(LogTags.Upload_TAG, "onClick: uploading starts");
+
+                        // start uploading process
+                        uploadButton.setEnabled(false);
+                        retrieveUploadDelete();
+
+
+                    }
+                })
+                .setNegativeButton(getText(R.string.upload_confirmation_negative), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+
+                        // close the activity
+                        UploadLocationsActivity.this.finish();
+                        Log.d(LogTags.Upload_TAG, "onClick: not gonna upload");
+                    }
+                });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+
     }
 }

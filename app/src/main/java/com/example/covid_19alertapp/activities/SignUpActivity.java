@@ -1,6 +1,7 @@
 package com.example.covid_19alertapp.activities;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
@@ -10,6 +11,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -18,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.covid_19alertapp.R;
+import com.example.covid_19alertapp.extras.LogTags;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
@@ -34,6 +37,7 @@ public class SignUpActivity extends AppCompatActivity {
     public static boolean ISRETURNEDFROMVERLAYOUT;
     public static SharedPreferences loginSp;
     PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,13 +61,13 @@ public class SignUpActivity extends AppCompatActivity {
         mCallbacks=new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             @Override
             public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
-                Toast.makeText(getApplicationContext(),"SuccessFul",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),"Successful",Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onVerificationFailed(@NonNull FirebaseException e) {
 
-                Toast.makeText(getApplicationContext(),"Check Your  Internet Connection",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),"Check Your Internet Connection",Toast.LENGTH_SHORT).show();
 
             }
             @Override
@@ -204,5 +208,4 @@ public class SignUpActivity extends AppCompatActivity {
 
 
     }
-
 }

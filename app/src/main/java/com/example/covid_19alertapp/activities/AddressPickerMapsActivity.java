@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.wifi.WifiManager;
@@ -25,7 +26,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MapsActivity extends FragmentActivity implements
+public class AddressPickerMapsActivity extends FragmentActivity implements
         OnMapReadyCallback,
         GoogleMap.OnMyLocationButtonClickListener,
         GoogleMap.OnMyLocationClickListener,
@@ -36,12 +37,12 @@ public class MapsActivity extends FragmentActivity implements
     private Marker homeMarker = null;
 
     // home address location
-    Location homeLocation;
+    Location pickedLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps);
+        setContentView(R.layout.activity_address_picker_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -89,9 +90,9 @@ public class MapsActivity extends FragmentActivity implements
 
         Log.d(LogTags.Map_TAG, "onMapLongClick: marker at = "+latLng.toString());
 
-        homeLocation = new Location(getLocalClassName());
-        homeLocation.setLatitude(latLng.latitude);
-        homeLocation.setLongitude(latLng.longitude);
+        pickedLocation = new Location(getLocalClassName());
+        pickedLocation.setLatitude(latLng.latitude);
+        pickedLocation.setLongitude(latLng.longitude);
 
         if(homeMarker!=null){
             homeMarker.remove();
@@ -162,10 +163,16 @@ public class MapsActivity extends FragmentActivity implements
         take this location and set it as home address
          */
 
-        Log.d(LogTags.Map_TAG, "confirmClicked: location taken = "+homeLocation.toString());
+        Log.d(LogTags.Map_TAG, "confirmClicked: location taken = "+pickedLocation.toString());
 
         Toast.makeText(this, "Your home location was saved!", Toast.LENGTH_SHORT)
                 .show();
+
+        // send data to parent activity
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra("latitude-longitude",
+                pickedLocation.getLatitude()+", "+pickedLocation.getLongitude());
+        setResult(RESULT_OK, resultIntent);
         finish();
 
     }

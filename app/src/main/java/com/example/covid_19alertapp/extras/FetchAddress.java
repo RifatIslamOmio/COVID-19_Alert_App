@@ -22,14 +22,14 @@ public class FetchAddress extends IntentService {
     private static final String GEO_LOCATION = "geo_location";
     private static final String GEO_ADDRESS = "geo_address";
     private static final String GEO_RECEIVER = "geo_receiver";
+    private static final String LIST_POSITION = "position@list";
     private static final int GEO_FAILURE = 103;
-    private final int GEO_SUCCESS = 104;
+    private static final int GEO_SUCCESS = 104;
 
     protected ResultReceiver receiver;
 
     /**
-     * Creates an IntentService.  Invoked by your subclass's constructor.
-     * class name Used to name the worker thread, important only for debugging.
+     * fetch address from co-ordinates
      */
 
     public FetchAddress() {
@@ -56,8 +56,11 @@ public class FetchAddress extends IntentService {
         // get the location and receiver passed to this service through an extra.
         Location location = intent.getParcelableExtra(GEO_LOCATION);
 
-        // get the receiver from calling avtivity
+        // get the receiver from calling activity
         receiver = intent.getParcelableExtra(GEO_RECEIVER);
+
+        // get the position of list
+        int listPosition = intent.getIntExtra(LIST_POSITION, -1);
 
         List<Address> addresses = null;
 
@@ -76,11 +79,11 @@ public class FetchAddress extends IntentService {
         } catch (IOException ioException) {
             // Catch network or other I/O problems.
             errorMessage = "service not available";
-            Log.e(LogTags.Address_TAG, errorMessage, ioException);
+            Log.d(LogTags.Address_TAG, errorMessage, ioException);
         } catch (IllegalArgumentException illegalArgumentException) {
             // Catch invalid latitude or longitude values.
             errorMessage = "invalid lat_long used";
-            Log.e(LogTags.Address_TAG, errorMessage + ". " +
+            Log.d(LogTags.Address_TAG, errorMessage + ". " +
                     "Latitude = " + location.getLatitude() +
                     ", Longitude = " +
                     location.getLongitude(), illegalArgumentException);
@@ -94,7 +97,7 @@ public class FetchAddress extends IntentService {
                 Log.d(LogTags.Address_TAG, errorMessage);
             }
 
-            deliverResultToReceiver(GEO_FAILURE, errorMessage);
+            deliverResultToReceiver(GEO_FAILURE, errorMessage, listPosition);
         }
 
         else {
@@ -111,18 +114,27 @@ public class FetchAddress extends IntentService {
             }
 
             deliverResultToReceiver(GEO_SUCCESS,
-                    TextUtils.join(", ", addressFragments));
+                    TextUtils.join(", ", addressFragments),
+                    listPosition);
         }
 
     }
 
-    private void deliverResultToReceiver(int resultCode, String message) {
+    private void deliverResultToReceiver(int resultCode, String address, int position) {
 
         Bundle bundle = new Bundle();
-        bundle.putString(GEO_ADDRESS, message);
+        bundle.putString(GEO_ADDRESS, address);
+        bundle.putInt(LIST_POSITION, position);
 
         receiver.send(resultCode, bundle);
 
     }
 
+    public static int getGeoFailure() {
+        return GEO_FAILURE;
+    }
+
+    public static int getGeoSuccess() {
+        return GEO_SUCCESS;
+    }
 }
