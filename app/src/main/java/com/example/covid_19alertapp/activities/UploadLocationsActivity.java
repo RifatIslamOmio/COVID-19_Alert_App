@@ -18,6 +18,7 @@ import com.example.covid_19alertapp.roomdatabase.VisitedLocationsDao;
 import com.example.covid_19alertapp.roomdatabase.VisitedLocationsDatabase;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
@@ -43,7 +44,8 @@ implement verification by medical report photo here
     private List<VisitedLocations> retrievedDatas = new ArrayList<>();
 
     // retrieve and upload progress level
-    private int dataSize, currProgress = 0;
+    private int dataSize, dataCount = 0;
+    private double currProgress = 0;
 
     // models to store in firebase
     private MutableLiveData<InfectedLocations> currentInfectedLocation = new MutableLiveData<>();
@@ -86,11 +88,22 @@ implement verification by medical report photo here
                             }
 
                             // keep track of upload progress (50%-100%)
-                            currProgress += Math.ceil(50.00f/(float) dataSize);
+                            currProgress += (double) 50/dataSize;
+
+                            dataCount++;
+                            if(dataCount==dataSize){
+                                // remove progressbar
+
+                            }
                         }
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            Toast.makeText(getApplicationContext(),
+                                    getApplicationContext().getString(R.string.no_internet_toast),
+                                    Toast.LENGTH_LONG)
+                            .show();
 
                             Log.d(LogTags.Upload_TAG, "onCancelled: data read and update failed! Error:"+databaseError.getMessage());
 
@@ -107,7 +120,11 @@ implement verification by medical report photo here
         // set firebase database offline capability, set firebase reference
         if(firbaseReference == null) {
             FirebaseDatabase database = FirebaseDatabase.getInstance();
-            database.setPersistenceEnabled(true);
+            try {
+                database.setPersistenceEnabled(true);
+            }catch (DatabaseException e){
+                Log.d(LogTags.Upload_TAG, "onCreate: setPersistent issue. need to fix this");
+            }
             firbaseReference  = database.getReference();
         }
 
@@ -155,7 +172,7 @@ implement verification by medical report photo here
 
                     // splitData[0] = lat,lon
                     // splitData[1] = dateTime
-                    String[] splitData = roomEntry.splitPrimaryKey(roomEntry.getConatainerDateTimeComposite());
+                    String[] splitData = roomEntry.splitPrimaryKey();
 
                     Log.d(LogTags.Upload_TAG, "run: current retrieved data = "
                             +splitData[0]+", "+roomEntry.getCount()+", "+splitData[1]);

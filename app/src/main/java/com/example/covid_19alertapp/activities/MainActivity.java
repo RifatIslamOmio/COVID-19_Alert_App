@@ -26,11 +26,14 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.concurrent.TimeUnit;
 
+import static com.example.covid_19alertapp.activities.UserInfoFormActivity.userInfo;
+
 public class MainActivity extends AppCompatActivity {
     /*
     starter activity to test and get the permissions + all time running start worker
     overwrite or edit this later, keeping the permission codes
      */
+
 
     private Permissions permissions;
     private static final String[] permissionStrings = {
@@ -46,6 +49,11 @@ public class MainActivity extends AppCompatActivity {
 
         // ask for permissions start of app
         promptPermissions();
+
+
+        //initializing the info named shared preference
+        userInfo = getSharedPreferences("info",MODE_PRIVATE);
+
 
         // start background worker for always
         startWorker();
@@ -65,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
                     .build();
 
             PeriodicWorkRequest promptNotificationWork =
-                    new PeriodicWorkRequest.Builder(BackgroundWorker.class, 1, TimeUnit.HOURS)
+                    new PeriodicWorkRequest.Builder(BackgroundWorker.class, 15, TimeUnit.MINUTES)
                             .setConstraints(constraints)
                             .addTag(Constants.background_WorkerTag)
                             .build();

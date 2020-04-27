@@ -1,7 +1,5 @@
 package com.example.covid_19alertapp.activities;
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -24,26 +22,6 @@ public class UserInfoFormActivity extends AppCompatActivity {
         workAddress = findViewById(R.id.workAdress);
         homeAddress = findViewById(R.id.homeAddress);
         save_profile = findViewById(R.id.SaveProfButton);
-
-        final Drawable checkedIcon = getApplicationContext().getResources().getDrawable(R.drawable.ic_check_black_24dp);
-        homeAddress.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                //onSuccess
-                homeAddress.setCompoundDrawables(null,null,checkedIcon,null);
-            }
-        });
-
-        workAddress.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                //onSuccess
-                workAddress.setCompoundDrawables(null,null,checkedIcon,null);
-
-            }
-        });
 
 
         save_profile.setOnClickListener(new View.OnClickListener() {

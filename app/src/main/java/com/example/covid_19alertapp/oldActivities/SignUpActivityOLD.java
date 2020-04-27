@@ -1,4 +1,4 @@
-package com.example.covid_19alertapp.activities;
+package com.example.covid_19alertapp.oldActivities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.covid_19alertapp.R;
+import com.example.covid_19alertapp.activities.MainActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
@@ -29,7 +30,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.concurrent.TimeUnit;
 
 public class SignUpActivityOLD extends AppCompatActivity {
-    FirebaseAuth auth;
+    public static FirebaseAuth auth;
     EditText phoneNoEdit, enteredCodeEdit,countrCode;
 
     String verification,enterededCodeString,uid;
@@ -40,7 +41,7 @@ public class SignUpActivityOLD extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_up);
+        setContentView(R.layout.activity_sign_up_old);
         phoneNoEdit =findViewById(R.id.mobileNo);
         enteredCodeEdit =findViewById(R.id.verificationCode);
         countrCode=findViewById(R.id.countr_code);
@@ -169,7 +170,7 @@ public class SignUpActivityOLD extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.child(uid).exists()){
 
-                    startActivity(new Intent(getApplicationContext(),MainActivity.class));
+                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
                 }
                 else {
 

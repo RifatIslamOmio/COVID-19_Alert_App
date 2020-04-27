@@ -16,4 +16,5 @@ public abstract class LogTags {
     public static String Address_TAG  = "address_tag";
     public static String Upload_TAG = "upload_tag";
 
+    public static String MatchFound_TAG = "match_found_tag";
 }

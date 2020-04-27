@@ -1,6 +1,7 @@
 package com.example.covid_19alertapp.services;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 
@@ -8,14 +9,85 @@ import androidx.annotation.NonNull;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
+import com.example.covid_19alertapp.activities.ShowMatchedLocationsActivity;
 import com.example.covid_19alertapp.activities.TrackerSettingsActivity;
 import com.example.covid_19alertapp.extras.Constants;
 import com.example.covid_19alertapp.extras.LogTags;
 import com.example.covid_19alertapp.extras.Notifications;
+import com.example.covid_19alertapp.roomdatabase.VisitedLocations;
+import com.example.covid_19alertapp.roomdatabase.VisitedLocationsDao;
+import com.example.covid_19alertapp.roomdatabase.VisitedLocationsDatabase;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseException;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.Calendar;
+import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
 
+/*
+
+    Performs background tasks:
+
+        (1) if location not allowed
+                notify and ask to allow,
+
+        (2) delete 7 days old locations in local database,
+
+        (3) query firebase with local data to find match and notify immediately if match found
+
+*/
+
 public class BackgroundWorker extends Worker {
+
+    // stop loop, Bangla niyome listener shorao
+    private boolean matchFound;
+
+    // firebase reference and listener
+    private DatabaseReference refToMatch;
+    private ValueEventListener findMatch = new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+            if(dataSnapshot.getValue()!=null){
+                // INFECTED LOCATION MATCH FOUND!
+
+                // remove turn location on prompt
+                Notifications.removeNotification(Constants.TrackingLocationNotification_ID, getApplicationContext());
+
+                //TODO: design notification tap intent Activity
+                Intent notificationIntent = new Intent(getApplicationContext(), ShowMatchedLocationsActivity.class);
+
+                // show notification
+                Notifications.showNotification(
+                        Constants.DangerNotification_ID,
+                        getApplicationContext(),
+                        notificationIntent,
+                        true
+                );
+
+                Log.d(LogTags.Worker_TAG, "onDataChange: match found. notified.");
+
+                // try to break loop
+                matchFound = false;
+
+                // remove listener after finding any match (will show all through another activity)
+                refToMatch.removeEventListener(findMatch);
+
+            }
+
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            Log.d(LogTags.Worker_TAG, "onCancelled: no internet? "+databaseError.getMessage());
+        }
+    };
 
     public BackgroundWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
@@ -33,21 +105,70 @@ public class BackgroundWorker extends Worker {
         if(!trackerState) {
             // tracker is off prompt notification
 
+            Intent notificationIntent = new Intent(getApplicationContext(), TrackerSettingsActivity.class);
+
             Notifications.createNotificationChannel(getApplicationContext());
             Notifications.showNotification(
                     Constants.PromptTrackerNotification_ID,
                     getApplicationContext(),
-                    TrackerSettingsActivity.class,
+                    notificationIntent,
                     true
             );
         }
 
 
-        //TODO: delete 7 days old locations from room db
+        //TODO:[CHECK] delete 7 days old locations from room db
+
+        // local db
+        VisitedLocationsDatabase roomDatabase = VisitedLocationsDatabase.getDatabase(getApplicationContext());
+        VisitedLocationsDao visitedLocationsDao = roomDatabase.visitedLocationsDao();
+
+        // delete seven days ago entries
+        visitedLocationsDao.deleteSevenDaysAgoVisitedLocations
+                ("%"+dateLastWeek()+"%");
 
 
-        //TODO: match room db locations with firebase locations
+        /// QUERY FIREBASE
 
+        // initialize as not found
+        matchFound = false;
+
+        // firebase configs
+        try{
+            // can do this only at first time invocation of 'FirebaseDatabase.getInstance()'
+            // lem -_-
+            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        }catch (DatabaseException e){
+            Log.d(LogTags.Worker_TAG, "doWork: firebase setPersistent issue. ki korbo ami ekhon?");
+        }
+
+        refToMatch = FirebaseDatabase.getInstance().getReference();
+
+        // fetch from local db and query firebase
+        List<VisitedLocations> localLocationsList = visitedLocationsDao.fetchAll();
+
+        Log.d(LogTags.Worker_TAG, "doWork: local db fethced");
+
+        for (VisitedLocations currentEntry: localLocationsList)
+        {
+
+            if(matchFound)
+                break;
+
+            // format = "latLon_dateTime"
+            String[] splitter = currentEntry.splitPrimaryKey();
+
+            // firebase query values
+            String key = currentEntry.getATencodedlatlon();
+            String dateTime = splitter[1];
+
+            Log.d(LogTags.Worker_TAG, "doWork: Query-> key = "+key+" dateTime = "+dateTime);
+
+            // query in firebase
+            refToMatch = FirebaseDatabase.getInstance().getReference().child("infectedLocations").child(key).child(dateTime);
+            refToMatch.addListenerForSingleValueEvent(findMatch);
+
+        }
 
 
         Log.d(LogTags.Worker_TAG, "doWork: worker WORKED!");
@@ -55,6 +176,60 @@ public class BackgroundWorker extends Worker {
         return Result.success();
     }
 
+
+    private String dateLastWeek(){
+
+        String date = "";
+
+        int currMonth = Calendar.getInstance().get(Calendar.MONTH)+1;
+        int currDate = Calendar.getInstance().get(Calendar.DATE);
+
+        int resDate = currDate - 7, resMonth = currMonth;
+
+        if(currDate<=0){
+
+            switch (currMonth){
+
+                case 1:
+
+                    resMonth = 12;
+                    resDate = 31+resDate;
+
+                    break;
+
+                case 3:
+                case 5:
+                case 7:
+                case 8:
+                case 10:
+                case 12:
+
+                    resDate = 31+resDate;
+                    resMonth = currMonth-1;
+
+                    break;
+
+                case 2:
+
+                    //TODO: add leap-year check
+                    resDate = 28+resDate;
+                    resMonth = currMonth-1;
+
+                    break;
+
+                default:
+                    resDate = 30+resDate;
+                    resMonth = currMonth-1;
+            }
+
+        }
+
+        date = resMonth+"-"+resDate;
+
+        Log.d(LogTags.Worker_TAG, "dateLastWeek: seven days ago = "+date);
+
+        return date;
+    }
 
 
     @Override

@@ -20,6 +20,9 @@ public interface VisitedLocationsDao {
     @Query("SELECT * FROM visitedlocations")
     List<VisitedLocations> fetchAll();
 
+    @Query("DELETE FROM visitedlocations WHERE conatainerDateTimeComposite LIKE :sqlFormatsevenDayAgoDate")
+    void deleteSevenDaysAgoVisitedLocations(String sqlFormatsevenDayAgoDate);
+
     @Delete
     void deleteLocation(VisitedLocations visitedLocations);
 
