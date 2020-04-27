@@ -27,7 +27,6 @@ import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
 
 import static com.example.covid_19alertapp.activities.SignUpActivity.verification;
-import static com.example.covid_19alertapp.activities.UserInfoFormActivity.userInfo;
 
 
 public class VerificationPageActivity extends AppCompatActivity {
