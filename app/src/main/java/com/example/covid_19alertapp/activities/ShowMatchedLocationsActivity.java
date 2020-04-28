@@ -3,6 +3,7 @@ package com.example.covid_19alertapp.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,6 +17,8 @@ import android.widget.Toast;
 import com.example.covid_19alertapp.R;
 import com.example.covid_19alertapp.extras.AddressReceiver;
 import com.example.covid_19alertapp.extras.Constants;
+import com.example.covid_19alertapp.extras.FetchAddress;
+import com.example.covid_19alertapp.extras.Internet;
 import com.example.covid_19alertapp.extras.LogTags;
 import com.example.covid_19alertapp.extras.Notifications;
 import com.example.covid_19alertapp.models.MatchedLocation;
@@ -49,10 +52,10 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
 
     // retrieve and upload progress level
     private double currProgress = 0;
-    private int dataCount=0,dataSize;
+    private int dataSize;
 
     // Address Fetch
-    AddressReceiver addressReceiver = new AddressReceiver(new Handler(), this, this);
+    AddressReceiver addressReceiver = new AddressReceiver(new Handler(), this);
 
     // UI stuff
     ProgressBar progressBar;
@@ -91,6 +94,11 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
 
     private void findMatchedLocations() {
 
+        matchedLocationPosition = 0;
+        retryButton.setEnabled(false);
+
+        matchedLocations.clear();
+
         roomDatabase.databaseWriteExecutor.execute(new Runnable() {
             @Override
             public void run() {
@@ -98,11 +106,29 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
                 // fetch from local db and query firebase
                 retrievedDatas = visitedLocationsDao.fetchAll();
 
-                // retrieval from localDB done (50%)
-                currProgress = 50;
+                // retrieval from localDB done (30%)
+                currProgress = 30;
                 progressBar.setProgress((int) currProgress);
 
                 dataSize = retrievedDatas.size();
+
+                if(dataSize==0){
+                    // local database empty
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+
+                           progressBarText.setText(getText(R.string.local_db_empty_text));
+                           progressBar.setVisibility(View.GONE);
+
+                        }
+                    });
+
+                    return;
+
+                }
+
 
                 for (VisitedLocations currentEntry: retrievedDatas)
                 {
@@ -113,12 +139,27 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
                     final String key = currentEntry.getATencodedlatlon();
                     final String dateTime = splitter[1];
 
+                    Log.d(LogTags.MatchFound_TAG, "run: query key = "+key +" date time = "+dateTime);
+
+                    if(!Internet.isInternetAvailable(getApplicationContext())){
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                internetDisconnceted();
+                                retryButton.setEnabled(true);
+                            }
+                        });
+
+                        return;
+                    }
+
                     // query in firebase
                     firebaseReference = FirebaseDatabase.getInstance().getReference().child("infectedLocations").child(key).child(dateTime);
                     firebaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            if(dataSnapshot.exists()){
+                            if(dataSnapshot.getValue()!=null){
                                 // INFECTED LOCATION MATCH FOUND!
 
                                 // TODO: add to list/recycler view
@@ -131,14 +172,13 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
 
                                 // start address fetch service
                                 addressReceiver.startAddressFetchService(
+                                        ShowMatchedLocationsActivity.this,
                                         matchedLocation.getLatitude(),
                                         matchedLocation.getLongitude(),
                                         matchedLocationPosition
                                 );
 
                                 matchedLocationPosition++;
-
-                                Log.d(LogTags.MatchFound_TAG, "onDataChange: matched data = "+ matchedLocation.toString());
 
                             }
 
@@ -147,43 +187,46 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                            //TODO: add a refresh button, in case internet connection goes off midway
+                            // internet connection lost
 
-                            Toast.makeText(getApplicationContext()
-                                    , getApplicationContext().getString(R.string.no_internet_toast),
-                                    Toast.LENGTH_SHORT
-                            ).show();
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    internetDisconnceted();
+                                    retryButton.setEnabled(true);
+                                }
+                            });
 
                         }
                     });
 
 
-                    // keep track of upload progress (50%-100%)
-                    currProgress += (double) 50/dataSize;
+                    // keep track of upload progress (30%-60%)
+                    currProgress += (double) 30/dataSize;
                     if(currProgress<=100)
                         progressBar.setProgress((int) currProgress);
 
-                    dataCount++;
-                    if(dataCount==dataSize){
-                        // remove progressbar
-
-
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-
-                                retryButton.setEnabled(true);
-                                progressBarText.setText(getText(R.string.finished_progressbar_text));
-                                progressBar.setVisibility(View.GONE);
-
-                            }
-                        });
+                    // let the value listener and address fetch service catch up
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        Log.d(LogTags.MatchFound_TAG, "run: thread not tired");
                     }
 
                 }
 
             }
         });
+
+    }
+
+    private void internetDisconnceted() {
+
+        progressBar.setVisibility(View.GONE);
+        progressBarText.setText(getText(R.string.internet_disconnected_text));
+
+        Toast.makeText(this, getText(R.string.no_internet_toast), Toast.LENGTH_LONG)
+                .show();
 
     }
 
@@ -196,6 +239,7 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
 
     }
 
+    private int updateCount = 0;
     @Override
     public void updateAddress(String address, int listPosition) {
 
@@ -204,7 +248,28 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
          */
 
         matchedLocations.get(listPosition).setAddress(address);
+        Log.d(LogTags.MatchFound_TAG, "updateAddress: address = "+matchedLocations.get(listPosition).toString());
 
+        // keep track of upload progress (60%-100%)
+        currProgress += (double) 40/matchedLocations.size();
+        if(currProgress<=100)
+            progressBar.setProgress((int) currProgress);
+
+        updateCount++;
+        if(updateCount>=matchedLocations.size()){
+
+            updateCount = 0;
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    retryButton.setEnabled(true);
+                    progressBarText.setText(getText(R.string.finished_progressbar_text));
+                    progressBar.setVisibility(View.GONE);
+                }
+            });
+
+        }
 
     }
 }

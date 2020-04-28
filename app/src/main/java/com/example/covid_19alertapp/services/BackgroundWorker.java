@@ -61,7 +61,7 @@ public class BackgroundWorker extends Worker {
                 Notifications.removeNotification(Constants.PromptTrackerNotification_ID, getApplicationContext());
 
                 // open ShowMatchedLocationsActivity on notification tap
-                Intent notificationIntent = new Intent(getApplicationContext(), MainActivity.class);
+                Intent notificationIntent = new Intent(getApplicationContext(), ShowMatchedLocationsActivity.class);
 
                 // show notification
                 Notifications.showNotification(

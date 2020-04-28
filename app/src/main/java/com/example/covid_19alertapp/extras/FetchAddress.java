@@ -44,7 +44,7 @@ public class FetchAddress extends IntentService {
         decode the address
          */
 
-        Log.d(LogTags.Address_TAG, "onHandleIntent: inside FetchAIS class");
+        Log.d(LogTags.Address_TAG, "onHandleIntent: inside FetchAddress class");
 
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
 
@@ -113,8 +113,19 @@ public class FetchAddress extends IntentService {
                 addressFragments.add(address.getAddressLine(i));
             }
 
+            // fix too long addresses
+
+            String senAddress = "";
+            if(addressFragments.size()>=5)
+                senAddress = addressFragments.get(addressFragments.size()-3)+", "
+                        +addressFragments.get(addressFragments.size()-1)+", "
+                        +addressFragments.get(addressFragments.size()-1);
+
+            else
+                senAddress = TextUtils.join(", ", addressFragments);
+
             deliverResultToReceiver(GEO_SUCCESS,
-                    TextUtils.join(", ", addressFragments),
+                    senAddress,
                     listPosition);
         }
 

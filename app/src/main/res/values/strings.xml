@@ -70,4 +70,9 @@
     <string name="dob_hint">Date of birth</string>
     <string name="save_button_text">Save</string>
 
+    <string name="local_db_empty_text">Sorry, the App does not have any of your recent locations recorded.
+        Try enabling location tracking in <b>Settings</b></string>
+    <string name="internet_disconnected_text">Internet got disconnected. Connect and try again please.</string>
+    <string name="title_activity_location_show_maps">Map</string>
+
 </resources>

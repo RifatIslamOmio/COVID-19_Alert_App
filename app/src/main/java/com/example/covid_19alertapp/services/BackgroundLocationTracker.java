@@ -17,7 +17,7 @@ import com.example.covid_19alertapp.extras.Notifications;
 
 public class BackgroundLocationTracker extends Service {
 /*
-service to track location on bacckground
+service to track location on background
  */
     @Nullable
     @Override

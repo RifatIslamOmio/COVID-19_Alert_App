@@ -8,9 +8,10 @@ import android.os.Handler;
 import android.os.ResultReceiver;
 import android.util.Log;
 
+import com.example.covid_19alertapp.activities.ShowMatchedLocationsActivity;
+
 public class AddressReceiver extends ResultReceiver {
 
-    private Activity activity;
 
     // for interface
     private AddressView view;
@@ -21,10 +22,9 @@ public class AddressReceiver extends ResultReceiver {
     private static final String GEO_RECEIVER = "geo_receiver";
     private static final String LIST_POSITION = "position@list";
 
-    public AddressReceiver(Handler handler, Activity activity, AddressView view) {
+    public AddressReceiver(Handler handler, AddressView view) {
 
         super(handler);
-        this.activity = activity;
         this.view = view;
     }
 
@@ -44,20 +44,18 @@ public class AddressReceiver extends ResultReceiver {
 
         Log.d(LogTags.Address_TAG,"onReceiveResult: address received = "+addressOutput);
 
-        // do something with the 'addressOutput'
-
         view.updateAddress(addressOutput, listPosition);
 
 
     }
 
-    public void startAddressFetchService(double latitude, double longitude, int listPosition){
+    public void startAddressFetchService(Activity activity, double latitude, double longitude, int listPosition){
 
-        Location location = null;
+        Location location = new Location("dummy-provider");
         location.setLatitude(latitude);
         location.setLongitude(longitude);
 
-        Intent intent = new Intent(activity, FetchAddress.class);
+        Intent intent = new Intent(activity.getApplicationContext(), FetchAddress.class);
         intent.putExtra(GEO_LOCATION, location);
         intent.putExtra(GEO_RECEIVER, this);
         intent.putExtra(LIST_POSITION, listPosition);

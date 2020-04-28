@@ -1,5 +1,9 @@
 package com.example.covid_19alertapp.models;
 
+import android.util.Log;
+
+import com.example.covid_19alertapp.extras.LogTags;
+
 public class MatchedLocation {
 
     private double latitude, longitude;
@@ -22,16 +26,16 @@ public class MatchedLocation {
         latLon = latLon.replace('@', '.');
         String[] splitLatitude = latLon.split(",");
 
-        this.latitude = Double.valueOf(splitLatitude[0]);
-        this.longitude = Double.valueOf(splitLatitude[1]);
+        this.latitude = ( Double.valueOf(splitLatitude[0])+Double.valueOf(splitLatitude[2]) )/ 2.000000d;
+        this.longitude = ( Double.valueOf(splitLatitude[1])+ Double.valueOf(splitLatitude[3]) )/ 2.000000d;
 
         // get meaningfulDateTime
         String[] splitDateTime = dateTime.split("-");
         // Month date, time
         this.meaningfulDateTime = month(
-                Integer.getInteger(splitDateTime[0]))
+                Integer.parseInt(splitDateTime[0]))
                 + " "+splitDateTime[1]
-                +", "+time(Integer.getInteger(splitDateTime[2])
+                +", "+time(Integer.parseInt(splitDateTime[2])
         );
 
         this.count = count;
@@ -81,12 +85,12 @@ public class MatchedLocation {
     private String time(int time) {
 
         if(time==0)
-            return "12 AM";
+            return "12AM";
 
         if(time<12)
-            return time+" AM";
+            return time+"AM";
         else
-            return (time-12)+" PM";
+            return (time-12)+"PM";
 
     }
 
@@ -123,5 +127,16 @@ public class MatchedLocation {
                 return "Unknown month";
         }
 
+    }
+
+    @Override
+    public String toString() {
+        return "MatchedLocation{" +
+                "latitude=" + latitude +
+                ", longitude=" + longitude +
+                ", address='" + address + '\'' +
+                ", meaningfulDateTime='" + meaningfulDateTime + '\'' +
+                ", count=" + count +
+                '}';
     }
 }
