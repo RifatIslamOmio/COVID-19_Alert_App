@@ -39,6 +39,7 @@ public class UserInfoFormActivity extends AppCompatActivity {
     String path="UserInfo";
 
     public static SharedPreferences userInfo;
+    private String homeLatLng = "", workLatLng = "";
 
     // address picker keys
     private static final int HOME_ADDRESS_PICKER = 829;
@@ -86,32 +87,32 @@ public class UserInfoFormActivity extends AppCompatActivity {
         save_profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(homeAddress.getText().toString().equals("Tap to pick home address") || RequiredEditText(userName) || RequiredEditText(dobText))
+                if(homeLatLng.equals("") || RequiredEditText(userName) || RequiredEditText(dobText))
                 {
-                    homeAddress.setError("Required");
+                    if(homeLatLng.equals(""))
+                        homeAddress.setError("Required");
+
                     return;
                 }
 
-                final String name,home,workPlace,day,month,year,dateOfBirth,contactNumber;
+                final String name,day,month,year,dateOfBirth,contactNumber;
                 name=userName.getText().toString();
-                home=homeAddress.getText().toString();
-                workPlace=workAddress.getText().toString();
                 dateOfBirth=dobText.getText().toString();
 
 
-                if(TextUtils.isEmpty(workPlace)){
-                    userInfoData=new UserInfoData(name,dateOfBirth,home,PHONE_NUMBER);
+                if(workLatLng.equals("")){
+                    userInfoData=new UserInfoData(name,dateOfBirth,homeLatLng,PHONE_NUMBER);
 
                 }
                 else {
-                    userInfoData = new UserInfoData(name, dateOfBirth, workPlace, home, PHONE_NUMBER);
-                    userInfo.edit().putString(Constants.user_work_address_preference,workPlace).apply();
+                    userInfoData = new UserInfoData(name, dateOfBirth, workLatLng, homeLatLng, PHONE_NUMBER);
+                    userInfo.edit().putString(Constants.user_work_address_preference,workLatLng).apply();
                 }
                 //applying values to the info names Shared Preference
 
                 userInfo.edit().putString(Constants.username_preference,name).apply();
                 userInfo.edit().putString(Constants.user_dob_preference,dateOfBirth).apply();
-                userInfo.edit().putString(Constants.user_home_address_preference,home).apply();
+                userInfo.edit().putString(Constants.user_home_address_preference,homeLatLng).apply();
                 userInfo.edit().putString(Constants.uid_preference,uid).apply();
                 userInfo.edit().putString(Constants.user_phone_no_preference,PHONE_NUMBER).apply();
                 userInfo.edit().putBoolean(Constants.user_exists_preference,true).apply();
@@ -154,9 +155,10 @@ public class UserInfoFormActivity extends AppCompatActivity {
             case (HOME_ADDRESS_PICKER):
                 if(resultCode == RESULT_OK){
 
-                    // home address
-                    String latLon = data.getStringExtra("latitude-longitude");
-                    Log.d(LogTags.Map_TAG, "onActivityResult: home address fetched = "+latLon);
+                    // set the home LatLng
+                    homeLatLng = data.getStringExtra("latitude-longitude");
+                    Log.d(LogTags.Map_TAG, "onActivityResult: home address fetched = "+homeLatLng);
+
 
                     //onSuccess
                     homeAddress.setText(getText(R.string.address_picked_text));
@@ -169,9 +171,9 @@ public class UserInfoFormActivity extends AppCompatActivity {
             case (WORK_ADDRESS_PICKER):
                 if(resultCode == RESULT_OK){
 
-                    //work address
-                    String latLon = data.getStringExtra("latitude-longitude");
-                    Log.d(LogTags.Map_TAG, "onActivityResult: work address fetched = "+latLon);
+                    // set the work address
+                    workLatLng = data.getStringExtra("latitude-longitude");
+                    Log.d(LogTags.Map_TAG, "onActivityResult: work address fetched = "+workLatLng);
 
                     //onSuccess
                     workAddress.setCompoundDrawables(null,null,checkedIcon,null);

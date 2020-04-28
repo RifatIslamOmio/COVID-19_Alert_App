@@ -226,7 +226,7 @@ public class AddressPickerMapsActivity extends FragmentActivity implements
         // send data to parent activity
         Intent resultIntent = new Intent();
         resultIntent.putExtra("latitude-longitude",
-                pickedLocation.getLatitude()+", "+pickedLocation.getLongitude());
+                pickedLocation.getLatitude()+","+pickedLocation.getLongitude());
         setResult(RESULT_OK, resultIntent);
         finish();
 

@@ -1,9 +1,5 @@
 package com.example.covid_19alertapp.models;
 
-import android.util.Log;
-
-import com.example.covid_19alertapp.extras.LogTags;
-
 public class MatchedLocation {
 
     private double latitude, longitude;

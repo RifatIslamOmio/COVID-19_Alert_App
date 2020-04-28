@@ -80,7 +80,7 @@ public abstract class LocalDBContainer {
     }
 
 
-    private static void calculateContainer(Double lat, Double lon, String country)
+    public static List<String> calculateContainer(Double lat, Double lon, String country)
     {
         Double latDevider=0.000000d, lonDevider=0.000000d, latX, lony;
 
@@ -146,6 +146,8 @@ public abstract class LocalDBContainer {
         }
 
         Log.d(LogTags.LocalDBContainer_TAG, "calculateContainer: diagonalPoints size = "+diagonalRangePoint.size());
+
+        return diagonalRangePoint;
 
     }
 }

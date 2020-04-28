@@ -290,6 +290,9 @@ implement verification by medical report photo here
 
                         Log.d(LogTags.Upload_TAG, "onClick: uploading starts");
 
+                        // upload home container
+                        //uploadHome()
+
                         // start uploading process
                         uploadButton.setEnabled(false);
                         retrieveUploadDelete();

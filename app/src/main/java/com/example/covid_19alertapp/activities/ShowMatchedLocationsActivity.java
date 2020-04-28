@@ -49,7 +49,6 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
 
     // retrieved data from local db
     private List<VisitedLocations> retrievedDatas = new ArrayList<>();
-
     private int dataSize;
 
     // Address Fetch
@@ -68,8 +67,6 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
         setUI();
 
         Notifications.removeNotification(Constants.DangerNotification_ID, this);
-
-        // TODO:[Check] fetch locations and match
 
         // set local db configs
         roomDatabase = VisitedLocationsDatabase.getDatabase(getApplicationContext());
