@@ -40,8 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         //initializing the info named shared preference
-        userInfo = getSharedPreferences("info",MODE_PRIVATE);
-
+        userInfo = getSharedPreferences(Constants.USER_INFO_SHARED_PREFERENCES,MODE_PRIVATE);
 
         // start background worker for always
         startWorker();
@@ -61,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
                     .build();
 
             PeriodicWorkRequest promptNotificationWork =
-                    new PeriodicWorkRequest.Builder(BackgroundWorker.class, 15, TimeUnit.MINUTES)
+                    new PeriodicWorkRequest.Builder(BackgroundWorker.class, 1, TimeUnit.HOURS)
                             .setConstraints(constraints)
                             .addTag(Constants.background_WorkerTag)
                             .build();
@@ -109,12 +108,6 @@ public class MainActivity extends AppCompatActivity {
     public void uploadClick(View view) {
         Intent intent = new Intent(this, UploadLocationsActivity.class);
         startActivity(intent);
-    }
-
-    public void testUIClick(View view) {
-
-        startActivity(new Intent(getApplicationContext(), SignUpActivity.class));
-
     }
 
     public void removethisOnClick(View view) {

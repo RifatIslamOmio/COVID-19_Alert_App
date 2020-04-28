@@ -86,12 +86,12 @@ public class UserInfoFormActivity extends AppCompatActivity {
         save_profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(homeAddress.getText().toString().equals("Tap to pick home address"))
+                if(homeAddress.getText().toString().equals("Tap to pick home address") || RequiredEditText(userName) || RequiredEditText(dobText))
                 {
                     homeAddress.setError("Required");
+                    return;
                 }
-                RequiredEditText(userName);
-                RequiredEditText(dobText);
+
                 final String name,home,workPlace,day,month,year,dateOfBirth,contactNumber;
                 name=userName.getText().toString();
                 home=homeAddress.getText().toString();
@@ -190,10 +190,10 @@ public class UserInfoFormActivity extends AppCompatActivity {
         if(e.getText().toString().length()==0)
         {
             e.setError("Required");
-            return false;
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     public void hideSoftInput() {

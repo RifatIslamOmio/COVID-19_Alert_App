@@ -58,5 +58,8 @@ dependencies {
     // Test helpers
     testImplementation "androidx.room:room-testing:$room_version"
 
+    // places api
+    implementation 'com.google.android.libraries.places:places:2.2.0'
+
 
 }

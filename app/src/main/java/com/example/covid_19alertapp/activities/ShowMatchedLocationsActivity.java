@@ -50,8 +50,6 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
     // retrieved data from local db
     private List<VisitedLocations> retrievedDatas = new ArrayList<>();
 
-    // retrieve and upload progress level
-    private double currProgress = 0;
     private int dataSize;
 
     // Address Fetch
@@ -87,7 +85,7 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
     private void setUI() {
 
         progressBar = findViewById(R.id.progressBar);
-        progressBarText = findViewById(R.id.progressBar_text);
+        progressBarText = findViewById(R.id.progressText);
         retryButton = findViewById(R.id.retry_btn);
 
     }
@@ -96,6 +94,7 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
 
         matchedLocationPosition = 0;
         retryButton.setEnabled(false);
+        retryButton.setVisibility(View.GONE);
 
         matchedLocations.clear();
 
@@ -106,9 +105,6 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
                 // fetch from local db and query firebase
                 retrievedDatas = visitedLocationsDao.fetchAll();
 
-                // retrieval from localDB done (30%)
-                currProgress = 30;
-                progressBar.setProgress((int) currProgress);
 
                 dataSize = retrievedDatas.size();
 
@@ -119,8 +115,7 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
                         @Override
                         public void run() {
 
-                           progressBarText.setText(getText(R.string.local_db_empty_text));
-                           progressBar.setVisibility(View.GONE);
+                           localDbEmptyUI();
 
                         }
                     });
@@ -146,7 +141,7 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                internetDisconnceted();
+                                internetDisconncetedUI();
                                 retryButton.setEnabled(true);
                             }
                         });
@@ -192,26 +187,25 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    internetDisconnceted();
-                                    retryButton.setEnabled(true);
+                                    internetDisconncetedUI();
                                 }
                             });
 
                         }
                     });
 
+                }
 
-                    // keep track of upload progress (30%-60%)
-                    currProgress += (double) 30/dataSize;
-                    if(currProgress<=100)
-                        progressBar.setProgress((int) currProgress);
+                // let the value listener and address fetch service catch up
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    Log.d(LogTags.MatchFound_TAG, "run: thread not tired");
+                }
 
-                    // let the value listener and address fetch service catch up
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        Log.d(LogTags.MatchFound_TAG, "run: thread not tired");
-                    }
+                if(matchedLocations.isEmpty()){
+
+                    noMatchFoundUI();
 
                 }
 
@@ -220,20 +214,54 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
 
     }
 
-    private void internetDisconnceted() {
+    private void internetDisconncetedUI() {
 
-        progressBar.setVisibility(View.GONE);
+        progressBar.setVisibility(View.INVISIBLE);
         progressBarText.setText(getText(R.string.internet_disconnected_text));
+
+        retryButton.setEnabled(true);
+        retryButton.setVisibility(View.VISIBLE);
 
         Toast.makeText(this, getText(R.string.no_internet_toast), Toast.LENGTH_LONG)
                 .show();
 
     }
 
+    private void dataFetchFinishedUI(){
+
+        retryButton.setEnabled(false);
+        progressBarText.setVisibility(View.GONE);
+        progressBar.setVisibility(View.GONE);
+        retryButton.setVisibility(View.GONE);
+
+        Toast.makeText(this, getText(R.string.finished_progressbar_text), Toast.LENGTH_LONG)
+                .show();
+
+    }
+
+    private void noMatchFoundUI(){
+
+        progressBar.setVisibility(View.INVISIBLE);
+        retryButton.setVisibility(View.GONE);
+        retryButton.setEnabled(false);
+        progressBarText.setVisibility(View.VISIBLE);
+        progressBarText.setText(getText(R.string.no_match_found_text));
+    }
+
+    private void localDbEmptyUI(){
+
+        progressBar.setVisibility(View.INVISIBLE);
+        retryButton.setVisibility(View.GONE);
+        retryButton.setEnabled(false);
+        progressBarText.setVisibility(View.VISIBLE);
+        progressBarText.setText(getText(R.string.local_db_empty_text));
+
+    }
+
     public void retryClicked(View view) {
 
-        progressBar.setProgress(0);
         progressBar.setVisibility(View.VISIBLE);
+        progressBarText.setVisibility(View.VISIBLE);
         progressBarText.setText(getText(R.string.loading_progressbar_text));
         findMatchedLocations();
 
@@ -250,24 +278,14 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
         matchedLocations.get(listPosition).setAddress(address);
         Log.d(LogTags.MatchFound_TAG, "updateAddress: address = "+matchedLocations.get(listPosition).toString());
 
-        // keep track of upload progress (60%-100%)
-        currProgress += (double) 40/matchedLocations.size();
-        if(currProgress<=100)
-            progressBar.setProgress((int) currProgress);
 
         updateCount++;
         if(updateCount>=matchedLocations.size()){
 
             updateCount = 0;
 
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    retryButton.setEnabled(true);
-                    progressBarText.setText(getText(R.string.finished_progressbar_text));
-                    progressBar.setVisibility(View.GONE);
-                }
-            });
+            dataFetchFinishedUI();
+
 
         }
 
