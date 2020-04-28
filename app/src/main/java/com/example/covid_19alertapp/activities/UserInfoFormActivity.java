@@ -2,6 +2,7 @@ package com.example.covid_19alertapp.activities;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
@@ -9,8 +10,10 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.example.covid_19alertapp.R;
 import com.example.covid_19alertapp.dataStorage.UserInfoData;
@@ -25,7 +28,8 @@ import static com.example.covid_19alertapp.activities.SignUpActivity.PHONE_NUMBE
 public class UserInfoFormActivity extends AppCompatActivity {
 
 
-    EditText dobText,userName,workAddress,homeAddress;
+    EditText dobText,userName;
+    TextView workAddress,homeAddress;
     Button save_profile;
     UserInfoData userInfoData;
 
@@ -72,6 +76,7 @@ public class UserInfoFormActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 // work address click
+
                 Intent workIntent = new Intent(UserInfoFormActivity.this, AddressPickerMapsActivity.class);
                 startActivityForResult(workIntent, WORK_ADDRESS_PICKER);
 
@@ -81,8 +86,11 @@ public class UserInfoFormActivity extends AppCompatActivity {
         save_profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(homeAddress.getText().toString().equals("Tap to pick home address"))
+                {
+                    homeAddress.setError("Required");
+                }
                 RequiredEditText(userName);
-                RequiredEditText(homeAddress);
                 RequiredEditText(dobText);
                 final String name,home,workPlace,day,month,year,dateOfBirth,contactNumber;
                 name=userName.getText().toString();
@@ -186,6 +194,14 @@ public class UserInfoFormActivity extends AppCompatActivity {
         }
 
         return true;
+    }
+
+    public void hideSoftInput() {
+        View view1 = this.getCurrentFocus();
+        if(view1!= null){
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view1.getWindowToken(), 0);
+        }
     }
 
 
