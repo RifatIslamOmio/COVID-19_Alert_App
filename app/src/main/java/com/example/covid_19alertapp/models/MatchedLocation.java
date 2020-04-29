@@ -13,6 +13,14 @@ public class MatchedLocation {
          */
     }
 
+    public MatchedLocation(double latitude, double longitude, String address, long count) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.address = address;
+        this.meaningfulDateTime = "n/a";
+        this.count = count;
+    }
+
     public MatchedLocation(String latLon, String dateTime, long count) {
         /*
         parameters according to firebase formatted data

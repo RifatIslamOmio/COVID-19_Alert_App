@@ -12,9 +12,11 @@ import androidx.work.WorkerParameters;
 import com.example.covid_19alertapp.activities.MainActivity;
 import com.example.covid_19alertapp.activities.ShowMatchedLocationsActivity;
 import com.example.covid_19alertapp.activities.TrackerSettingsActivity;
+import com.example.covid_19alertapp.activities.UserInfoFormActivity;
 import com.example.covid_19alertapp.extras.Constants;
 import com.example.covid_19alertapp.extras.LogTags;
 import com.example.covid_19alertapp.extras.Notifications;
+import com.example.covid_19alertapp.roomdatabase.LocalDBContainer;
 import com.example.covid_19alertapp.roomdatabase.VisitedLocations;
 import com.example.covid_19alertapp.roomdatabase.VisitedLocationsDao;
 import com.example.covid_19alertapp.roomdatabase.VisitedLocationsDatabase;
@@ -25,6 +27,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -49,7 +52,7 @@ public class BackgroundWorker extends Worker {
     private boolean matchFound;
 
     // firebase reference and listener
-    private DatabaseReference refToMatch;
+    private DatabaseReference refToMatch, refToMatchHome;
     private ValueEventListener findMatch = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -118,6 +121,9 @@ public class BackgroundWorker extends Worker {
         }
 
 
+        // query home
+        queryHomeLocation();
+
         //TODO:[CHECK] delete 7 days old locations from room db
 
         // local db
@@ -181,6 +187,44 @@ public class BackgroundWorker extends Worker {
         Log.d(LogTags.Worker_TAG, "doWork: worker WORKED!");
 
         return Result.success();
+    }
+
+    private void queryHomeLocation() {
+
+        // firebase configs
+        try{
+            // can do this only at first time invocation of 'FirebaseDatabase.getInstance()'
+            // lem -_-
+            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        }catch (DatabaseException e){
+            Log.d(LogTags.Worker_TAG, "doWork: firebase setPersistent issue. ki korbo ami ekhon?");
+        }
+
+        UserInfoFormActivity.userInfo = getApplicationContext().getSharedPreferences(Constants.USER_INFO_SHARED_PREFERENCES,MODE_PRIVATE);
+
+        List<String> queryKeys;
+        String homeLatLng = UserInfoFormActivity.userInfo.getString(Constants.user_home_address_preference, "");
+        if(homeLatLng == ""){
+            Log.d(LogTags.Worker_TAG, "queryHomeAddress: why the hell is home null");
+            return;
+        }
+
+        String[] latLng = homeLatLng.split(",");
+
+        queryKeys = LocalDBContainer.calculateContainer(Double.parseDouble(latLng[0]), Double.parseDouble(latLng[1]), "Bangladesh");
+
+        for (String query: queryKeys) {
+
+            if(matchFound)
+                break;
+
+            // need '@' instead of '.'
+            query = query.replaceAll("\\.","@");
+
+            refToMatchHome = FirebaseDatabase.getInstance().getReference().child("infectedHomes").child(query);
+            refToMatchHome.addListenerForSingleValueEvent(findMatch);
+
+        }
     }
 
 
