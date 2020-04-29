@@ -123,4 +123,9 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
 
     }
+
+    public void startNewsFeed(View view)
+    {
+        startActivity(new Intent(getApplicationContext(),NewsFeedActivity.class));
+    }
 }

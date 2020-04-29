@@ -73,6 +73,7 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onVerificationFailed(@NonNull FirebaseException e) {
 
+
                 Toast.makeText(getApplicationContext(),"Check Your Internet Connection",Toast.LENGTH_SHORT).show();
 
             }
@@ -156,13 +157,11 @@ public class SignUpActivity extends AppCompatActivity {
                 {
                     PHONE_NUMBER = phoneNumber.getText().toString();
                     PHONE_NUMBER=PHONE_NUMBER.replaceAll("\\s+","");
+                    
 
                     System.out.println(PHONE_NUMBER);
                     sendSms(PHONE_NUMBER);
-                    //startActivity(new Intent(getApplicationContext(), VerificationPageActivity.class));
-                    //finish();
 
-                    //Write OTP Request Function
                 }
                 else
                 {
@@ -249,4 +248,6 @@ public class SignUpActivity extends AppCompatActivity {
         }
 
     }
+
+
 }
