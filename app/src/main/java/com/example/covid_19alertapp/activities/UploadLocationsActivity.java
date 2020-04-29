@@ -16,8 +16,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.covid_19alertapp.R;
+import com.example.covid_19alertapp.extras.Constants;
 import com.example.covid_19alertapp.extras.LogTags;
 import com.example.covid_19alertapp.models.InfectedLocations;
+import com.example.covid_19alertapp.roomdatabase.LocalDBContainer;
 import com.example.covid_19alertapp.roomdatabase.VisitedLocations;
 import com.example.covid_19alertapp.roomdatabase.VisitedLocationsDao;
 import com.example.covid_19alertapp.roomdatabase.VisitedLocationsDatabase;
@@ -88,8 +90,7 @@ implement verification by medical report photo here
                                 firbaseReference.child("infectedLocations").child(infectedLocations.getKey()).child(infectedLocations.getDateTime())
                                         .setValue(infectedLocations);
 
-                                Log.d(LogTags.Upload_TAG, "onDataChange: no data exists. " +
-                                        "new data inserted to firebase.");
+                                Log.d(LogTags.Upload_TAG, "onDataChange: no data exists. new data inserted to firebase.");
                             }
 
                         }
@@ -209,15 +210,22 @@ implement verification by medical report photo here
                 dataSize = retrievedDatas.size();
 
 
-                if(dataSize==0)
+                if(dataSize==0) {
                     // notify on UI thread no data found locally
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(UploadLocationsActivity.this, "No locations recorded", Toast.LENGTH_LONG)
+                            Toast.makeText(UploadLocationsActivity.this, "No locations recorded, only home address uploaded", Toast.LENGTH_LONG)
                                     .show();
+                            uploadProgressText.setVisibility(View.GONE);
+                            uploadProgressBar.setVisibility(View.GONE);
                         }
                     });
+
+                    uploading = false;
+
+                    return;
+                }
 
 
                 for(VisitedLocations roomEntry: retrievedDatas){
@@ -271,6 +279,63 @@ implement verification by medical report photo here
 
     }
 
+    private void uploadHomeLocation(){
+
+        UserInfoFormActivity.userInfo = getApplicationContext().getSharedPreferences(Constants.USER_INFO_SHARED_PREFERENCES,MODE_PRIVATE);
+
+        List<String> entries;
+        String homeLatLng = UserInfoFormActivity.userInfo.getString(Constants.user_home_address_preference, "");
+        if(homeLatLng.equals("")){
+            Log.d(LogTags.Upload_TAG, "uploadHomeLocation: why the hell is home null");
+            return;
+        }
+
+        String[] latLng = homeLatLng.split(",");
+
+        entries = LocalDBContainer.calculateContainer(Double.parseDouble(latLng[0]), Double.parseDouble(latLng[1]), "Bangladesh");
+
+        for (String entry: entries) {
+
+            // need '@' instead of '.'
+            entry = entry.replaceAll("\\.","@");
+
+            final String finalEntry = entry;
+            firbaseReference.child("infectedHomes").child(finalEntry).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                    if(dataSnapshot.getValue()!= null){
+                        // entry already exists
+                        // update count
+
+                        long count = (long) dataSnapshot.getValue();
+                        Log.d(LogTags.Upload_TAG, "onDataChange: home location data already exists. count = "+count);
+
+                        count++;
+
+                        firbaseReference.child("infectedHomes").child(finalEntry).setValue(count);
+                        Log.d(LogTags.Upload_TAG, "onDataChange: home location count updated = "+count);
+                    }
+                    else{
+                        // no such entry exists
+
+                        firbaseReference.child("infectedHomes").child(finalEntry).setValue(1);
+
+                        Log.d(LogTags.Upload_TAG, "onDataChange: no home location data exists. new data inserted to firebase.");
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+        }
+
+    }
+
     public void uploadClicked(View view) {
         /*
         upload button click
@@ -289,6 +354,9 @@ implement verification by medical report photo here
                         dialog.dismiss();
 
                         Log.d(LogTags.Upload_TAG, "onClick: uploading starts");
+
+                        // upload home location
+                        uploadHomeLocation();
 
                         // start uploading process
                         uploadButton.setEnabled(false);

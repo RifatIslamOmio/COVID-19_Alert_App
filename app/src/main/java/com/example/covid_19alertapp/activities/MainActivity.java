@@ -23,9 +23,9 @@ import com.example.covid_19alertapp.extras.LogTags;
 import com.example.covid_19alertapp.extras.Permissions;
 import com.example.covid_19alertapp.services.BackgroundWorker;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static com.example.covid_19alertapp.activities.UserInfoFormActivity.userInfo;
 
 public class MainActivity extends AppCompatActivity {
     /*
@@ -40,11 +40,11 @@ public class MainActivity extends AppCompatActivity {
 
 
         //initializing the info named shared preference
-        userInfo = getSharedPreferences("info",MODE_PRIVATE);
-
+        UserInfoFormActivity.userInfo = getSharedPreferences(Constants.USER_INFO_SHARED_PREFERENCES,MODE_PRIVATE);
 
         // start background worker for always
         startWorker();
+
     }
 
     private void startWorker() {
@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
                     .build();
 
             PeriodicWorkRequest promptNotificationWork =
-                    new PeriodicWorkRequest.Builder(BackgroundWorker.class, 15, TimeUnit.MINUTES)
+                    new PeriodicWorkRequest.Builder(BackgroundWorker.class, 1, TimeUnit.HOURS)
                             .setConstraints(constraints)
                             .addTag(Constants.background_WorkerTag)
                             .build();
@@ -101,20 +101,9 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void pickHomeClick(View view) {
-        Intent intent = new Intent(this, AddressPickerMapsActivity.class);
-        startActivity(intent);
-    }
-
     public void uploadClick(View view) {
         Intent intent = new Intent(this, UploadLocationsActivity.class);
         startActivity(intent);
-    }
-
-    public void testUIClick(View view) {
-
-        startActivity(new Intent(getApplicationContext(), SignUpActivity.class));
-
     }
 
     public void removethisOnClick(View view) {

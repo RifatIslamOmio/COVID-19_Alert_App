@@ -22,6 +22,7 @@ import com.example.covid_19alertapp.extras.Internet;
 import com.example.covid_19alertapp.extras.LogTags;
 import com.example.covid_19alertapp.extras.Notifications;
 import com.example.covid_19alertapp.models.MatchedLocation;
+import com.example.covid_19alertapp.roomdatabase.LocalDBContainer;
 import com.example.covid_19alertapp.roomdatabase.VisitedLocations;
 import com.example.covid_19alertapp.roomdatabase.VisitedLocationsDao;
 import com.example.covid_19alertapp.roomdatabase.VisitedLocationsDatabase;
@@ -40,6 +41,9 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
     List<MatchedLocation> matchedLocations = new ArrayList<>();
     int matchedLocationPosition = 0;
 
+    // matched home locations model (for another(?) recycler-view)
+    List<MatchedLocation> matchedHomeLocations = new ArrayList<>();
+
     // firebase
     private DatabaseReference firebaseReference;
 
@@ -49,9 +53,6 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
 
     // retrieved data from local db
     private List<VisitedLocations> retrievedDatas = new ArrayList<>();
-
-    // retrieve and upload progress level
-    private double currProgress = 0;
     private int dataSize;
 
     // Address Fetch
@@ -71,8 +72,6 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
 
         Notifications.removeNotification(Constants.DangerNotification_ID, this);
 
-        // TODO:[Check] fetch locations and match
-
         // set local db configs
         roomDatabase = VisitedLocationsDatabase.getDatabase(getApplicationContext());
         visitedLocationsDao = roomDatabase.visitedLocationsDao();
@@ -80,15 +79,73 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
         // firebase
         firebaseReference = FirebaseDatabase.getInstance().getReference();
 
+        findHomeMatchedLocations();
         findMatchedLocations();
 
     }
 
+
     private void setUI() {
 
         progressBar = findViewById(R.id.progressBar);
-        progressBarText = findViewById(R.id.progressBar_text);
+        progressBarText = findViewById(R.id.progressText);
         retryButton = findViewById(R.id.retry_btn);
+
+    }
+
+    private void findHomeMatchedLocations() {
+
+        UserInfoFormActivity.userInfo = getApplicationContext().getSharedPreferences(Constants.USER_INFO_SHARED_PREFERENCES,MODE_PRIVATE);
+
+        List<String> queryKeys;
+        final String homeLatLng = UserInfoFormActivity.userInfo.getString(Constants.user_home_address_preference, "");
+        if(homeLatLng.equals("")){
+            Log.d(LogTags.Worker_TAG, "queryHomeAddress: why the hell is home null");
+            return;
+        }
+
+        final String[] latLng = homeLatLng.split(",");
+
+        queryKeys = LocalDBContainer.calculateContainer(Double.parseDouble(latLng[0]), Double.parseDouble(latLng[1]), "Bangladesh");
+
+        for (String query: queryKeys) {
+
+            // need '@' instead of '.'
+            query = query.replaceAll("\\.","@");
+
+            firebaseReference.child("infectedHomes").child(query)
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                            if(dataSnapshot.getValue()!=null){
+
+                                MatchedLocation homeLocation = new MatchedLocation(
+                                        Double.parseDouble(latLng[0]),
+                                        Double.parseDouble(latLng[1]),
+                                        "NEAR YOUR HOME!",
+                                        (long)dataSnapshot.getValue()
+                                );
+
+                                matchedHomeLocations.add(homeLocation);
+
+                                Log.d(LogTags.MatchFound_TAG, "onDataChange: home location matched: "+homeLocation.toString());
+
+                            }
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            internetDisconncetedUI();
+
+                            Log.d(LogTags.MatchFound_TAG, "onCancelled: home location query failed "+databaseError.getMessage());
+
+                        }
+                    });
+
+        }
 
     }
 
@@ -96,6 +153,7 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
 
         matchedLocationPosition = 0;
         retryButton.setEnabled(false);
+        retryButton.setVisibility(View.GONE);
 
         matchedLocations.clear();
 
@@ -103,12 +161,16 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
             @Override
             public void run() {
 
+                // let home location query finish
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    Log.d(LogTags.MatchFound_TAG, "run: letting home location finish first failed "+e.getMessage());
+                }
+
+
                 // fetch from local db and query firebase
                 retrievedDatas = visitedLocationsDao.fetchAll();
-
-                // retrieval from localDB done (30%)
-                currProgress = 30;
-                progressBar.setProgress((int) currProgress);
 
                 dataSize = retrievedDatas.size();
 
@@ -119,8 +181,7 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
                         @Override
                         public void run() {
 
-                           progressBarText.setText(getText(R.string.local_db_empty_text));
-                           progressBar.setVisibility(View.GONE);
+                           localDbEmptyUI();
 
                         }
                     });
@@ -146,8 +207,9 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                internetDisconnceted();
-                                retryButton.setEnabled(true);
+
+                                internetDisconncetedUI();
+
                             }
                         });
 
@@ -192,25 +254,52 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    internetDisconnceted();
-                                    retryButton.setEnabled(true);
+                                    internetDisconncetedUI();
                                 }
                             });
 
                         }
                     });
 
+                }
 
-                    // keep track of upload progress (30%-60%)
-                    currProgress += (double) 30/dataSize;
-                    if(currProgress<=100)
-                        progressBar.setProgress((int) currProgress);
+                // let the value listener and address fetch service catch up
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    Log.d(LogTags.MatchFound_TAG, "run: thread not tired");
+                }
 
-                    // let the value listener and address fetch service catch up
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        Log.d(LogTags.MatchFound_TAG, "run: thread not tired");
+                if(matchedLocations.isEmpty()){
+                    // no locations match
+
+                    if(matchedHomeLocations.isEmpty()) {
+                        // no home locations match either
+                        // show no match found
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                noMatchFoundUI();
+
+                            }
+                        });
+                    }
+
+                    else {
+                        // no location match
+                        // but home location matched show finish UI
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                dataFetchFinishedUI();
+
+                            }
+                        });
+
                     }
 
                 }
@@ -220,21 +309,57 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
 
     }
 
-    private void internetDisconnceted() {
+    private void internetDisconncetedUI() {
 
-        progressBar.setVisibility(View.GONE);
+        progressBar.setVisibility(View.INVISIBLE);
         progressBarText.setText(getText(R.string.internet_disconnected_text));
+
+        retryButton.setEnabled(true);
+        retryButton.setVisibility(View.VISIBLE);
 
         Toast.makeText(this, getText(R.string.no_internet_toast), Toast.LENGTH_LONG)
                 .show();
 
     }
 
+    private void dataFetchFinishedUI(){
+
+        retryButton.setEnabled(false);
+        progressBarText.setVisibility(View.GONE);
+        progressBar.setVisibility(View.GONE);
+        retryButton.setVisibility(View.GONE);
+
+        Toast.makeText(this, getText(R.string.finished_progressbar_text), Toast.LENGTH_LONG)
+                .show();
+
+    }
+
+    private void noMatchFoundUI(){
+
+        progressBar.setVisibility(View.INVISIBLE);
+        retryButton.setVisibility(View.GONE);
+        retryButton.setEnabled(false);
+        progressBarText.setVisibility(View.VISIBLE);
+        progressBarText.setText(getText(R.string.no_match_found_text));
+    }
+
+    private void localDbEmptyUI(){
+
+        progressBar.setVisibility(View.INVISIBLE);
+        retryButton.setVisibility(View.GONE);
+        retryButton.setEnabled(false);
+        progressBarText.setVisibility(View.VISIBLE);
+        progressBarText.setText(getText(R.string.local_db_empty_text));
+
+    }
+
     public void retryClicked(View view) {
 
-        progressBar.setProgress(0);
         progressBar.setVisibility(View.VISIBLE);
+        progressBarText.setVisibility(View.VISIBLE);
         progressBarText.setText(getText(R.string.loading_progressbar_text));
+
+        findHomeMatchedLocations();
         findMatchedLocations();
 
     }
@@ -242,7 +367,6 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
     private int updateCount = 0;
     @Override
     public void updateAddress(String address, int listPosition) {
-
         /*
         address received here
          */
@@ -250,24 +374,14 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
         matchedLocations.get(listPosition).setAddress(address);
         Log.d(LogTags.MatchFound_TAG, "updateAddress: address = "+matchedLocations.get(listPosition).toString());
 
-        // keep track of upload progress (60%-100%)
-        currProgress += (double) 40/matchedLocations.size();
-        if(currProgress<=100)
-            progressBar.setProgress((int) currProgress);
 
         updateCount++;
         if(updateCount>=matchedLocations.size()){
 
             updateCount = 0;
 
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    retryButton.setEnabled(true);
-                    progressBarText.setText(getText(R.string.finished_progressbar_text));
-                    progressBar.setVisibility(View.GONE);
-                }
-            });
+            dataFetchFinishedUI();
+
 
         }
 

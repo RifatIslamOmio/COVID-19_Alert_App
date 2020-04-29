@@ -38,7 +38,7 @@ public class SignUpActivity extends AppCompatActivity {
     TextView textViewTermsCond;
     public static String PHONE_NUMBER,verification;
     public static boolean ISRETURNEDFROMVERLAYOUT;
-    public static SharedPreferences loginSp;
+    public static SharedPreferences loginSp,userInfo;
     PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
 
     @Override
@@ -55,10 +55,10 @@ public class SignUpActivity extends AppCompatActivity {
         btnHomeSignup = findViewById(R.id.home_button_signup_page);
         btnForwardSignup = findViewById(R.id.forward_button_signup_page);
 
-        loginSp = getSharedPreferences("login",MODE_PRIVATE);
+        loginSp = getSharedPreferences(Constants.USER_LOGIN_INFO_SHARED_PREFERENCES,MODE_PRIVATE);
+        userInfo = getSharedPreferences(Constants.USER_INFO_SHARED_PREFERENCES,MODE_PRIVATE);
 
-
-        if(loginSp.getBoolean("logged",false)){
+        if(loginSp.getBoolean(Constants.user_login_state_shared_preference,false)){
 
             startActivity(new Intent(getApplicationContext(), VerificationPageActivity.class));
             finish();
@@ -85,7 +85,7 @@ public class SignUpActivity extends AppCompatActivity {
 
                 Toast.makeText(getApplicationContext(),"Code Sent to the Number",Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(getApplicationContext(), VerificationPageActivity.class));
-                loginSp.edit().putBoolean("logged",true).apply();
+                loginSp.edit().putBoolean(Constants.user_login_state_shared_preference,true).apply();
                 finish();
             }
 
@@ -102,6 +102,7 @@ public class SignUpActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     startActivity(new Intent(getApplicationContext(), VerificationPageActivity.class));
+                    loginSp.edit().putBoolean(Constants.user_login_state_shared_preference,true).apply();
                     finish();
                 }
             });
@@ -156,10 +157,12 @@ public class SignUpActivity extends AppCompatActivity {
                 if(phoneNumber.getText().toString().length()==16)  //Write a function to check phone number validity
                 {
                     PHONE_NUMBER = phoneNumber.getText().toString();
+
                     PHONE_NUMBER=PHONE_NUMBER.replaceAll("\\s+","");
                     
 
                     System.out.println(PHONE_NUMBER);
+                    userInfo.edit().putString(Constants.user_phone_no_preference,PHONE_NUMBER).apply();
                     sendSms(PHONE_NUMBER);
 
                 }

@@ -30,7 +30,7 @@
     <string name="title_activity_maps">Map</string>
 
     <string name="map_text">
-        Long press on map to set <b>Home Address</b>
+        Long press on map to pick <b>Address</b>
     </string>
     <string name="map_no_internet_text">Failed to load Map!</string>
     <string name="map_confirm_button_text">confirm</string>
@@ -48,12 +48,14 @@
 
     <string name="loading_progressbar_text">loading, please wait</string>
     <string name="finished_progressbar_text">Loading finished, these infected locations match yours</string>
+    <string name="retry_button_text">retry</string>
+    <string name="no_match_found_text">No match found. Yay! you are safe.</string>
 
     <string name="uploading_progressbar_text">uploading, please wait</string>
     <string name="uploadFinished_progressbar_text">Your locations were uploaded successfully!</string>
 
     <string name="upload_confirmation_title">Confirmation for uploading</string>
-    <string name="upload_confirmation_message">Choosing "YES" means you hereby declare that you have tested positive for COVID-19.
+    <string name="upload_confirmation_message">Choosing <b>YES</b> means you hereby declare that you have tested positive for COVID-19.
         <b>Legal actions will be taken if you falsely testify of being infected.</b>
         Do you want to upload all your locations? (you can not stop the upload process once it starts)
     </string>

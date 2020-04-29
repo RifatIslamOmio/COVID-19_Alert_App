@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.covid_19alertapp.R;
+import com.example.covid_19alertapp.extras.Constants;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -25,7 +27,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import static com.example.covid_19alertapp.activities.SignUpActivity.PHONE_NUMBER;
 import static com.example.covid_19alertapp.activities.SignUpActivity.verification;
 
 
@@ -37,7 +45,7 @@ public class VerificationPageActivity extends AppCompatActivity {
     EditText digit1,digit2,digit3,digit4,digit5,digit6;
     String verificationCode,uid;
     FirebaseAuth auth;
-    SharedPreferences sp,userInfoCheck;
+    SharedPreferences sp,userInfoCheck,signUpSp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,14 +68,12 @@ public class VerificationPageActivity extends AppCompatActivity {
 
         sp = getSharedPreferences("verify",MODE_PRIVATE);
         userInfoCheck=getSharedPreferences("info",MODE_PRIVATE);
+        signUpSp = getSharedPreferences(Constants.USER_LOGIN_INFO_SHARED_PREFERENCES,MODE_PRIVATE);
 
         if(sp.getBoolean("logged",false)){
 
-            if(checkIfUserInfoExist())
-                GoToMainActivity();
-            else
-                GotoUserInfoFormActivity();
-            finish();
+            checkIfUserInfoExist();
+
         }
 
         homeButton.setOnClickListener(new View.OnClickListener() {
@@ -216,6 +222,8 @@ public class VerificationPageActivity extends AppCompatActivity {
             public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(),SignUpActivity.class));
                 SignUpActivity.ISRETURNEDFROMVERLAYOUT = true;
+                signUpSp.edit().putBoolean(Constants.user_login_state_shared_preference,false).apply();
+                finish();
 
             }
         });
@@ -266,15 +274,9 @@ public class VerificationPageActivity extends AppCompatActivity {
                             FirebaseUser user = task.getResult().getUser();
                             uid= FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-                            if(checkIfUserInfoExist())
-                                GoToMainActivity();
-                            else
-                                GotoUserInfoFormActivity();
-
-
+                            checkIfUserInfoExist();
                             sp.edit().putBoolean("logged",true).apply();
                             Toast.makeText(getApplicationContext(),"User Signed In Successfully",Toast.LENGTH_SHORT).show();
-                            finish();
 
                         } else {
                             //System.out.println(task.getException()+" task exception");
@@ -287,9 +289,54 @@ public class VerificationPageActivity extends AppCompatActivity {
                 });
     }
 
-    public boolean checkIfUserInfoExist(){
+    public void checkIfUserInfoExist(){
 
-        return userInfoCheck.getBoolean("Userinfo",false);
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+        uid=FirebaseAuth.getInstance().getUid();
+
+        DatabaseReference ref = database.getReference().child("UserInfo").child(uid);
+
+        ValueEventListener valueEventListener = new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+
+                    userInfoCheck.edit().putString(Constants.username_preference, String.valueOf(dataSnapshot.child(Constants.userInfo_node_name).getValue())).apply();
+                    userInfoCheck.edit().putString(Constants.user_dob_preference, String.valueOf(dataSnapshot.child(Constants.userInfo_node_dob).getValue())).apply();
+                    userInfoCheck.edit().putString(Constants.user_home_address_preference, String.valueOf(dataSnapshot.child(Constants.userInfo_node_home).getValue())).apply();
+                    userInfoCheck.edit().putString(Constants.uid_preference,uid).apply();
+                    userInfoCheck.edit().putString(Constants.user_phone_no_preference, String.valueOf(dataSnapshot.child(Constants.userInfo_node_contactNumber).getValue())).apply();
+                    userInfoCheck.edit().putBoolean(Constants.user_exists_preference,true).apply();
+
+
+                    if(String.valueOf(dataSnapshot.child(Constants.userInfo_node_workAddress).getValue())!=null)
+                        userInfoCheck.edit()
+                                .putString(
+                                        Constants.user_work_address_preference,
+                                        String.valueOf(dataSnapshot.child(Constants.userInfo_node_workAddress
+                                ).getValue())).apply();
+
+                    GoToMainActivity();
+                }
+                else {
+
+                    GotoUserInfoFormActivity();
+                }
+
+                finish();
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+        ref.addListenerForSingleValueEvent(valueEventListener);
+
+
     }
 
     public void GoToMainActivity(){

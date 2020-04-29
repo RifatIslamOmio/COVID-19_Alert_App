@@ -1,9 +1,5 @@
 package com.example.covid_19alertapp.models;
 
-import android.util.Log;
-
-import com.example.covid_19alertapp.extras.LogTags;
-
 public class MatchedLocation {
 
     private double latitude, longitude;
@@ -15,6 +11,14 @@ public class MatchedLocation {
         /*
         hudai
          */
+    }
+
+    public MatchedLocation(double latitude, double longitude, String address, long count) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.address = address;
+        this.meaningfulDateTime = "n/a";
+        this.count = count;
     }
 
     public MatchedLocation(String latLon, String dateTime, long count) {

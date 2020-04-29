@@ -16,8 +16,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.covid_19alertapp.R;
+import com.example.covid_19alertapp.extras.AddressReceiver;
 import com.example.covid_19alertapp.extras.Internet;
 import com.example.covid_19alertapp.extras.LogTags;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -25,6 +27,15 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.model.TypeFilter;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.AutocompleteFragment;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
+
+import java.util.Arrays;
 
 public class AddressPickerMapsActivity extends FragmentActivity implements
         OnMapReadyCallback,
@@ -38,6 +49,9 @@ public class AddressPickerMapsActivity extends FragmentActivity implements
 
     // home address location
     Location pickedLocation;
+
+    // places api client
+    PlacesClient placesClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +73,50 @@ public class AddressPickerMapsActivity extends FragmentActivity implements
 
         }
 
+        initPlacesApi();
+
         confirmButton = findViewById(R.id.confirm_button);
+    }
+
+    private void initPlacesApi() {
+
+        Places.initialize(getApplicationContext(), getString(R.string.google_maps_key));
+        placesClient = Places.createClient(this);
+
+        // initialize fragment
+        AutocompleteSupportFragment autocompleteFragment =
+                (AutocompleteSupportFragment) getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+
+        // specify place type (find out more)
+        autocompleteFragment
+                .setPlaceFields(Arrays.asList(Place.Field.NAME, Place.Field.LAT_LNG))
+                .setCountries("BD")
+                .setTypeFilter(TypeFilter.GEOCODE);
+
+        // place selection listener
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(@NonNull Place place) {
+
+                // move camera to place
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(), 16.0f));
+
+                Log.d(LogTags.Map_TAG, "onPlaceSelected: place selected = "+place.getName()+" "+place.getLatLng());
+
+            }
+
+            @Override
+            public void onError(@NonNull Status status) {
+
+                Toast.makeText(AddressPickerMapsActivity.this, "please try again", Toast.LENGTH_LONG)
+                        .show();
+
+                Log.d(LogTags.Map_TAG, "onError: place selection error = "+status.toString());
+
+            }
+        });
+
+
     }
 
 
@@ -134,9 +191,7 @@ public class AddressPickerMapsActivity extends FragmentActivity implements
 
     @Override
     public void onMyLocationClick(@NonNull Location location) {
-        /*
-        press on the blue dot?
-         */
+
         if(location.getAccuracy()>150)
             Toast.makeText(
                     this,
@@ -171,7 +226,7 @@ public class AddressPickerMapsActivity extends FragmentActivity implements
         // send data to parent activity
         Intent resultIntent = new Intent();
         resultIntent.putExtra("latitude-longitude",
-                pickedLocation.getLatitude()+", "+pickedLocation.getLongitude());
+                pickedLocation.getLatitude()+","+pickedLocation.getLongitude());
         setResult(RESULT_OK, resultIntent);
         finish();
 
