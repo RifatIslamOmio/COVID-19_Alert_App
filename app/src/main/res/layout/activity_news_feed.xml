@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="#EFEFEF"
     tools:context=".activities.NewsFeedActivity">
     <include layout="@layout/toolbar_feed"/>
 
@@ -23,7 +24,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clipToPadding="false"
-                android:paddingTop="13dp">
+                android:paddingTop="2dp">
 
             </androidx.recyclerview.widget.RecyclerView>
 
