@@ -44,7 +44,7 @@ public class VerificationPageActivity extends AppCompatActivity {
     EditText digit1,digit2,digit3,digit4,digit5,digit6;
     String verificationCode,uid;
     FirebaseAuth auth;
-    SharedPreferences sp,userInfoCheck;
+    SharedPreferences sp,userInfoCheck,signUpSp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +67,7 @@ public class VerificationPageActivity extends AppCompatActivity {
 
         sp = getSharedPreferences("verify",MODE_PRIVATE);
         userInfoCheck=getSharedPreferences("info",MODE_PRIVATE);
+        signUpSp = getSharedPreferences(Constants.USER_LOGIN_INFO_SHARED_PREFERENCES,MODE_PRIVATE);
 
         if(sp.getBoolean("logged",false)){
 
@@ -221,6 +222,8 @@ public class VerificationPageActivity extends AppCompatActivity {
             public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(),SignUpActivity.class));
                 SignUpActivity.ISRETURNEDFROMVERLAYOUT = true;
+                signUpSp.edit().putBoolean(Constants.user_login_state_shared_preference,false).apply();
+                finish();
 
             }
         });

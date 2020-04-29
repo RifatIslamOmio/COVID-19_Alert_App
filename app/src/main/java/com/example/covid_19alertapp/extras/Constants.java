@@ -36,6 +36,13 @@ public abstract class Constants {
     public static final String user_work_address_preference = "workAddress";
     public static final String user_phone_no_preference = "contactNumber";
 
+    public static final String USER_LOGIN_INFO_SHARED_PREFERENCES = "login";
+
+
+    public static final String user_login_state_shared_preference = "loggedIn";
+
+
+
 
     //Firebase UsersInfo child node
 
