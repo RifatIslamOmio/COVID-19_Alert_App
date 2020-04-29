@@ -25,7 +25,6 @@ import com.example.covid_19alertapp.services.BackgroundWorker;
 
 import java.util.concurrent.TimeUnit;
 
-import static com.example.covid_19alertapp.activities.UserInfoFormActivity.userInfo;
 
 public class MainActivity extends AppCompatActivity {
     /*
@@ -40,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         //initializing the info named shared preference
-        userInfo = getSharedPreferences(Constants.USER_INFO_SHARED_PREFERENCES,MODE_PRIVATE);
+        UserInfoFormActivity.userInfo = getSharedPreferences(Constants.USER_INFO_SHARED_PREFERENCES,MODE_PRIVATE);
 
         // start background worker for always
         startWorker();
@@ -97,11 +96,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void removeThisButton(View view) {
         Intent intent = new Intent(this, TrackerSettingsActivity.class);
-        startActivity(intent);
-    }
-
-    public void pickHomeClick(View view) {
-        Intent intent = new Intent(this, AddressPickerMapsActivity.class);
         startActivity(intent);
     }
 

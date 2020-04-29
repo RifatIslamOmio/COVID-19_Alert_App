@@ -22,6 +22,7 @@ import com.example.covid_19alertapp.extras.Internet;
 import com.example.covid_19alertapp.extras.LogTags;
 import com.example.covid_19alertapp.extras.Notifications;
 import com.example.covid_19alertapp.models.MatchedLocation;
+import com.example.covid_19alertapp.roomdatabase.LocalDBContainer;
 import com.example.covid_19alertapp.roomdatabase.VisitedLocations;
 import com.example.covid_19alertapp.roomdatabase.VisitedLocationsDao;
 import com.example.covid_19alertapp.roomdatabase.VisitedLocationsDatabase;
@@ -39,6 +40,9 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
     // matched locations model (for recycler-view)
     List<MatchedLocation> matchedLocations = new ArrayList<>();
     int matchedLocationPosition = 0;
+
+    // matched home locations model (for another(?) recycler-view)
+    List<MatchedLocation> matchedHomeLocations = new ArrayList<>();
 
     // firebase
     private DatabaseReference firebaseReference;
@@ -75,15 +79,73 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
         // firebase
         firebaseReference = FirebaseDatabase.getInstance().getReference();
 
+        findHomeMatchedLocations();
         findMatchedLocations();
 
     }
+
 
     private void setUI() {
 
         progressBar = findViewById(R.id.progressBar);
         progressBarText = findViewById(R.id.progressText);
         retryButton = findViewById(R.id.retry_btn);
+
+    }
+
+    private void findHomeMatchedLocations() {
+
+        UserInfoFormActivity.userInfo = getApplicationContext().getSharedPreferences(Constants.USER_INFO_SHARED_PREFERENCES,MODE_PRIVATE);
+
+        List<String> queryKeys;
+        final String homeLatLng = UserInfoFormActivity.userInfo.getString(Constants.user_home_address_preference, "");
+        if(homeLatLng == ""){
+            Log.d(LogTags.Worker_TAG, "queryHomeAddress: why the hell is home null");
+            return;
+        }
+
+        final String[] latLng = homeLatLng.split(",");
+
+        queryKeys = LocalDBContainer.calculateContainer(Double.parseDouble(latLng[0]), Double.parseDouble(latLng[1]), "Bangladesh");
+
+        for (String query: queryKeys) {
+
+            // need '@' instead of '.'
+            query = query.replaceAll("\\.","@");
+
+            firebaseReference.child("infectedHomes").child(query)
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                            if(dataSnapshot.getValue()!=null){
+
+                                MatchedLocation homeLocation = new MatchedLocation(
+                                        Double.parseDouble(latLng[0]),
+                                        Double.parseDouble(latLng[1]),
+                                        "NEAR YOUR HOME!",
+                                        (long)dataSnapshot.getValue()
+                                );
+
+                                matchedHomeLocations.add(homeLocation);
+
+                                Log.d(LogTags.MatchFound_TAG, "onDataChange: home location matched: "+homeLocation.toString());
+
+                            }
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            internetDisconncetedUI();
+
+                            Log.d(LogTags.MatchFound_TAG, "onCancelled: home location query failed "+databaseError.getMessage());
+
+                        }
+                    });
+
+        }
 
     }
 
@@ -99,9 +161,16 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
             @Override
             public void run() {
 
+                // let home location query finish
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    Log.d(LogTags.MatchFound_TAG, "run: letting home location finish first failed "+e.getMessage());
+                }
+
+
                 // fetch from local db and query firebase
                 retrievedDatas = visitedLocationsDao.fetchAll();
-
 
                 dataSize = retrievedDatas.size();
 
@@ -195,14 +264,42 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
 
                 // let the value listener and address fetch service catch up
                 try {
-                    Thread.sleep(3000);
+                    Thread.sleep(2000);
                 } catch (InterruptedException e) {
                     Log.d(LogTags.MatchFound_TAG, "run: thread not tired");
                 }
 
                 if(matchedLocations.isEmpty()){
+                    // no locations match
 
-                    noMatchFoundUI();
+                    if(matchedHomeLocations.isEmpty()) {
+                        // no home locations match either
+                        // show no match found
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                noMatchFoundUI();
+
+                            }
+                        });
+                    }
+
+                    else {
+                        // no location match
+                        // but home location matched show finish UI
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                dataFetchFinishedUI();
+
+                            }
+                        });
+
+                    }
 
                 }
 
@@ -260,6 +357,8 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
         progressBar.setVisibility(View.VISIBLE);
         progressBarText.setVisibility(View.VISIBLE);
         progressBarText.setText(getText(R.string.loading_progressbar_text));
+
+        findHomeMatchedLocations();
         findMatchedLocations();
 
     }
