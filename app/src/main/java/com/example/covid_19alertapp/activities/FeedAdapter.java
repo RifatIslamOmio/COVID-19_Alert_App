@@ -24,12 +24,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class HelpFeedAdapter extends RecyclerView.Adapter<HelpFeedAdapter.MyViewHolder> {
+public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> {
 
     Context context;
     ArrayList<Post> postList;
 
-    public HelpFeedAdapter(Context c, ArrayList<Post> postList) {
+    public FeedAdapter(Context c, ArrayList<Post> postList) {
         context = c;
         this.postList = postList;
     }
@@ -51,7 +51,6 @@ public class HelpFeedAdapter extends RecyclerView.Adapter<HelpFeedAdapter.MyView
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd");
         String today_date = dateFormat.format(cal.getTime()) + " " + monthFormat.format(cal.getTime());
 
-
         String post_date = postList.get(position).getDate();
         if (post_date.equals(today_date)) {
             post_date = "Today";
@@ -61,9 +60,6 @@ public class HelpFeedAdapter extends RecyclerView.Adapter<HelpFeedAdapter.MyView
 
 
         holder.postBody.setText(postList.get(position).getPostBody());
-
-
-        String phone_number = postList.get(position).getContactNO();
         holder.contact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,13 +68,16 @@ public class HelpFeedAdapter extends RecyclerView.Adapter<HelpFeedAdapter.MyView
         });
 
         if (postList.get(position).getPostType().equals("RELIEF")) {
-            holder.relativeLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.color_item_view_relief_line));
+            holder.userName.setText("Anonymous");
+            holder.relativeLayout1.setBackgroundColor(ContextCompat.getColor(context, R.color.color_item_view_relief_line));
+            holder.relativeLayout2.setBackgroundColor(ContextCompat.getColor(context, R.color.color_item_view_relief_line));
             holder.contact.setVisibility(View.VISIBLE);
             holder.contact.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    String phone_number = postList.get(position).getContactNO();
                     Intent callIntent = new Intent(Intent.ACTION_DIAL);
-                    callIntent.setData(Uri.parse("tel:"+postList.get(position).getContactNO()));
+                    callIntent.setData(Uri.parse("tel:"+phone_number));
                     if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                         return;
                     }
@@ -100,7 +99,7 @@ public class HelpFeedAdapter extends RecyclerView.Adapter<HelpFeedAdapter.MyView
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView userName,dateTime,postBody,comment,contact;
-        RelativeLayout relativeLayout;
+        RelativeLayout relativeLayout1,relativeLayout2;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -109,7 +108,8 @@ public class HelpFeedAdapter extends RecyclerView.Adapter<HelpFeedAdapter.MyView
             postBody = itemView.findViewById(R.id.description_Text);
             comment = itemView.findViewById(R.id.Comment_Counter_PostView);
             contact = itemView.findViewById(R.id.Contact_PostView);
-            relativeLayout = itemView.findViewById(R.id.relativeLayout_Color_Relief);
+            relativeLayout1 = itemView.findViewById(R.id.relativeLayout_Color_Relief1);
+            relativeLayout2 = itemView.findViewById(R.id.relativeLayout_Color_Relief2);
         }
     }
 }

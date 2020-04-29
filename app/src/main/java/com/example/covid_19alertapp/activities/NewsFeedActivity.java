@@ -28,7 +28,7 @@ public class NewsFeedActivity extends AppCompatActivity {
     DatabaseReference reference;
     RecyclerView recyclerView;
     ArrayList<Post> list;
-    HelpFeedAdapter helpFeedAdapter;
+    FeedAdapter FeedAdapter;
     private Parcelable recyclerViewState;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,9 +69,9 @@ public class NewsFeedActivity extends AppCompatActivity {
                     list.add(post);
                 }
                 Collections.reverse(list);
-                helpFeedAdapter = new HelpFeedAdapter(NewsFeedActivity.this,list);
+                FeedAdapter = new FeedAdapter(NewsFeedActivity.this,list);
                 recyclerViewState = recyclerView.getLayoutManager().onSaveInstanceState();
-                recyclerView.setAdapter(helpFeedAdapter);
+                recyclerView.setAdapter(FeedAdapter);
                 recyclerView.getLayoutManager().onRestoreInstanceState(recyclerViewState);
             }
 

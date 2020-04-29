@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:layout_marginBottom="35dp"
+    android:layout_marginBottom="30dp"
     >
 
     <LinearLayout
@@ -45,7 +45,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="5dp"
-        android:id="@+id/relativeLayout_Color_Relief"
+        android:id="@+id/relativeLayout_Color_Relief1"
         android:background="@color/color_yellow_line"/>
     <LinearLayout
         android:layout_width="match_parent"
@@ -69,9 +69,10 @@
 
     </LinearLayout>
     <RelativeLayout
+        android:id="@+id/relativeLayout_Color_Relief2"
         android:layout_width="match_parent"
         android:layout_height="5dp"
-        android:background="@color/color_end_line"/>
+        android:background="@color/color_yellow_line"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -104,5 +105,9 @@
             android:textColor="#2979FF"
             android:textSize="15sp"/>
     </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:background="@color/color_end_line"/>
 
 </LinearLayout>
