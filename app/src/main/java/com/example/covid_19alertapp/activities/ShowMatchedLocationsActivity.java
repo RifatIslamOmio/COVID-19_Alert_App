@@ -99,7 +99,7 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
 
         List<String> queryKeys;
         final String homeLatLng = UserInfoFormActivity.userInfo.getString(Constants.user_home_address_preference, "");
-        if(homeLatLng == ""){
+        if(homeLatLng.equals("")){
             Log.d(LogTags.Worker_TAG, "queryHomeAddress: why the hell is home null");
             return;
         }
@@ -207,8 +207,9 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+
                                 internetDisconncetedUI();
-                                retryButton.setEnabled(true);
+
                             }
                         });
 
@@ -366,7 +367,6 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
     private int updateCount = 0;
     @Override
     public void updateAddress(String address, int listPosition) {
-
         /*
         address received here
          */

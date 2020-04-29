@@ -204,7 +204,7 @@ public class BackgroundWorker extends Worker {
 
         List<String> queryKeys;
         String homeLatLng = UserInfoFormActivity.userInfo.getString(Constants.user_home_address_preference, "");
-        if(homeLatLng == ""){
+        if(homeLatLng.equals("")){
             Log.d(LogTags.Worker_TAG, "queryHomeAddress: why the hell is home null");
             return;
         }
@@ -220,6 +220,8 @@ public class BackgroundWorker extends Worker {
 
             // need '@' instead of '.'
             query = query.replaceAll("\\.","@");
+
+            Log.d(LogTags.Worker_TAG, "queryHomeLocation: home query = "+query);
 
             refToMatchHome = FirebaseDatabase.getInstance().getReference().child("infectedHomes").child(query);
             refToMatchHome.addListenerForSingleValueEvent(findMatch);

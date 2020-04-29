@@ -23,6 +23,7 @@ import com.example.covid_19alertapp.extras.LogTags;
 import com.example.covid_19alertapp.extras.Permissions;
 import com.example.covid_19alertapp.services.BackgroundWorker;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 
@@ -43,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
         // start background worker for always
         startWorker();
+
     }
 
     private void startWorker() {

@@ -285,7 +285,7 @@ implement verification by medical report photo here
 
         List<String> entries;
         String homeLatLng = UserInfoFormActivity.userInfo.getString(Constants.user_home_address_preference, "");
-        if(homeLatLng == ""){
+        if(homeLatLng.equals("")){
             Log.d(LogTags.Upload_TAG, "uploadHomeLocation: why the hell is home null");
             return;
         }

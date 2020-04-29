@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -73,7 +74,6 @@ public class VerificationPageActivity extends AppCompatActivity {
 
             checkIfUserInfoExist();
 
-            finish();
         }
 
         homeButton.setOnClickListener(new View.OnClickListener() {
@@ -277,7 +277,6 @@ public class VerificationPageActivity extends AppCompatActivity {
                             checkIfUserInfoExist();
                             sp.edit().putBoolean("logged",true).apply();
                             Toast.makeText(getApplicationContext(),"User Signed In Successfully",Toast.LENGTH_SHORT).show();
-                            finish();
 
                         } else {
                             //System.out.println(task.getException()+" task exception");
@@ -296,13 +295,13 @@ public class VerificationPageActivity extends AppCompatActivity {
 
         uid=FirebaseAuth.getInstance().getUid();
 
-        DatabaseReference ref = database.getReference().child("UserInfo");
+        DatabaseReference ref = database.getReference().child("UserInfo").child(uid);
 
         ValueEventListener valueEventListener = new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.child(uid).exists()){
+                if(dataSnapshot.exists()){
 
                     userInfoCheck.edit().putString(Constants.username_preference, String.valueOf(dataSnapshot.child(Constants.userInfo_node_name).getValue())).apply();
                     userInfoCheck.edit().putString(Constants.user_dob_preference, String.valueOf(dataSnapshot.child(Constants.userInfo_node_dob).getValue())).apply();
@@ -313,9 +312,11 @@ public class VerificationPageActivity extends AppCompatActivity {
 
 
                     if(String.valueOf(dataSnapshot.child(Constants.userInfo_node_workAddress).getValue())!=null)
-                    userInfoCheck.edit().putString(Constants.user_work_address_preference,String.valueOf(dataSnapshot.child(Constants.userInfo_node_workAddress).getValue())).apply();
-
-                    System.out.println(String.valueOf(dataSnapshot.child(Constants.userInfo_node_home).getValue())+" 0f naam");
+                        userInfoCheck.edit()
+                                .putString(
+                                        Constants.user_work_address_preference,
+                                        String.valueOf(dataSnapshot.child(Constants.userInfo_node_workAddress
+                                ).getValue())).apply();
 
                     GoToMainActivity();
                 }
@@ -323,6 +324,8 @@ public class VerificationPageActivity extends AppCompatActivity {
 
                     GotoUserInfoFormActivity();
                 }
+
+                finish();
 
             }
 
