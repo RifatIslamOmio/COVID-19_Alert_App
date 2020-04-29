@@ -102,52 +102,71 @@ public abstract class LocalDBContainer {
         boxA_Y=lony;                     //left           // #  #   right box(x,y)
         boxC_X=latX+latDevider;                          //  #  #
         boxC_Y=lony+lonDevider;                         //(A)####
-        //    #  #   lower box
-        diagonalRangePoint.add(Double.toString(boxA_X)+","+Double.toString(boxA_Y)+","+Double.toString(boxC_X)+","+Double.toString(boxC_Y));
+        //    #  #   lower
+
+        diagonalRangePoint.add(checkLatLongLength(Double.toString(boxA_X))+","+checkLatLongLength(Double.toString(boxA_Y))+","+checkLatLongLength(Double.toString(boxC_X))+","+checkLatLongLength(Double.toString(boxC_Y)));
 
         if(lat- boxA_X<latDevider/2){
             //lower box's diagonal points are to be inserted
-            diagonalRangePoint.add(Double.toString(boxC_X)+","+Double.toString(boxA_Y)+","+Double.toString(boxA_X)+","+Double.toString(boxA_Y- lonDevider));
+            diagonalRangePoint.add(checkLatLongLength(Double.toString(boxC_X))+","+checkLatLongLength(Double.toString(boxA_Y))+","+checkLatLongLength(Double.toString(boxA_X))+","+checkLatLongLength(Double.toString(boxA_Y- lonDevider)));
 
         }
         else if(boxC_X-lat<latDevider/2){
             //Upper box's diagonal points are to be inserted
-            diagonalRangePoint.add(Double.toString(boxC_X)+","+Double.toString(boxC_Y+lonDevider)+","+Double.toString(boxA_X)+","+Double.toString(boxC_Y));
+            diagonalRangePoint.add(checkLatLongLength(Double.toString(boxC_X))+","+checkLatLongLength(Double.toString(boxC_Y+lonDevider))+","+checkLatLongLength(Double.toString(boxA_X))+","+checkLatLongLength(Double.toString(boxC_Y)));
 
         }
         if(lon- boxA_Y<=latDevider/2){
             //left box's diagonal points are to be inserted
-            diagonalRangePoint.add(Double.toString(boxA_X- latDevider)+","+Double.toString(boxA_Y)+","+Double.toString(boxA_X)+","+Double.toString(boxC_Y));
+            diagonalRangePoint.add(checkLatLongLength(Double.toString(boxA_X- latDevider))+","+checkLatLongLength(Double.toString(boxA_Y))+","+checkLatLongLength(Double.toString(boxA_X))+","+checkLatLongLength(Double.toString(boxC_Y)));
 
         }
         if(boxC_Y-lon<lonDevider/2){
             //Right box's diagonal points are to be inserted
-            diagonalRangePoint.add(Double.toString(boxC_X)+","+Double.toString(boxA_Y)+","+Double.toString(boxC_X+latDevider)+","+Double.toString(boxC_Y));
+
+            diagonalRangePoint.add(checkLatLongLength(Double.toString(boxC_X))+","+checkLatLongLength(Double.toString(boxA_Y))+","+checkLatLongLength(Double.toString(boxC_X+latDevider))+","+checkLatLongLength(Double.toString(boxC_Y)));
 
         }
         if(boxC_X-lat <latDevider/2 && boxC_Y-lon<lonDevider/2){
             //Upper Right  box's diagonal points are to be inserted
-            diagonalRangePoint.add(Double.toString(boxC_X)+","+Double.toString(boxC_Y)+","+Double.toString(boxC_X+latDevider)+","+Double.toString(boxC_Y+lonDevider));
+            diagonalRangePoint.add(checkLatLongLength(Double.toString(boxC_X))+","+checkLatLongLength(Double.toString(boxC_Y))+","+checkLatLongLength(Double.toString(boxC_X+latDevider))+","+checkLatLongLength(Double.toString(boxC_Y+lonDevider)));
 
         }
         else if(lat- boxA_X <latDevider/2 && lon- boxA_Y<lonDevider/2){
             //Lower left box's diagonal points are to be inserted
-            diagonalRangePoint.add(Double.toString(boxA_X)+","+Double.toString(boxA_Y)+","+Double.toString(boxA_X-latDevider)+","+Double.toString(boxA_Y-lonDevider));
+            diagonalRangePoint.add(checkLatLongLength(Double.toString(boxA_X))+","+checkLatLongLength(Double.toString(boxA_Y))+","+checkLatLongLength(Double.toString(boxA_X-latDevider))+","+checkLatLongLength(Double.toString(boxA_Y-lonDevider)));
 
         }
         else if(lat- boxA_X <latDevider/2 && lon- boxA_Y<lonDevider/2){
             //Upper Left  box's diagonal points are to be inserted
-            diagonalRangePoint.add(Double.toString(boxA_X)+","+Double.toString(boxA_Y+2*lonDevider)+","+Double.toString(boxC_X-2*latDevider)+","+Double.toString(boxC_Y));
+            diagonalRangePoint.add((Double.toString(boxA_X))+","+checkLatLongLength(Double.toString(boxA_Y+2*lonDevider))+","+checkLatLongLength(Double.toString(boxC_X-2*latDevider))+","+checkLatLongLength(Double.toString(boxC_Y)));
 
         }
         else if(lat- boxA_X <latDevider/2 && lon- boxA_Y<lonDevider/2){
             //Lower Right  box's diagonal points are to be inserted
-            diagonalRangePoint.add(Double.toString(boxA_X+2*lonDevider)+","+Double.toString(boxA_Y)+","+Double.toString(boxC_X)+","+Double.toString(boxC_Y-2*lonDevider));
+            diagonalRangePoint.add(checkLatLongLength(Double.toString(boxA_X+2*lonDevider))+","+checkLatLongLength(Double.toString(boxA_Y))+","+checkLatLongLength(Double.toString(boxC_X))+","+checkLatLongLength(Double.toString(boxC_Y-2*lonDevider)));
         }
 
         Log.d(LogTags.LocalDBContainer_TAG, "calculateContainer: diagonalPoints size = "+diagonalRangePoint.size());
 
         return diagonalRangePoint;
 
+    }
+
+    //This method keeps the lenght of the String same all the time
+    public static String checkLatLongLength(String latLonDigits){
+        int index;
+        int len=latLonDigits.length();
+        int decimalPointIndex=latLonDigits.indexOf('.');
+        int checkRequiredDigits=len-decimalPointIndex-1;
+        if(checkRequiredDigits<6){
+            for(index=checkRequiredDigits;index<6;index++)
+                latLonDigits=latLonDigits+"0";
+        }
+        else if(checkRequiredDigits>6){
+            return latLonDigits.substring(0, len -checkRequiredDigits+6 );
+        }
+
+        return latLonDigits;
     }
 }

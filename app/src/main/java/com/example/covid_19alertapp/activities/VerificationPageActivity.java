@@ -70,10 +70,8 @@ public class VerificationPageActivity extends AppCompatActivity {
 
         if(sp.getBoolean("logged",false)){
 
-            if(checkIfUserInfoExist())
-                GoToMainActivity();
-            else
-                GotoUserInfoFormActivity();
+            checkIfUserInfoExist();
+
             finish();
         }
 
@@ -273,9 +271,7 @@ public class VerificationPageActivity extends AppCompatActivity {
                             FirebaseUser user = task.getResult().getUser();
                             uid= FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-
-
-
+                            checkIfUserInfoExist();
                             sp.edit().putBoolean("logged",true).apply();
                             Toast.makeText(getApplicationContext(),"User Signed In Successfully",Toast.LENGTH_SHORT).show();
                             finish();
@@ -291,17 +287,16 @@ public class VerificationPageActivity extends AppCompatActivity {
                 });
     }
 
-    public boolean checkIfUserInfoExist(){
+    public void checkIfUserInfoExist(){
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
 
-
-
+        uid=FirebaseAuth.getInstance().getUid();
 
         DatabaseReference ref = database.getReference().child("UserInfo");
 
         ValueEventListener valueEventListener = new ValueEventListener() {
-            {System.out.println("method");}
+
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.child(uid).exists()){
@@ -335,7 +330,7 @@ public class VerificationPageActivity extends AppCompatActivity {
         };
         ref.addListenerForSingleValueEvent(valueEventListener);
 
-        return userInfoCheck.getBoolean("Userinfo",false);
+
     }
 
     public void GoToMainActivity(){

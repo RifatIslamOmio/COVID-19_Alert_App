@@ -99,13 +99,14 @@ public class UserInfoFormActivity extends AppCompatActivity {
                 name=userName.getText().toString();
                 dateOfBirth=dobText.getText().toString();
 
+                contactNumber=userInfo.getString(Constants.user_phone_no_preference,"Not Defined");
 
                 if(workLatLng.equals("")){
-                    userInfoData=new UserInfoData(name,dateOfBirth,homeLatLng,PHONE_NUMBER);
+                    userInfoData=new UserInfoData(name,dateOfBirth,homeLatLng,contactNumber);
 
                 }
                 else {
-                    userInfoData = new UserInfoData(name, dateOfBirth, workLatLng, homeLatLng, PHONE_NUMBER);
+                    userInfoData = new UserInfoData(name, dateOfBirth, workLatLng, homeLatLng, contactNumber);
                     userInfo.edit().putString(Constants.user_work_address_preference,workLatLng).apply();
                 }
                 //applying values to the info names Shared Preference
@@ -114,7 +115,7 @@ public class UserInfoFormActivity extends AppCompatActivity {
                 userInfo.edit().putString(Constants.user_dob_preference,dateOfBirth).apply();
                 userInfo.edit().putString(Constants.user_home_address_preference,homeLatLng).apply();
                 userInfo.edit().putString(Constants.uid_preference,uid).apply();
-                userInfo.edit().putString(Constants.user_phone_no_preference,PHONE_NUMBER).apply();
+                //userInfo.edit().putString(Constants.user_phone_no_preference,PHONE_NUMBER).apply();
                 userInfo.edit().putBoolean(Constants.user_exists_preference,true).apply();
 
                 database = FirebaseDatabase.getInstance();

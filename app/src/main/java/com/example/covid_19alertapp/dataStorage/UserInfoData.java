@@ -9,6 +9,7 @@ public class UserInfoData {
         this.workAddress = workAddress;
         this.home = home;
         this.contactNumber = contactNumber;
+        System.out.println(contactNumber+" contact");
 
 
     }
@@ -18,6 +19,7 @@ public class UserInfoData {
         this.dob = dob;
         this.home = home;
         this.contactNumber = contactNumber;
+        System.out.println(contactNumber+" contact");
     }
 
     public String getContactNumber() {
