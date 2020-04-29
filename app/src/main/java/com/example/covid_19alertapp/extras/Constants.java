@@ -37,5 +37,15 @@ public abstract class Constants {
     public static final String user_phone_no_preference = "contactNumber";
 
 
+    //Firebase UsersInfo child node
+
+
+    public static final String userInfo_node_name="name";
+    public static final String userInfo_node_dob="dob";
+    public static final String userInfo_node_workAddress="workAddress";
+    public static final String userInfo_node_home="home";
+    public static final String userInfo_node_contactNumber="contactNumber";
+
+
 
 }

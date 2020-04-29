@@ -98,8 +98,8 @@ public abstract class LocalDBContainer {
         lony=Math.floor(lon/lonDevider)*lonDevider;
         //upper left            upper right
         Double boxA_X,boxA_Y,boxC_X,boxC_Y;                 //upper box
-        boxA_X=latX;                                       //#### C(x,y)
-        boxA_Y=lony;                     //left           // #  #   right box
+        boxA_X=latX;                                       //#### C
+        boxA_Y=lony;                     //left           // #  #   right box(x,y)
         boxC_X=latX+latDevider;                          //  #  #
         boxC_Y=lony+lonDevider;                         //(A)####
         //    #  #   lower box
