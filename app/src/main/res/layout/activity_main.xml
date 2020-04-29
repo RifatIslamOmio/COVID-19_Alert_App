@@ -1,44 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#fff"
     tools:context=".activities.MainActivity">
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="5dp"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+    <include layout="@layout/toolbar_menu"/>
 
-        <Button
-            android:id="@+id/button2"
-            android:layout_width="wrap_content"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="removeThisButton"
-            android:text="Settings" />
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_gravity="center">
 
-        <Button
-            android:id="@+id/button3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="removethisOnClick"
-            android:text="show matched locations" />
+            <LinearLayout
+                android:id="@+id/linearLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:orientation="horizontal"
+                android:layout_marginBottom="15dp">
 
-        <Button
-            android:id="@+id/button4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="uploadClick"
-            android:text="Upload" />
-    </LinearLayout>
+                <Button
+                    android:id="@+id/button"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:onClick="startNewsFeed"
+                    android:padding="5dp"
+                    android:layout_marginEnd="20dp"
+                    android:drawablePadding="5dp"
+                    android:background="@drawable/menu_button"
+                    android:drawableTop="@drawable/newsfeed"
+                    android:text="News Feed" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+                <Button
+                    android:id="@+id/button3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="removethisOnClick"
+                    android:text="matched locations"
+                    android:layout_marginStart="25dp"
+                    android:padding="5dp"
+                    android:drawablePadding="3dp"
+                    android:background="@drawable/menu_button"
+                    android:drawableTop="@drawable/ic_locations"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/button4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:onClick="uploadClick"
+                    android:text="Upload"
+                    android:padding="5dp"
+                    android:drawablePadding="3dp"
+                    android:background="@drawable/menu_button"
+                    android:drawableTop="@drawable/ic_upload"/>
+
+                <Button
+                    android:id="@+id/button2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:onClick="removeThisButton"
+                    android:padding="5dp"
+                    android:drawablePadding="3dp"
+                    android:background="@drawable/menu_button"
+                    android:drawableTop="@drawable/settings"
+                    android:text="Settings" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+
+</LinearLayout>

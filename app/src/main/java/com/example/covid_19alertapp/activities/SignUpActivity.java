@@ -157,10 +157,7 @@ public class SignUpActivity extends AppCompatActivity {
                 if(phoneNumber.getText().toString().length()==16)  //Write a function to check phone number validity
                 {
                     PHONE_NUMBER = phoneNumber.getText().toString();
-
                     PHONE_NUMBER=PHONE_NUMBER.replaceAll("\\s+","");
-                    
-
                     System.out.println(PHONE_NUMBER);
                     userInfo.edit().putString(Constants.user_phone_no_preference,PHONE_NUMBER).apply();
                     sendSms(PHONE_NUMBER);

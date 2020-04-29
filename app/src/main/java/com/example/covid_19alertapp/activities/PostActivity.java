@@ -47,7 +47,6 @@ public class PostActivity extends AppCompatActivity {
         postText = findViewById(R.id.editText_post);
         radioGroup = findViewById(R.id.radioGroup);
         reliefbtnID = R.id.radBtnRelief;
-        radioID = radioGroup.getCheckedRadioButtonId();
         homeBtnPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,6 +67,7 @@ public class PostActivity extends AppCompatActivity {
                 {
                     //Post It
 
+                    radioID = radioGroup.getCheckedRadioButtonId();
                     if(radioID==reliefbtnID) { postType = "RELIEF"; }
 
                     sharedPreferences = getSharedPreferences(Constants.USER_INFO_SHARED_PREFERENCES,MODE_PRIVATE);
