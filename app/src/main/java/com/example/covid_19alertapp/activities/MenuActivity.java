@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MenuActivity extends AppCompatActivity {
     /*
     starter activity to test and get the permissions + all time running start worker
     overwrite or edit this later, keeping the permission codes

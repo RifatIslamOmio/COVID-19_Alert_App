@@ -222,7 +222,8 @@ public class SignUpActivity extends AppCompatActivity {
     private static final String[] permissionStrings = {
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_BACKGROUND_LOCATION,
-            Manifest.permission.ACCESS_WIFI_STATE
+            Manifest.permission.ACCESS_WIFI_STATE,
+            Manifest.permission.CALL_PHONE
     };
 
     private void promptPermissions() {

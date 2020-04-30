@@ -10,12 +10,12 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.covid_19alertapp.R;
+import com.example.covid_19alertapp.adapters.LocationListAdapter;
 import com.example.covid_19alertapp.extras.AddressReceiver;
 import com.example.covid_19alertapp.extras.Constants;
 import com.example.covid_19alertapp.extras.Internet;
@@ -39,10 +39,11 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
 
     // matched locations model (for recycler-view)
     ArrayList<MatchedLocation> matchedLocations = new ArrayList<>();
-    int matchedLocationPosition = 0;
+    int matchedLocationPosition = 0, locationQueryCount = 0;
 
     // matched home locations model (for another(?) recycler-view)
     ArrayList<MatchedLocation> matchedHomeLocations = new ArrayList<>();
+    int homeQueryCount = 0;
 
     // firebase
     private DatabaseReference firebaseReference;
@@ -59,12 +60,16 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
     AddressReceiver addressReceiver = new AddressReceiver(new Handler(), this);
 
     // UI stuff
-    ProgressBar progressBar;
-    TextView progressBarText;
-    Button retryButton;
+    private ProgressBar progressBar;
+    private TextView progressBarText;
+    private Button retryButton;
+    private RecyclerView locationRecyclerView, homeLocationRecyclerView;
+    private LocationListAdapter locationListAdapter, homeLocationListAdapter;
 
-    RecyclerView locationRecyclerView, homeLocationRecyclerView;
-    LocationListAdapter locationListAdapter, homeLocationListAdapter;
+    // flags
+    private boolean localDbEmptyFlag = false;
+    private boolean homeLocationsFetchFinishedFlag = false;
+    private boolean locationsFetchFinishedFlag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,7 +109,9 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
 
     private void findHomeMatchedLocations() {
 
+        homeLocationsFetchFinishedFlag = false;
         matchedHomeLocations.clear();
+        homeQueryCount = 0;
         homeLocationListAdapter = new LocationListAdapter(this, matchedHomeLocations);
         homeLocationRecyclerView.setAdapter(homeLocationListAdapter);
 
@@ -119,7 +126,10 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
 
         final String[] latLng = homeLatLng.split(",");
 
-        queryKeys = LocalDBContainer.calculateContainer(Double.parseDouble(latLng[0]), Double.parseDouble(latLng[1]), "Bangladesh");
+        queryKeys =
+                LocalDBContainer.calculateContainer(Double.parseDouble(latLng[0]), Double.parseDouble(latLng[1]), "Bangladesh");
+
+        final int querySize = queryKeys.size();
 
         for (String query: queryKeys) {
 
@@ -133,18 +143,45 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
 
                             if(dataSnapshot.getValue()!=null){
 
+                                long count = 0;
+                                for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
+
+                                    count+=(long)snapshot.getValue();
+
+                                }
+
                                 MatchedLocation homeLocation = new MatchedLocation(
                                         Double.parseDouble(latLng[0]),
                                         Double.parseDouble(latLng[1]),
                                         "NEAR YOUR HOME!",
-                                        (long)dataSnapshot.getValue()
+                                        count
                                 );
 
-                                matchedHomeLocations.add(homeLocation);
-                                homeLocationListAdapter.notifyItemInserted(matchedHomeLocations.size()-1);
+                                if(matchedHomeLocations.isEmpty()) {
+                                    // only find one match for home
 
+                                    matchedHomeLocations.add(homeLocation);
+                                    homeLocationListAdapter.notifyItemInserted(matchedHomeLocations.size() - 1);
+
+                                    homeLocationsFetchFinishedFlag = true;
+
+                                    if(locationsFetchFinishedFlag)
+                                        dataFetchFinishedUI();
+                                    else if(localDbEmptyFlag)
+                                        localDbEmptyUI();
+                                }
                                 Log.d(LogTags.MatchFound_TAG, "onDataChange: home location matched: "+homeLocation.toString());
 
+                            }
+
+                            homeQueryCount++;
+                            if(homeQueryCount>=querySize){
+                                homeLocationsFetchFinishedFlag = true;
+
+                                if(locationsFetchFinishedFlag)
+                                    dataFetchFinishedUI();
+                                else if(localDbEmptyFlag)
+                                    localDbEmptyUI();
                             }
 
                         }
@@ -165,7 +202,10 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
 
     private void findMatchedLocations() {
 
+        localDbEmptyFlag = false;
+        locationsFetchFinishedFlag = false;
         matchedLocationPosition = 0;
+        locationQueryCount = 0;
         retryButton.setEnabled(false);
         retryButton.setVisibility(View.GONE);
 
@@ -187,14 +227,17 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
                 if(dataSize==0){
                     // local database empty
 
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
+                    localDbEmptyFlag = true;
 
-                           localDbEmptyUI();
+                    if(homeLocationsFetchFinishedFlag) {
 
-                        }
-                    });
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                localDbEmptyUI();
+                            }
+                        });
+                    }
 
                     return;
 
@@ -245,12 +288,53 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
                                 // start address fetch service
                                 addressReceiver.startAddressFetchService(
                                         ShowMatchedLocationsActivity.this,
-                                        matchedLocation.getLatitude(),
-                                        matchedLocation.getLongitude(),
+                                        matchedLocation.getBlLatitude(),
+                                        matchedLocation.getBlLongitude(),
                                         matchedLocationPosition
                                 );
 
                                 matchedLocationPosition++;
+
+                            }
+
+                            locationQueryCount++;
+                            if(locationQueryCount>=dataSize){
+
+                                if(matchedLocations.isEmpty()){
+                                    // no locations match
+
+                                    locationsFetchFinishedFlag = true;
+
+                                    if(matchedHomeLocations.isEmpty()) {
+                                        // no home locations match either
+                                        // show no match found
+
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+
+                                                noMatchFoundUI();
+
+                                            }
+                                        });
+                                    }
+
+                                    else {
+                                        // no location match
+                                        // but home location matched show finish UI
+
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+
+                                                dataFetchFinishedUI();
+
+                                            }
+                                        });
+
+                                    }
+
+                                }
 
                             }
 
@@ -273,46 +357,6 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
 
                 }
 
-                // let the value listener and address fetch service catch up
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    Log.d(LogTags.MatchFound_TAG, "run: thread not tired");
-                }
-
-                if(matchedLocations.isEmpty()){
-                    // no locations match
-
-                    if(matchedHomeLocations.isEmpty()) {
-                        // no home locations match either
-                        // show no match found
-
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-
-                                noMatchFoundUI();
-
-                            }
-                        });
-                    }
-
-                    else {
-                        // no location match
-                        // but home location matched show finish UI
-
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-
-                                dataFetchFinishedUI();
-
-                            }
-                        });
-
-                    }
-
-                }
 
             }
         });
@@ -339,7 +383,6 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
         retryButton.setEnabled(false);
         progressBarText.setVisibility(View.GONE);
         progressBar.setVisibility(View.GONE);
-        //linearLayout.setVisibility(View.GONE);
         retryButton.setVisibility(View.GONE);
 
         Toast.makeText(this, getText(R.string.finished_progressbar_text), Toast.LENGTH_LONG)
@@ -397,9 +440,12 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
         updateCount++;
         if(updateCount>=matchedLocations.size()){
 
+            locationsFetchFinishedFlag = true;
+
             updateCount = 0;
 
-            dataFetchFinishedUI();
+            if(homeLocationsFetchFinishedFlag)
+                dataFetchFinishedUI();
 
 
         }

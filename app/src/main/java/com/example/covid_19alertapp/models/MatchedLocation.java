@@ -2,7 +2,7 @@ package com.example.covid_19alertapp.models;
 
 public class MatchedLocation {
 
-    private double latitude, longitude;
+    private double blLatitude, blLongitude;
     private String address = "";
     private String meaningfulDateTime;
     private long count;
@@ -13,11 +13,11 @@ public class MatchedLocation {
          */
     }
 
-    public MatchedLocation(double latitude, double longitude, String address, long count) {
-        this.latitude = latitude;
-        this.longitude = longitude;
+    public MatchedLocation(double blLatitude, double blLongitude, String address, long count) {
+        this.blLatitude = blLatitude;
+        this.blLongitude = blLongitude;
         this.address = address;
-        this.meaningfulDateTime = "n/a";
+        this.meaningfulDateTime = "last 7 days";
         this.count = count;
     }
 
@@ -30,8 +30,8 @@ public class MatchedLocation {
         latLon = latLon.replace('@', '.');
         String[] splitLatitude = latLon.split(",");
 
-        this.latitude = ( Double.valueOf(splitLatitude[0])+Double.valueOf(splitLatitude[2]) )/ 2.000000d;
-        this.longitude = ( Double.valueOf(splitLatitude[1])+ Double.valueOf(splitLatitude[3]) )/ 2.000000d;
+        this.blLatitude = Double.valueOf(splitLatitude[0]);
+        this.blLongitude = Double.valueOf(splitLatitude[1]);
 
         // get meaningfulDateTime
         String[] splitDateTime = dateTime.split("-");
@@ -48,20 +48,20 @@ public class MatchedLocation {
 
     }
 
-    public double getLatitude() {
-        return latitude;
+    public double getBlLatitude() {
+        return blLatitude;
     }
 
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
+    public void setBlLatitude(double blLatitude) {
+        this.blLatitude = blLatitude;
     }
 
-    public double getLongitude() {
-        return longitude;
+    public double getBlLongitude() {
+        return blLongitude;
     }
 
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
+    public void setBlLongitude(double blLongitude) {
+        this.blLongitude = blLongitude;
     }
 
     public String getAddress() {
@@ -138,8 +138,7 @@ public class MatchedLocation {
     @Override
     public String toString() {
         return "MatchedLocation{" +
-                "latitude=" + latitude +
-                ", longitude=" + longitude +
+                "bottom left=" + blLatitude +","+blLongitude+
                 ", address='" + address + '\'' +
                 ", meaningfulDateTime='" + meaningfulDateTime + '\'' +
                 ", count=" + count +

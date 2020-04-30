@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#fff"
-    tools:context=".activities.MainActivity">
+    tools:context=".activities.MenuActivity">
 
     <include layout="@layout/toolbar_menu"/>
 
