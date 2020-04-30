@@ -61,7 +61,7 @@ public class MenuActivity extends AppCompatActivity {
                     .build();
 
             PeriodicWorkRequest promptNotificationWork =
-                    new PeriodicWorkRequest.Builder(BackgroundWorker.class, 1, TimeUnit.HOURS)
+                    new PeriodicWorkRequest.Builder(BackgroundWorker.class, 15, TimeUnit.MINUTES)
                             .setConstraints(constraints)
                             .addTag(Constants.background_WorkerTag)
                             .build();

@@ -42,7 +42,9 @@ public class MatchedLocation {
                 +", "+time(Integer.parseInt(splitDateTime[2])
         );
 
-        this.count = count;
+        this.count = count/4;
+        if(this.count==0)
+            this.count = 1;
 
         this.address = "fetching address";
 
