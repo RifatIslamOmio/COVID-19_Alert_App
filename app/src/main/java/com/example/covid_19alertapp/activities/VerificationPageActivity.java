@@ -71,8 +71,12 @@ public class VerificationPageActivity extends AppCompatActivity {
         signUpSp = getSharedPreferences(Constants.USER_LOGIN_INFO_SHARED_PREFERENCES,MODE_PRIVATE);
 
         if(sp.getBoolean("logged",false)){
-
-            checkIfUserInfoExist();
+            if(userInfoCheck.getBoolean(Constants.user_exists_preference,false)) {
+                GoToMainActivity();
+                finish();
+            }
+            else
+                checkIfUserInfoExist();
 
         }
 
@@ -273,8 +277,13 @@ public class VerificationPageActivity extends AppCompatActivity {
                             //System.out.println("Successful");
                             FirebaseUser user = task.getResult().getUser();
                             uid= FirebaseAuth.getInstance().getCurrentUser().getUid();
+                            if(userInfoCheck.getBoolean(Constants.user_exists_preference,false)) {
+                                GoToMainActivity();
+                                finish();
+                            }
+                            else
+                                checkIfUserInfoExist();
 
-                            checkIfUserInfoExist();
                             sp.edit().putBoolean("logged",true).apply();
                             Toast.makeText(getApplicationContext(),"User Signed In Successfully",Toast.LENGTH_SHORT).show();
 
