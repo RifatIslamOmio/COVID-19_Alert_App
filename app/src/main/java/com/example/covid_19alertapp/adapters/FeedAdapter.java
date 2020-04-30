@@ -1,10 +1,8 @@
-package com.example.covid_19alertapp.activities;
+package com.example.covid_19alertapp.adapters;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,12 +11,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.covid_19alertapp.R;
-import com.example.covid_19alertapp.dataStorage.Post;
+import com.example.covid_19alertapp.models.Post;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

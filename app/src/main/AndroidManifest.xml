@@ -64,7 +64,7 @@
             android:name=".services.BackgroundLocationTracker"
             android:exported="false" />
 
-        <activity android:name=".activities.MainActivity" />
+        <activity android:name=".activities.MenuActivity" />
 
         <service
             android:name=".extras.FetchAddress"

@@ -7,9 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -33,7 +31,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import static com.example.covid_19alertapp.activities.SignUpActivity.PHONE_NUMBER;
 import static com.example.covid_19alertapp.activities.SignUpActivity.verification;
 
 
@@ -350,7 +347,7 @@ public class VerificationPageActivity extends AppCompatActivity {
 
     public void GoToMainActivity(){
 
-        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+        startActivity(new Intent(getApplicationContext(), MenuActivity.class));
     }
     public void GotoUserInfoFormActivity(){
 

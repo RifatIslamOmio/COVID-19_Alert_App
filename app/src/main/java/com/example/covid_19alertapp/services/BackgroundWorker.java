@@ -9,7 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
-import com.example.covid_19alertapp.activities.MainActivity;
 import com.example.covid_19alertapp.activities.ShowMatchedLocationsActivity;
 import com.example.covid_19alertapp.activities.TrackerSettingsActivity;
 import com.example.covid_19alertapp.activities.UserInfoFormActivity;
@@ -27,7 +26,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 

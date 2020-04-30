@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#0C0C0C</color>
     <color name="colorAccent">#03DAC5</color>
     <color name="colorInactive">#A5A5A5</color>
-    <color name="colorActive">#FF1744</color>
+    <color name="colorActive">#2979FF</color>
     <color name="color_top_part_background">#3D5AFE</color>
     <color name="color_user_info_edit_text">#4A4A4A</color>
     <color name="color_user_name_feed">#2E245F</color>

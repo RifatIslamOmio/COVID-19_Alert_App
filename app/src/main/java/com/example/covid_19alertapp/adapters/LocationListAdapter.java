@@ -1,4 +1,4 @@
-package com.example.covid_19alertapp.activities;
+package com.example.covid_19alertapp.adapters;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -15,7 +15,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.covid_19alertapp.R;
-import com.example.covid_19alertapp.extras.Constants;
+import com.example.covid_19alertapp.activities.LocationShowMapsActivity;
 import com.example.covid_19alertapp.models.MatchedLocation;
 
 
@@ -50,8 +50,8 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
                 //SHOW IN MAP FUNCTION
 
                 Intent intent = new Intent(context, LocationShowMapsActivity.class);
-                intent.putExtra("maps-latitude", locationsList.get(position).getLatitude());
-                intent.putExtra("maps-longitude", locationsList.get(position).getLongitude());
+                intent.putExtra(LocationShowMapsActivity.getBlLatitudeKey(), locationsList.get(position).getBlLatitude());
+                intent.putExtra(LocationShowMapsActivity.getBlLongitudeKey(), locationsList.get(position).getBlLongitude());
                 context.startActivity(intent);
             }
         });

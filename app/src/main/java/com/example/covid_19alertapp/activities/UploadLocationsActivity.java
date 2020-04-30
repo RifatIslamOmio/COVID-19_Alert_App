@@ -31,6 +31,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class UploadLocationsActivity extends AppCompatActivity {
@@ -294,13 +295,20 @@ implement verification by medical report photo here
 
         entries = LocalDBContainer.calculateContainer(Double.parseDouble(latLng[0]), Double.parseDouble(latLng[1]), "Bangladesh");
 
+        // get current time
+        Calendar cal = Calendar.getInstance();
+        //TODO: add year
+        final String dateTime = (cal.get(Calendar.MONTH)+1) +"-" // Calender.MONTH is 0 based -_- why tf?
+                + cal.get(Calendar.DATE) +"-"
+                + cal.get(Calendar.HOUR);
+
         for (String entry: entries) {
 
             // need '@' instead of '.'
             entry = entry.replaceAll("\\.","@");
 
             final String finalEntry = entry;
-            firbaseReference.child("infectedHomes").child(finalEntry).addListenerForSingleValueEvent(new ValueEventListener() {
+            firbaseReference.child("infectedHomes").child(finalEntry).child(dateTime).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
@@ -319,7 +327,7 @@ implement verification by medical report photo here
                     else{
                         // no such entry exists
 
-                        firbaseReference.child("infectedHomes").child(finalEntry).setValue(1);
+                        firbaseReference.child("infectedHomes").child(finalEntry).child(dateTime).setValue(1);
 
                         Log.d(LogTags.Upload_TAG, "onDataChange: no home location data exists. new data inserted to firebase.");
                     }

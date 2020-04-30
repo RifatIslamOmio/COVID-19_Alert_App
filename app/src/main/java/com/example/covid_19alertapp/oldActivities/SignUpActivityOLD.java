@@ -12,7 +12,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.covid_19alertapp.R;
-import com.example.covid_19alertapp.activities.MainActivity;
+import com.example.covid_19alertapp.activities.MenuActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
@@ -170,7 +170,7 @@ public class SignUpActivityOLD extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.child(uid).exists()){
 
-                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                    startActivity(new Intent(getApplicationContext(), MenuActivity.class));
                 }
                 else {
 
@@ -189,7 +189,7 @@ public class SignUpActivityOLD extends AppCompatActivity {
     }
 
     public void goToMainActivity(){
-        startActivity(new Intent(getApplicationContext(),MainActivity.class));
+        startActivity(new Intent(getApplicationContext(), MenuActivity.class));
     }
     public  String getPhoneNumber() {
         return phoneNumberString;

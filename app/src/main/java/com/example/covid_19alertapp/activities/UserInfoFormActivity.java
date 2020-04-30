@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -16,14 +15,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.covid_19alertapp.R;
-import com.example.covid_19alertapp.dataStorage.UserInfoData;
+import com.example.covid_19alertapp.models.UserInfoData;
 import com.example.covid_19alertapp.extras.Constants;
 import com.example.covid_19alertapp.extras.LogTags;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
-import static com.example.covid_19alertapp.activities.SignUpActivity.PHONE_NUMBER;
 
 public class UserInfoFormActivity extends AppCompatActivity {
 
@@ -123,7 +120,7 @@ public class UserInfoFormActivity extends AppCompatActivity {
                 userInfoRef.setValue(userInfoData);
 
 
-                startActivity(new Intent(getApplicationContext(),MainActivity.class));
+                startActivity(new Intent(getApplicationContext(), MenuActivity.class));
                 finish();
 
             }

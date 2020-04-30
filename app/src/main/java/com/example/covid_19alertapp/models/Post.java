@@ -1,4 +1,4 @@
-package com.example.covid_19alertapp.dataStorage;
+package com.example.covid_19alertapp.models;
 
 public class Post {
     private String postID;
