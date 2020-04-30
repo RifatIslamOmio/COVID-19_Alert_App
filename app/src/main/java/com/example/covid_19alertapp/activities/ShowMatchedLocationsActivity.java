@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -61,6 +62,7 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
     ProgressBar progressBar;
     TextView progressBarText;
     Button retryButton;
+
     RecyclerView locationRecyclerView, homeLocationRecyclerView;
     LocationListAdapter locationListAdapter, homeLocationListAdapter;
 
@@ -320,6 +322,7 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
     private void internetDisconncetedUI() {
 
         progressBar.setVisibility(View.INVISIBLE);
+        //linearLayout.setVisibility(View.INVISIBLE);
         progressBarText.setText(getText(R.string.internet_disconnected_text));
         progressBarText.setVisibility(View.VISIBLE);
 
@@ -336,6 +339,7 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
         retryButton.setEnabled(false);
         progressBarText.setVisibility(View.GONE);
         progressBar.setVisibility(View.GONE);
+        //linearLayout.setVisibility(View.GONE);
         retryButton.setVisibility(View.GONE);
 
         Toast.makeText(this, getText(R.string.finished_progressbar_text), Toast.LENGTH_LONG)
@@ -346,6 +350,7 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
     private void noMatchFoundUI(){
 
         progressBar.setVisibility(View.INVISIBLE);
+        //linearLayout.setVisibility(View.INVISIBLE);
         retryButton.setVisibility(View.GONE);
         retryButton.setEnabled(false);
         progressBarText.setVisibility(View.VISIBLE);
@@ -355,6 +360,7 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
     private void localDbEmptyUI(){
 
         progressBar.setVisibility(View.INVISIBLE);
+        //linearLayout.setVisibility(View.INVISIBLE);
         retryButton.setVisibility(View.GONE);
         retryButton.setEnabled(false);
         progressBarText.setVisibility(View.VISIBLE);
@@ -365,6 +371,7 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
     public void retryClicked(View view) {
 
         progressBar.setVisibility(View.VISIBLE);
+        //linearLayout.setVisibility(View.VISIBLE);
         progressBarText.setVisibility(View.VISIBLE);
         progressBarText.setText(getText(R.string.loading_progressbar_text));
 
