@@ -118,7 +118,7 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
-
+            //l
             int countB=phoneNumber.getText().toString().length(),countA=0;
             @SuppressLint("SetTextI18n")
             @Override
