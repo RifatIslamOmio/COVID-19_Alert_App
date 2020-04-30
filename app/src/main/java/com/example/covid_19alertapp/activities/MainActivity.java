@@ -96,25 +96,27 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void removeThisButton(View view) {
-        Intent intent = new Intent(this, TrackerSettingsActivity.class);
-        startActivity(intent);
-    }
-
     public void uploadClick(View view) {
         Intent intent = new Intent(this, UploadLocationsActivity.class);
         startActivity(intent);
     }
 
-    public void removethisOnClick(View view) {
+    public void startNewsFeed(View view)
+    {
+        startActivity(new Intent(getApplicationContext(),NewsFeedActivity.class));
+    }
 
-        Intent intent = new Intent(getApplicationContext(), ShowMatchedLocationsActivity.class);
+    public void openSettingsClick(View view) {
+
+        Intent intent = new Intent(this, TrackerSettingsActivity.class);
         startActivity(intent);
 
     }
 
-    public void startNewsFeed(View view)
-    {
-        startActivity(new Intent(getApplicationContext(),NewsFeedActivity.class));
+    public void showMatchedLocationsClick(View view) {
+
+        Intent intent = new Intent(getApplicationContext(), ShowMatchedLocationsActivity.class);
+        startActivity(intent);
+
     }
 }

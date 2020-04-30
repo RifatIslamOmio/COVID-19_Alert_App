@@ -44,6 +44,8 @@ public class MatchedLocation {
 
         this.count = count;
 
+        this.address = "fetching address";
+
     }
 
     public double getLatitude() {

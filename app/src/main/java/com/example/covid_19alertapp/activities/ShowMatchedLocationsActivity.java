@@ -2,9 +2,9 @@ package com.example.covid_19alertapp.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
-import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -17,7 +17,6 @@ import android.widget.Toast;
 import com.example.covid_19alertapp.R;
 import com.example.covid_19alertapp.extras.AddressReceiver;
 import com.example.covid_19alertapp.extras.Constants;
-import com.example.covid_19alertapp.extras.FetchAddress;
 import com.example.covid_19alertapp.extras.Internet;
 import com.example.covid_19alertapp.extras.LogTags;
 import com.example.covid_19alertapp.extras.Notifications;
@@ -38,11 +37,11 @@ import java.util.List;
 public class ShowMatchedLocationsActivity extends AppCompatActivity implements AddressReceiver.AddressView {
 
     // matched locations model (for recycler-view)
-    List<MatchedLocation> matchedLocations = new ArrayList<>();
+    ArrayList<MatchedLocation> matchedLocations = new ArrayList<>();
     int matchedLocationPosition = 0;
 
     // matched home locations model (for another(?) recycler-view)
-    List<MatchedLocation> matchedHomeLocations = new ArrayList<>();
+    ArrayList<MatchedLocation> matchedHomeLocations = new ArrayList<>();
 
     // firebase
     private DatabaseReference firebaseReference;
@@ -62,6 +61,8 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
     ProgressBar progressBar;
     TextView progressBarText;
     Button retryButton;
+    RecyclerView locationRecyclerView, homeLocationRecyclerView;
+    LocationListAdapter locationListAdapter, homeLocationListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,9 +92,19 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
         progressBarText = findViewById(R.id.progressText);
         retryButton = findViewById(R.id.retry_btn);
 
+        homeLocationRecyclerView = findViewById(R.id.homeRecyclerView);
+        homeLocationRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        locationRecyclerView = findViewById(R.id.locationRecyclerView);
+        locationRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
     }
 
     private void findHomeMatchedLocations() {
+
+        matchedHomeLocations.clear();
+        homeLocationListAdapter = new LocationListAdapter(this, matchedHomeLocations);
+        homeLocationRecyclerView.setAdapter(homeLocationListAdapter);
 
         UserInfoFormActivity.userInfo = getApplicationContext().getSharedPreferences(Constants.USER_INFO_SHARED_PREFERENCES,MODE_PRIVATE);
 
@@ -128,6 +139,7 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
                                 );
 
                                 matchedHomeLocations.add(homeLocation);
+                                homeLocationListAdapter.notifyItemInserted(matchedHomeLocations.size()-1);
 
                                 Log.d(LogTags.MatchFound_TAG, "onDataChange: home location matched: "+homeLocation.toString());
 
@@ -156,17 +168,13 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
         retryButton.setVisibility(View.GONE);
 
         matchedLocations.clear();
+        locationListAdapter = new LocationListAdapter(this, matchedLocations);
+        locationRecyclerView.setAdapter(locationListAdapter);
+
 
         roomDatabase.databaseWriteExecutor.execute(new Runnable() {
             @Override
             public void run() {
-
-                // let home location query finish
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    Log.d(LogTags.MatchFound_TAG, "run: letting home location finish first failed "+e.getMessage());
-                }
 
 
                 // fetch from local db and query firebase
@@ -224,13 +232,13 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
                             if(dataSnapshot.getValue()!=null){
                                 // INFECTED LOCATION MATCH FOUND!
 
-                                // TODO: add to list/recycler view
-
                                 String latLon = key;
                                 long count = (long) dataSnapshot.child("count").getValue();
 
                                 MatchedLocation matchedLocation = new MatchedLocation(latLon, dateTime, count);
                                 matchedLocations.add(matchedLocation);
+
+                                locationListAdapter.notifyItemInserted(matchedLocationPosition);
 
                                 // start address fetch service
                                 addressReceiver.startAddressFetchService(
@@ -313,6 +321,7 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
 
         progressBar.setVisibility(View.INVISIBLE);
         progressBarText.setText(getText(R.string.internet_disconnected_text));
+        progressBarText.setVisibility(View.VISIBLE);
 
         retryButton.setEnabled(true);
         retryButton.setVisibility(View.VISIBLE);
@@ -372,6 +381,9 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
          */
 
         matchedLocations.get(listPosition).setAddress(address);
+
+        locationListAdapter.notifyItemChanged(listPosition);
+
         Log.d(LogTags.MatchFound_TAG, "updateAddress: address = "+matchedLocations.get(listPosition).toString());
 
 
