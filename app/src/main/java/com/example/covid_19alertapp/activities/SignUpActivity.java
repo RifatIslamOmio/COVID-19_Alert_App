@@ -75,6 +75,7 @@ public class SignUpActivity extends AppCompatActivity {
 
 
                 Toast.makeText(getApplicationContext(),"Check Your Internet Connection",Toast.LENGTH_SHORT).show();
+                btnContinue.setEnabled(true);
 
             }
             @Override
@@ -86,6 +87,7 @@ public class SignUpActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),"Code Sent to the Number",Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(getApplicationContext(), VerificationPageActivity.class));
                 loginSp.edit().putBoolean(Constants.user_login_state_shared_preference,true).apply();
+                btnContinue.setEnabled(true);
                 finish();
             }
 
@@ -93,6 +95,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         if(ISRETURNEDFROMVERLAYOUT)
         {
+            PHONE_NUMBER=PHONE_NUMBER.substring(0,4)+" "+PHONE_NUMBER.substring(4);
             phoneNumber.setText(PHONE_NUMBER);
             ISRETURNEDFROMVERLAYOUT = false;
             btnHomeSignup.setVisibility(View.INVISIBLE);
@@ -102,6 +105,7 @@ public class SignUpActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     startActivity(new Intent(getApplicationContext(), VerificationPageActivity.class));
+
                     loginSp.edit().putBoolean(Constants.user_login_state_shared_preference,true).apply();
                     finish();
                 }
@@ -161,6 +165,7 @@ public class SignUpActivity extends AppCompatActivity {
                     System.out.println(PHONE_NUMBER);
                     userInfo.edit().putString(Constants.user_phone_no_preference,PHONE_NUMBER).apply();
                     sendSms(PHONE_NUMBER);
+                    btnContinue.setEnabled(false);
 
                 }
                 else
