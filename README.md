@@ -10,6 +10,8 @@
 
 ## App Specialties:
 
+<br>
+
 ### (1)	User Privacy Protection
 
 Location tracking is enabled by the user and is informed to the user via a fixed notification. Before user tests positive for COVID-19 and uploads all his/her locations, the locations are stored in the device’s local storage, none but the user has access to it. Once user tests positive for COVID-19 and uploads his/her locations, the identity of the user is preserved and not accessible to any other user. However, administrative access is enabled for tracking down false claims (not implemented yet) for taking legal actions.
@@ -20,9 +22,23 @@ Tracked location data of COVID-19 positive patients will evidently get very larg
 
 The block generation is similar to hashing function by providing a key that is the particular index for a query, with the additional benefit that the block also defines a radius of presence for any particular location. A block is defined by its bottom left and top right diagonal coordinates.
 
+<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;![Locations of close contact with covid-19 positive person/s](https://github.com/ferdouszislam/COVID-19_Alert_App/blob/master/infected%20locations.png) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ![Infected person recorded location block](https://github.com/ferdouszislam/COVID-19_Alert_App/blob/master/infected%20location%20block.png)
+
+<br>
+<br>
+
 ### (3)	Anonymous Relief Posts:
 
 Through the app’s global news feed, relief requests can be posted without directly sharing personal or family information of a user. A contact button is attached to relief posts through which any other user can call and contact the relief request post’s author and reach out for help. This feature especially targets the middle-class families that are suffering greatly in silence and cannot seek help publicly. A user is allowed to make only one relief post every seven days, this is a measure taken to stop misuse of the feature. 
 
+<br>
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;![relief post window](https://github.com/ferdouszislam/COVID-19_Alert_App/blob/master/relief%20post.png) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ![anonymous relief posts](https://github.com/ferdouszislam/COVID-19_Alert_App/blob/master/anonymous%20newsfeed.png)
+
+<br>
+<br>
 
 #### For the full project report please [visit this link](google.com) 

@@ -6,6 +6,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.os.Build;
 import android.util.Log;
@@ -97,7 +99,8 @@ public abstract class Notifications {
                 builder.setContentTitle(title)
                         .setContentText(content)
                         //TODO: set custom icons
-                        .setSmallIcon(R.drawable.ic_launcher_background)
+                        .setSmallIcon(R.drawable.ic_notification)
+                        .setLargeIcon(BitmapFactory.decodeResource(Resources.getSystem(), R.drawable.ic_notification))
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
                         // Intent(Activity) that will start when the user taps the button
                         .setContentIntent(pendingIntent)
@@ -120,7 +123,8 @@ public abstract class Notifications {
                 builder.setContentTitle(title)
                         .setContentText(content)
                         //TODO: set custom icons
-                        .setSmallIcon(R.drawable.ic_launcher_background)
+                        .setSmallIcon(R.drawable.ic_notification)
+                        .setLargeIcon(BitmapFactory.decodeResource(Resources.getSystem(), R.drawable.ic_notification))
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
                         // Intent(Activity) that will start when the user taps the button
                         .setContentIntent(pendingIntent)
