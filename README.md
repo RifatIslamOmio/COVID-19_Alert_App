@@ -10,6 +10,8 @@
 
 ## App Specialties:
 
+<br>
+
 ### (1)	User Privacy Protection
 
 Location tracking is enabled by the user and is informed to the user via a fixed notification. Before user tests positive for COVID-19 and uploads all his/her locations, the locations are stored in the device’s local storage, none but the user has access to it. Once user tests positive for COVID-19 and uploads his/her locations, the identity of the user is preserved and not accessible to any other user. However, administrative access is enabled for tracking down false claims (not implemented yet) for taking legal actions.
