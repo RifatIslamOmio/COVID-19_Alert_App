@@ -15,6 +15,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.covid_19alertapp.R;
+import com.example.covid_19alertapp.activities.CommentFeedActivity;
 import com.example.covid_19alertapp.models.Post;
 
 import java.text.SimpleDateFormat;
@@ -25,6 +26,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
 
     Context context;
     ArrayList<Post> postList;
+    public static Post POST;
 
     public FeedAdapter(Context c, ArrayList<Post> postList) {
         context = c;
@@ -83,6 +85,14 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
 
 
         holder.comment.setText(postList.get(position).getCommentCount()+"");
+
+        holder.comment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                POST = postList.get(position);
+                context.startActivity(new Intent(context, CommentFeedActivity.class));
+            }
+        });
 
 
     }

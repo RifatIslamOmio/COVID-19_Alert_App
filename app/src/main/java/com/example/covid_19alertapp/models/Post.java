@@ -1,5 +1,7 @@
 package com.example.covid_19alertapp.models;
 
+import java.util.List;
+
 public class Post {
     private String postID;
     private String userName;
@@ -9,7 +11,7 @@ public class Post {
     private String time;
     private String contactNO;
     private String postType;
-    //private List<Comment> commentList;
+    private List<Comment> Comments;
     private long commentCount=0;
 
 
@@ -97,5 +99,13 @@ public class Post {
 
     public void setCommentCount(long commentCount) {
         this.commentCount = commentCount;
+    }
+
+    public List<Comment> getCommentList() {
+        return Comments;
+    }
+
+    public void setCommentList(List<Comment> commentList) {
+        this.Comments = commentList;
     }
 }

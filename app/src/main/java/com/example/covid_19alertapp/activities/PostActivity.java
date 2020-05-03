@@ -72,7 +72,6 @@ public class PostActivity extends AppCompatActivity {
                     String post_ID = reference.push().getKey();
                     String user_name = sharedPreferences.getString(Constants.username_preference,null);
                     String user_ID = sharedPreferences.getString(Constants.uid_preference,null);
-                    //post_body
 
                     Calendar cal=Calendar.getInstance();
                     SimpleDateFormat monthFormat = new SimpleDateFormat("MMM");
