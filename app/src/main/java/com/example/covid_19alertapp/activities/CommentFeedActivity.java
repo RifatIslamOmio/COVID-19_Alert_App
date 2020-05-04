@@ -40,7 +40,7 @@ public class CommentFeedActivity extends AppCompatActivity {
     FloatingActionButton floatingActionButton;
     EditText comment_editText;
     Button btn_cancel, btn_submit, btn_home;
-    TextView post_body, post_auth, post_datetime;
+    TextView post_body, post_auth, post_datetime,comment_bar;
     SharedPreferences sharedPreferences;
     DatabaseReference view_reference,comment_reference,cCount_reference;
     RecyclerView recyclerView;
@@ -60,6 +60,7 @@ public class CommentFeedActivity extends AppCompatActivity {
         post_body = findViewById(R.id.description_Text_comment_feed);
         post_auth = findViewById(R.id.textView_username_comment_feed);
         post_datetime = findViewById(R.id.textView_DatenTime_comment_feed);
+        comment_bar = findViewById(R.id.comment_bar);
 
 
         //Set Post
@@ -158,6 +159,8 @@ public class CommentFeedActivity extends AppCompatActivity {
                     Comment comment = dataSnapshot1.getValue(Comment.class);
                     commentList.add(comment);
                 }
+
+                if(commentList.isEmpty()) {comment_bar.setText("No Comments Yet");}
 
                 //Collections.reverse(commentList);
                 commentFeedAdapter = new CommentFeedAdapter(getApplicationContext(),commentList);

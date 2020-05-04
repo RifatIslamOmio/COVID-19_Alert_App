@@ -82,7 +82,7 @@
         android:background="@color/color_user_name_feed">
 
         <TextView
-            android:id="@+id/Comment_Counter_PostView"
+            android:id="@+id/comment_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
