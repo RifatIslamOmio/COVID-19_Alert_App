@@ -16,11 +16,12 @@
 
 Location tracking is enabled by the user and is informed to the user via a fixed notification. Before user tests positive for COVID-19 and uploads all his/her locations, the locations are stored in the device’s local storage, none but the user has access to it. Once user tests positive for COVID-19 and uploads his/her locations, the identity of the user is preserved and not accessible to any other user. However, administrative access is enabled for tracking down false claims (not implemented yet) for taking legal actions.
 
-
 <br>
 
-&nbsp;&nbsp;&nbsp;&nbsp;![location access permission](https://github.com/ferdouszislam/COVID-19_Alert_App/blob/master/permission.jpg) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ![Infected person recorded location block](https://github.com/ferdouszislam/COVID-19_Alert_App/blob/master/permission%20exp.jpg)
+&nbsp;&nbsp;&nbsp;&nbsp;![User Location Permission](https://github.com/ferdouszislam/COVID-19_Alert_App/blob/master/permission.jpg) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ![Permission Explanation](https://github.com/ferdouszislam/COVID-19_Alert_App/blob/master/95097272_270367091019594_5457582228261306368_n.png)
 
+<br>
+<br>
 
 ### (2)	Efficient Access to potential Huge Server Data Storage
 
