@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +17,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.covid_19alertapp.R;
 import com.example.covid_19alertapp.activities.LocationShowMapsActivity;
+import com.example.covid_19alertapp.extras.LogTags;
 import com.example.covid_19alertapp.models.MatchedLocation;
+import com.example.covid_19alertapp.roomdatabase.VisitedLocations;
+import com.example.covid_19alertapp.roomdatabase.VisitedLocationsDao;
+import com.example.covid_19alertapp.roomdatabase.VisitedLocationsDatabase;
 
 
 import java.util.ArrayList;
@@ -25,6 +30,7 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
 
     Context context;
     ArrayList<MatchedLocation> locationsList;
+
     public LocationListAdapter(Context context,ArrayList<MatchedLocation> locationsList)
     {
         this.context = context;
@@ -42,7 +48,8 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
 
         holder.location.setText(locationsList.get(position).getAddress());
         holder.dateTime.setText(locationsList.get(position).getMeaningfulDateTime());
-        holder.count.setText("Infected: "+locationsList.get(position).getCount()+"");
+        holder.verifiedCount.setText("Infected (Verified): "+locationsList.get(position).getVerifiedCount()+"");
+        holder.unverifiedCount.setText("Infected (Unverified) : "+locationsList.get(position).getUnverifiedCount()+"");
 
         holder.location.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,9 +73,33 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
 
-                                //FUNCTION TO DELETE RECORD/LOCATION
+                                // delete location from local db
 
+                                if(locationsList.get(position).getRawDateTime().equals("")
+                                        || locationsList.get(position).getLatLon().equals("")) {
+                                    Toast.makeText(context, "Can't delete nearby home entries", Toast.LENGTH_LONG)
+                                            .show();
+                                    return;
+                                }
 
+                                final String deletionPrimaryKey =
+                                        locationsList.get(position).getLatLon()+"_"+locationsList.get(position).getRawDateTime();
+
+                                VisitedLocationsDatabase roomDatabase = VisitedLocationsDatabase.getDatabase(context);
+                                final VisitedLocationsDao visitedLocationsDao = roomDatabase.visitedLocationsDao();
+
+                                roomDatabase.databaseWriteExecutor.execute(new Runnable() {
+                                    @Override
+                                    public void run() {
+
+                                        visitedLocationsDao.deletebyPrimaryKey(deletionPrimaryKey);
+                                        Log.d(LogTags.MatchFound_TAG, "run: deleted entry = "+deletionPrimaryKey);
+
+                                    }
+                                });
+
+                                locationsList.remove(position);
+                                LocationListAdapter.this.notifyItemRemoved(position);
 
                                 dialog.dismiss();
                                 Toast.makeText(context,"Record Deleted!", Toast.LENGTH_SHORT).show();
@@ -96,11 +127,12 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView count,dateTime,location;
+        TextView unverifiedCount,verifiedCount,dateTime,location;
         LinearLayout linearLayout;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            count = itemView.findViewById(R.id.locationList_Counter);
+            unverifiedCount = itemView.findViewById(R.id.locationList_unverifiedCounter);
+            verifiedCount = itemView.findViewById(R.id.locationList_verifiedCounter);
             dateTime = itemView.findViewById(R.id.locationList_dateText);
             location = itemView.findViewById(R.id.locationList_locationText);
             linearLayout = itemView.findViewById(R.id.locationList_linearLayout);

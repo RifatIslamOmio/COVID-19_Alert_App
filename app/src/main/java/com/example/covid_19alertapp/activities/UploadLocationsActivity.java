@@ -23,6 +23,8 @@ import com.example.covid_19alertapp.roomdatabase.LocalDBContainer;
 import com.example.covid_19alertapp.roomdatabase.VisitedLocations;
 import com.example.covid_19alertapp.roomdatabase.VisitedLocationsDao;
 import com.example.covid_19alertapp.roomdatabase.VisitedLocationsDatabase;
+import com.example.covid_19alertapp.sharedPreferences.MiscSharedPreferences;
+import com.example.covid_19alertapp.sharedPreferences.UserInfoSharedPreferences;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
@@ -68,46 +70,16 @@ implement verification by medical report photo here
             }
 
             // upload to firebase
-            // update if already exists
-            firbaseReference.child("infectedLocations").child(infectedLocations.getKey()).child(infectedLocations.getDateTime())
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            if(dataSnapshot.getValue()!= null){
-                                // entry already exists
-                                // update count
-                                long count = (long) dataSnapshot.child("count").getValue();
-                                Log.d(LogTags.Upload_TAG, "onDataChange: data already exists. count = "+count);
+            insertToFirebase("infectedLocations", infectedLocations.getKey(), infectedLocations.getDateTime(), infectedLocations.getCount());
 
-                                count+=infectedLocations.getCount();
+            // blacklist user
 
-                                firbaseReference.child("infectedLocations").child(infectedLocations.getKey()).child(infectedLocations.getDateTime())
-                                        .child("count").setValue(count);
-                                Log.d(LogTags.Upload_TAG, "onDataChange: count updated = "+count);
-                            }
-                            else{
-                                // no such entry exists
+            // get user uid
+            String uid = UserInfoSharedPreferences.getUid(UploadLocationsActivity.this);
 
-                                firbaseReference.child("infectedLocations").child(infectedLocations.getKey()).child(infectedLocations.getDateTime())
-                                        .setValue(infectedLocations);
+            insertToFirebase("blackList/"+uid+"/visitedLocations",
+                    infectedLocations.getKey(), infectedLocations.getDateTime(), infectedLocations.getCount());
 
-                                Log.d(LogTags.Upload_TAG, "onDataChange: no data exists. new data inserted to firebase.");
-                            }
-
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                            Toast.makeText(getApplicationContext(),
-                                    getApplicationContext().getString(R.string.no_internet_toast),
-                                    Toast.LENGTH_LONG)
-                            .show();
-
-                            Log.d(LogTags.Upload_TAG, "onCancelled: data read and update failed! Error:"+databaseError.getMessage());
-
-                        }
-                    });
         }
     };
 
@@ -186,7 +158,7 @@ implement verification by medical report photo here
 
     }
 
-    private void retrieveUploadDelete() {
+    private void uploadAndDeleteLocal() {
         /*
         retrive from local database,
         upload to firebase,
@@ -264,6 +236,10 @@ implement verification by medical report photo here
 
                         // uploading done
                         uploading = false;
+
+                        // set upload status shared preference true
+                        MiscSharedPreferences.setUploadStatus(UploadLocationsActivity.this, true);
+
                     }
 
                     // sleep, give time to upload properly?
@@ -282,10 +258,9 @@ implement verification by medical report photo here
 
     private void uploadHomeLocation(){
 
-        UserInfoFormActivity.userInfo = getApplicationContext().getSharedPreferences(Constants.USER_INFO_SHARED_PREFERENCES,MODE_PRIVATE);
-
         List<String> entries;
-        String homeLatLng = UserInfoFormActivity.userInfo.getString(Constants.user_home_address_preference, "");
+
+        String homeLatLng = UserInfoSharedPreferences.getHomeAddress(this);
         if(homeLatLng.equals("")){
             Log.d(LogTags.Upload_TAG, "uploadHomeLocation: why the hell is home null");
             return;
@@ -307,42 +282,66 @@ implement verification by medical report photo here
             // need '@' instead of '.'
             entry = entry.replaceAll("\\.","@");
 
-            final String finalEntry = entry;
-            firbaseReference.child("infectedHomes").child(finalEntry).child(dateTime).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            // upload home address
+            insertToFirebase("infectedHomes", entry, dateTime, 1);
 
-                    if(dataSnapshot.getValue()!= null){
-                        // entry already exists
-                        // update count
+            // blacklist user
 
-                        long count = (long) dataSnapshot.getValue();
-                        Log.d(LogTags.Upload_TAG, "onDataChange: home location data already exists. count = "+count);
+            // get user uid
+            String uid = UserInfoSharedPreferences.getUid(this);
 
-                        count++;
-
-                        firbaseReference.child("infectedHomes").child(finalEntry).setValue(count);
-                        Log.d(LogTags.Upload_TAG, "onDataChange: home location count updated = "+count);
-                    }
-                    else{
-                        // no such entry exists
-
-                        firbaseReference.child("infectedHomes").child(finalEntry).child(dateTime).setValue(1);
-
-                        Log.d(LogTags.Upload_TAG, "onDataChange: no home location data exists. new data inserted to firebase.");
-                    }
-
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
+            insertToFirebase("blackList/"+uid+"/home", entry, dateTime, 1);
 
         }
 
     }
+
+    private void insertToFirebase(final String node, String latLon, String dateTime, final long count){
+
+        final DatabaseReference currentReference = firbaseReference.child(node).child(latLon).child(dateTime);
+
+        currentReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+
+                if(dataSnapshot.child("unverifiedCount").getValue()!=null){
+                    // data already exists
+                    Log.d(LogTags.Upload_TAG, "onDataChange: location already exists at "+node);
+
+                    long existingCount = (long)dataSnapshot.child("unverifiedCount").getValue();
+
+                    currentReference.child("unverifiedCount").setValue(count + existingCount);
+
+                }
+
+                else{
+                    // no such data exists
+                    Log.d(LogTags.Upload_TAG, "onDataChange: new location at "+node);
+
+                    currentReference.child("unverifiedCount").setValue(count);
+                }
+
+                if(dataSnapshot.child("verifiedCount").getValue()==null)
+                    currentReference.child("verifiedCount").setValue(0);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                Log.d(LogTags.Upload_TAG, "onCancelled: firebase e somossa ki korbo? "+databaseError.getMessage() +", "+databaseError.getDetails());
+
+                Toast.makeText(getApplicationContext(),
+                        getApplicationContext().getString(R.string.no_internet_toast),
+                        Toast.LENGTH_LONG)
+                        .show();
+
+            }
+        });
+
+    }
+
 
     public void uploadClicked(View view) {
         /*
@@ -368,7 +367,7 @@ implement verification by medical report photo here
 
                         // start uploading process
                         uploadButton.setEnabled(false);
-                        retrieveUploadDelete();
+                        uploadAndDeleteLocal();
 
 
                     }

@@ -6,14 +6,14 @@
 
     <string name="track_start_button_text">Turn On</string>
 
-    <string name="trackingNotificationTitle">COVID-19AlertApp Tracker Active</string>
+    <string name="trackingNotificationTitle">Location Tracker Active</string>
     <string name="trackingNotificationContent">please keep your Location On</string>
 
     <string name="promptToTrackNotificationTitle">Location Tracking Off!</string>
     <string name="promptToTrackNotificationContent">Tap to enable location tracker</string>
 
-    <string name="dangerNotificationTitle">YOU MIGHT BE INFECTED!</string>
-    <string name="dangerNotificationContent">Tap to see danger level</string>
+    <string name="dangerNotificationTitle">Have you been to these places?</string>
+    <string name="dangerNotificationContent">Tap to see vulnerable positions</string>
 
     <string name="tracker_Notification_Label">Location Tracking</string>
     <string name="permissions_dialogbox_title">Permissions Explanation</string>
@@ -76,5 +76,6 @@
         Try enabling location tracking in <b>Settings</b></string>
     <string name="internet_disconnected_text">Internet got disconnected. Connect and try again please.</string>
     <string name="title_activity_location_show_maps">Map</string>
+    <string name="cant_upload_twice_message">You have already uploaded all your recent locations. Thank you.</string>
 
 </resources>

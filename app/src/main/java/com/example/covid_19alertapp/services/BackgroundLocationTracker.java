@@ -14,6 +14,7 @@ import com.example.covid_19alertapp.extras.Constants;
 import com.example.covid_19alertapp.extras.LocationFetch;
 import com.example.covid_19alertapp.extras.LogTags;
 import com.example.covid_19alertapp.extras.Notifications;
+import com.example.covid_19alertapp.sharedPreferences.SettingsSharedPreferences;
 
 public class BackgroundLocationTracker extends Service {
 /*
@@ -64,11 +65,7 @@ service to track location on background
         }
 
         // set tracking settings preference to true
-        SharedPreferences sharedPreferences =
-                getSharedPreferences(Constants.LOCATION_SETTINGS_SHARED_PREFERENCES, MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean(Constants.location_tracker_state, true);
-        editor.apply();
+        SettingsSharedPreferences.setLocationTrackerState(this, true);
 
         //TODO: (check on upgraded API!)
         LocationFetch.setup(getApplicationContext());

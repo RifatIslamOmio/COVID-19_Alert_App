@@ -26,6 +26,7 @@ import com.example.covid_19alertapp.roomdatabase.LocalDBContainer;
 import com.example.covid_19alertapp.roomdatabase.VisitedLocations;
 import com.example.covid_19alertapp.roomdatabase.VisitedLocationsDao;
 import com.example.covid_19alertapp.roomdatabase.VisitedLocationsDatabase;
+import com.example.covid_19alertapp.sharedPreferences.UserInfoSharedPreferences;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -115,10 +116,9 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
         homeLocationListAdapter = new LocationListAdapter(this, matchedHomeLocations);
         homeLocationRecyclerView.setAdapter(homeLocationListAdapter);
 
-        UserInfoFormActivity.userInfo = getApplicationContext().getSharedPreferences(Constants.USER_INFO_SHARED_PREFERENCES,MODE_PRIVATE);
-
         List<String> queryKeys;
-        final String homeLatLng = UserInfoFormActivity.userInfo.getString(Constants.user_home_address_preference, "");
+
+        final String homeLatLng = UserInfoSharedPreferences.getHomeAddress(this);
         if(homeLatLng.equals("")){
             Log.d(LogTags.Worker_TAG, "queryHomeAddress: why the hell is home null");
             return;
@@ -143,18 +143,19 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
 
                             if(dataSnapshot.getValue()!=null){
 
-                                long count = 0;
+                                long verifiedCount = 0, unverifiedCount = 0;
                                 for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
 
-                                    count+=(long)snapshot.getValue();
-
+                                    verifiedCount+=(long)snapshot.child("verifiedCount").getValue();
+                                    unverifiedCount+=(long) snapshot.child("unverifiedCount").getValue();
                                 }
 
                                 MatchedLocation homeLocation = new MatchedLocation(
                                         Double.parseDouble(latLng[0]),
                                         Double.parseDouble(latLng[1]),
                                         "NEAR YOUR HOME!",
-                                        count
+                                        verifiedCount,
+                                        unverifiedCount
                                 );
 
                                 if(matchedHomeLocations.isEmpty()) {
@@ -278,9 +279,10 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
                                 // INFECTED LOCATION MATCH FOUND!
 
                                 String latLon = key;
-                                long count = (long) dataSnapshot.child("count").getValue();
+                                long verifiedCount = (long) dataSnapshot.child("verifiedCount").getValue();
+                                long unverifiedCount = (long) dataSnapshot.child("unverifiedCount").getValue();
 
-                                MatchedLocation matchedLocation = new MatchedLocation(latLon, dateTime, count);
+                                MatchedLocation matchedLocation = new MatchedLocation(latLon, dateTime, verifiedCount, unverifiedCount);
                                 matchedLocations.add(matchedLocation);
 
                                 locationListAdapter.notifyItemInserted(matchedLocationPosition);

@@ -2,7 +2,6 @@ package com.example.covid_19alertapp.services;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -11,7 +10,6 @@ import androidx.work.WorkerParameters;
 
 import com.example.covid_19alertapp.activities.ShowMatchedLocationsActivity;
 import com.example.covid_19alertapp.activities.TrackerSettingsActivity;
-import com.example.covid_19alertapp.activities.UserInfoFormActivity;
 import com.example.covid_19alertapp.extras.Constants;
 import com.example.covid_19alertapp.extras.LogTags;
 import com.example.covid_19alertapp.extras.Notifications;
@@ -19,6 +17,9 @@ import com.example.covid_19alertapp.roomdatabase.LocalDBContainer;
 import com.example.covid_19alertapp.roomdatabase.VisitedLocations;
 import com.example.covid_19alertapp.roomdatabase.VisitedLocationsDao;
 import com.example.covid_19alertapp.roomdatabase.VisitedLocationsDatabase;
+import com.example.covid_19alertapp.sharedPreferences.MiscSharedPreferences;
+import com.example.covid_19alertapp.sharedPreferences.SettingsSharedPreferences;
+import com.example.covid_19alertapp.sharedPreferences.UserInfoSharedPreferences;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
@@ -99,12 +100,7 @@ public class BackgroundWorker extends Worker {
     @Override
     public Result doWork() {
 
-        //get tracker status from sharedPreferences
-        SharedPreferences sharedPreferences =
-                getApplicationContext().getSharedPreferences(Constants.LOCATION_SETTINGS_SHARED_PREFERENCES, MODE_PRIVATE);
-        boolean trackerState = sharedPreferences.getBoolean(Constants.location_tracker_state,false);
-
-        if(!trackerState) {
+        if(!SettingsSharedPreferences.getLocationTrackerState(getApplicationContext())) {
             // tracker is off prompt notification
 
             Intent notificationIntent = new Intent(getApplicationContext(), TrackerSettingsActivity.class);
@@ -198,10 +194,9 @@ public class BackgroundWorker extends Worker {
             Log.d(LogTags.Worker_TAG, "doWork: firebase setPersistent issue. ki korbo ami ekhon?");
         }
 
-        UserInfoFormActivity.userInfo = getApplicationContext().getSharedPreferences(Constants.USER_INFO_SHARED_PREFERENCES,MODE_PRIVATE);
-
         List<String> queryKeys;
-        String homeLatLng = UserInfoFormActivity.userInfo.getString(Constants.user_home_address_preference, "");
+
+        String homeLatLng = UserInfoSharedPreferences.getHomeAddress(getApplicationContext());
         if(homeLatLng.equals("")){
             Log.d(LogTags.Worker_TAG, "queryHomeAddress: why the hell is home null");
             return;
@@ -237,7 +232,7 @@ public class BackgroundWorker extends Worker {
 
         int resDate = currDate - 7, resMonth = currMonth;
 
-        if(currDate<=0){
+        if(resDate<=0){
 
             switch (currMonth){
 
@@ -248,19 +243,19 @@ public class BackgroundWorker extends Worker {
 
                     break;
 
-                case 3:
+                case 2:
                 case 5:
                 case 7:
                 case 8:
                 case 10:
                 case 12:
 
-                    resDate = 31+resDate;
+                    resDate = 30+resDate;
                     resMonth = currMonth-1;
 
                     break;
 
-                case 2:
+                case 3:
 
                     //TODO: add leap-year check
                     resDate = 28+resDate;
@@ -269,7 +264,7 @@ public class BackgroundWorker extends Worker {
                     break;
 
                 default:
-                    resDate = 30+resDate;
+                    resDate = 31+resDate;
                     resMonth = currMonth-1;
             }
 
@@ -290,10 +285,6 @@ public class BackgroundWorker extends Worker {
         Log.d(LogTags.Worker_TAG, "onStopped: Worker stopped. why?");
 
         // set shared preference false
-        SharedPreferences preferences =
-                getApplicationContext().getSharedPreferences(Constants.WORKER_SHARED_PREFERENCES, MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putBoolean(Constants.bg_worker_state, false);
-        editor.apply();
+        MiscSharedPreferences.setBgWorkerStatus(getApplicationContext(), false);
     }
 }

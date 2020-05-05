@@ -73,9 +73,7 @@ public abstract class Notifications {
                 builder.setContentTitle(title)
                         .setContentText(content)
 
-                        //TODO: set custom icons
-
-                        .setSmallIcon(R.drawable.ic_launcher_background)
+                        .setSmallIcon(R.drawable.ic_notification_icon)
 
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
 
@@ -98,9 +96,8 @@ public abstract class Notifications {
                 //build notification
                 builder.setContentTitle(title)
                         .setContentText(content)
-                        //TODO: set custom icons
-                        .setSmallIcon(R.drawable.ic_notification)
-                        .setLargeIcon(BitmapFactory.decodeResource(Resources.getSystem(), R.drawable.ic_notification))
+                        .setSmallIcon(R.drawable.appicon)
+                        .setLargeIcon(BitmapFactory.decodeResource(Resources.getSystem(), R.drawable.appicon))
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
                         // Intent(Activity) that will start when the user taps the button
                         .setContentIntent(pendingIntent)
@@ -122,13 +119,12 @@ public abstract class Notifications {
                 // build notification
                 builder.setContentTitle(title)
                         .setContentText(content)
-                        //TODO: set custom icons
                         .setSmallIcon(R.drawable.ic_notification)
                         .setLargeIcon(BitmapFactory.decodeResource(Resources.getSystem(), R.drawable.ic_notification))
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
                         // Intent(Activity) that will start when the user taps the button
                         .setContentIntent(pendingIntent)
-                        // play default device notification tone //TODO: add custom tone
+                        // play default device notification tone
                         .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                         .setOngoing(true)
                         .setAutoCancel(false);
@@ -167,7 +163,6 @@ public abstract class Notifications {
         removes the notification
          */
 
-        //TODO: test this
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         notificationManager.cancel(notification_id);
     }

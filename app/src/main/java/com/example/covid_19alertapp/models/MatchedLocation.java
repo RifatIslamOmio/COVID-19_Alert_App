@@ -5,7 +5,10 @@ public class MatchedLocation {
     private double blLatitude, blLongitude;
     private String address = "";
     private String meaningfulDateTime;
-    private long count;
+    private long verifiedCount, unverifiedCount;
+
+    // for deletion using VisitedLocations class
+    private String rawDateTime, latLon;
 
     public MatchedLocation() {
         /*
@@ -13,15 +16,24 @@ public class MatchedLocation {
          */
     }
 
-    public MatchedLocation(double blLatitude, double blLongitude, String address, long count) {
+    public MatchedLocation(double blLatitude, double blLongitude, String address, long verifiedCount, long unverifiedCount) {
         this.blLatitude = blLatitude;
         this.blLongitude = blLongitude;
         this.address = address;
-        this.meaningfulDateTime = "last 7 days";
-        this.count = count;
+        this.meaningfulDateTime = "within last 7 days";
+
+        this.verifiedCount = verifiedCount/4;
+        if(this.verifiedCount==0 && verifiedCount!=0)
+            this.verifiedCount = 1;
+        this.unverifiedCount = unverifiedCount/4;
+        if(this.unverifiedCount==0 && unverifiedCount!=0)
+            this.unverifiedCount = 1;
+
+        this.rawDateTime = "";
+        this.latLon = "";
     }
 
-    public MatchedLocation(String latLon, String dateTime, long count) {
+    public MatchedLocation(String latLon, String dateTime, long verifiedCount, long unverifiedCount) {
         /*
         parameters according to firebase formatted data
          */
@@ -42,11 +54,18 @@ public class MatchedLocation {
                 +", "+time(Integer.parseInt(splitDateTime[2])
         );
 
-        this.count = count/4;
-        if(this.count==0)
-            this.count = 1;
+        this.verifiedCount = verifiedCount/4;
+        if(this.verifiedCount==0 && verifiedCount!=0)
+            this.verifiedCount = 1;
+
+        this.unverifiedCount = unverifiedCount/4;
+        if(this.unverifiedCount==0 && unverifiedCount!=0)
+            this.unverifiedCount = 1;
 
         this.address = "fetching address";
+
+        this.rawDateTime = dateTime;
+        this.latLon = latLon;
 
     }
 
@@ -82,12 +101,36 @@ public class MatchedLocation {
         this.meaningfulDateTime = meaningfulDateTime;
     }
 
-    public long getCount() {
-        return count;
+    public long getVerifiedCount() {
+        return verifiedCount;
     }
 
-    public void setCount(long count) {
-        this.count = count;
+    public void setVerifiedCount(long verifiedCount) {
+        this.verifiedCount = verifiedCount;
+    }
+
+    public long getUnverifiedCount() {
+        return unverifiedCount;
+    }
+
+    public void setUnverifiedCount(long unverifiedCount) {
+        this.unverifiedCount = unverifiedCount;
+    }
+
+    public String getRawDateTime() {
+        return rawDateTime;
+    }
+
+    public void setRawDateTime(String rawDateTime) {
+        this.rawDateTime = rawDateTime;
+    }
+
+    public String getLatLon() {
+        return latLon;
+    }
+
+    public void setLatLon(String latLon) {
+        this.latLon = latLon;
     }
 
     private String time(int time) {
@@ -140,10 +183,12 @@ public class MatchedLocation {
     @Override
     public String toString() {
         return "MatchedLocation{" +
-                "bottom left=" + blLatitude +","+blLongitude+
+                "blLatitude=" + blLatitude +
+                ", blLongitude=" + blLongitude +
                 ", address='" + address + '\'' +
                 ", meaningfulDateTime='" + meaningfulDateTime + '\'' +
-                ", count=" + count +
+                ", verifiedCount=" + verifiedCount +
+                ", unverifiedCount=" + unverifiedCount +
                 '}';
     }
 }
