@@ -196,13 +196,7 @@ public class UserInfoFormActivity extends AppCompatActivity {
         return false;
     }
 
-    public void hideSoftInput() {
-        View view1 = this.getCurrentFocus();
-        if(view1!= null){
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view1.getWindowToken(), 0);
-        }
-    }
+
 
 
 }

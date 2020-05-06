@@ -58,6 +58,7 @@
             android:paddingTop="8dp"
             android:maxLines="5"
             android:minLines="4"
+            android:textColor="#606060"
             android:scrollbars="vertical"
             android:paddingBottom="8dp"
             android:paddingEnd="3dp"
@@ -99,13 +100,13 @@
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_alignParentTop="true">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView_comment_feed"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:clipToPadding="false"
                 android:paddingTop="10dp">
 

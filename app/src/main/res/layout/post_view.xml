@@ -59,6 +59,7 @@
             android:layout_margin="5dp"
             android:fontFamily="@font/roboto"
             android:text="Description"
+            android:textColor="#606060"
             android:background="#FFF"
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
