@@ -86,7 +86,7 @@ implement verification by medical report photo here
     // UI stuff
     ProgressBar uploadProgressBar;
     TextView uploadProgressText;
-    Button uploadButton;
+    Button uploadButton, home_btn;
 
     // back press during uploading
     boolean uploading = false;
@@ -95,6 +95,13 @@ implement verification by medical report photo here
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload_locations);
+        home_btn = findViewById(R.id.home_button_upload_locations);
+        home_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         setUpUI();
 

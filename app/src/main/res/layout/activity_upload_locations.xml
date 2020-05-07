@@ -86,7 +86,7 @@
                 android:textAlignment="center"
                 android:textColor="#606060"
                 android:textSize="14sp"
-                android:visibility="visible" />
+                android:visibility="invisible" />
 
             <ProgressBar
                 android:id="@+id/uploadProgressBar"
@@ -96,7 +96,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:visibility="visible" />
+                android:visibility="invisible" />
         </LinearLayout>
     </ScrollView>
 
