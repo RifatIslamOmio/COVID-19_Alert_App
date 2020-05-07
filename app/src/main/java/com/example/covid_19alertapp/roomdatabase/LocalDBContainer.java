@@ -155,7 +155,7 @@ public abstract class LocalDBContainer {
     }
 
     //This method keeps the lenght of the String same all the time
-    public static String checkLatLongLength(String latLonDigits){
+    private static String checkLatLongLength(String latLonDigits){
         int index;
         int len=latLonDigits.length();
         int decimalPointIndex=latLonDigits.indexOf('.');

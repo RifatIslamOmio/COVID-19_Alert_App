@@ -23,6 +23,9 @@ public interface VisitedLocationsDao {
     @Query("DELETE FROM visitedlocations WHERE conatainerDateTimeComposite LIKE :sqlFormatsevenDayAgoDate")
     void deleteSevenDaysAgoVisitedLocations(String sqlFormatsevenDayAgoDate);
 
+    @Query("DELETE FROM visitedlocations WHERE conatainerDateTimeComposite = :primaryKey")
+    void deletebyPrimaryKey(String primaryKey);
+
     @Delete
     void deleteLocation(VisitedLocations visitedLocations);
 

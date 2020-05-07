@@ -1,7 +1,7 @@
 package com.example.covid_19alertapp.activities;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.work.Constraints;
@@ -9,10 +9,8 @@ import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
 
-import android.Manifest;
-import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -20,8 +18,8 @@ import android.view.View;
 import com.example.covid_19alertapp.R;
 import com.example.covid_19alertapp.extras.Constants;
 import com.example.covid_19alertapp.extras.LogTags;
-import com.example.covid_19alertapp.extras.Permissions;
 import com.example.covid_19alertapp.services.BackgroundWorker;
+import com.example.covid_19alertapp.sharedPreferences.MiscSharedPreferences;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -38,10 +36,6 @@ public class MenuActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-        //initializing the info named shared preference
-        UserInfoFormActivity.userInfo = getSharedPreferences(Constants.USER_INFO_SHARED_PREFERENCES,MODE_PRIVATE);
-
         // start background worker for always
         startWorker();
 
@@ -49,11 +43,7 @@ public class MenuActivity extends AppCompatActivity {
 
     private void startWorker() {
 
-        final SharedPreferences preferences =
-                getSharedPreferences(Constants.WORKER_SHARED_PREFERENCES, Context.MODE_PRIVATE);
-        boolean workerState = preferences.getBoolean(Constants.bg_worker_state, false);
-
-        if(!workerState){
+        if(!MiscSharedPreferences.getBgWorkerStatus(this)){
 
             Constraints constraints = new Constraints.Builder()
                     .setRequiresBatteryNotLow(true)
@@ -61,7 +51,7 @@ public class MenuActivity extends AppCompatActivity {
                     .build();
 
             PeriodicWorkRequest promptNotificationWork =
-                    new PeriodicWorkRequest.Builder(BackgroundWorker.class, 1, TimeUnit.HOURS)
+                    new PeriodicWorkRequest.Builder(BackgroundWorker.class, 30, TimeUnit.MINUTES)
                             .setConstraints(constraints)
                             .addTag(Constants.background_WorkerTag)
                             .build();
@@ -73,17 +63,15 @@ public class MenuActivity extends AppCompatActivity {
                             if (workInfo != null && workInfo.getState() == WorkInfo.State.ENQUEUED) {
                                 Log.d(LogTags.Worker_TAG, "onChanged: worker is enqueued");
 
-                                SharedPreferences.Editor editor = preferences.edit();
-                                editor.putBoolean(Constants.bg_worker_state, true);
-                                editor.apply();
+                                // set shared preference true
+                                MiscSharedPreferences.setBgWorkerStatus(MenuActivity.this, true);
                             }
 
                             if (workInfo != null && workInfo.getState() == WorkInfo.State.CANCELLED) {
                                 Log.d(LogTags.Worker_TAG, "onChanged: worker was stopped. why?");
 
-                                SharedPreferences.Editor editor = preferences.edit();
-                                editor.putBoolean(Constants.bg_worker_state, false);
-                                editor.apply();
+                                // set shared preference false
+                                MiscSharedPreferences.setBgWorkerStatus(MenuActivity.this, false);
                             }
                         }
                     });
@@ -97,8 +85,41 @@ public class MenuActivity extends AppCompatActivity {
     }
 
     public void uploadClick(View view) {
-        Intent intent = new Intent(this, UploadLocationsActivity.class);
-        startActivity(intent);
+
+        if(!MiscSharedPreferences.getUploadStatus(this)) {
+
+            Intent intent = new Intent(this, UploadLocationsActivity.class);
+            startActivity(intent);
+        }
+        else{
+
+            // show dialog and prevent
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            builder.setMessage(getText(R.string.cant_upload_twice_message))
+                    .setCancelable(false)
+                    .setPositiveButton(getText(R.string.permissions_dialogbox_positive), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .setNegativeButton("Override", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+
+                            // TODO: remove this
+                            Intent intent = new Intent(MenuActivity.this, UploadLocationsActivity.class);
+                            startActivity(intent);
+                        }
+                    });
+
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+
+        }
     }
 
     public void startNewsFeed(View view)
