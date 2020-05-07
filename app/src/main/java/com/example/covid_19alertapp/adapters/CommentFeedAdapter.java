@@ -49,7 +49,7 @@ public class CommentFeedAdapter extends RecyclerView.Adapter<CommentFeedAdapter.
 
         if(commentList.get(position).getUser_id().equals(FeedAdapter.POST.getUserID()))
         {
-            holder.auth_tag.setVisibility(View.VISIBLE);
+            holder.authTag.setVisibility(View.VISIBLE);
             holder.line.setBackgroundColor(ContextCompat.getColor(context, R.color.color_item_view_relief_line));
         }
 
@@ -75,7 +75,7 @@ public class CommentFeedAdapter extends RecyclerView.Adapter<CommentFeedAdapter.
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView dateTime, comment_body, comment_author,auth_tag;
+        TextView dateTime, comment_body, comment_author,authTag;
         LinearLayout line;
 
         public MyViewHolder(@NonNull View itemView) {
@@ -84,7 +84,7 @@ public class CommentFeedAdapter extends RecyclerView.Adapter<CommentFeedAdapter.
             comment_author = itemView.findViewById(R.id.textView_username_comment_view);
             comment_body = itemView.findViewById(R.id.comment_Text);
             line = itemView.findViewById(R.id.line_comment_view);
-            auth_tag = itemView.findViewWithTag(R.id.comment_view_author);
+            authTag = itemView.findViewById(R.id.comment_view_author_title);
         }
     }
 }

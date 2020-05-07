@@ -12,7 +12,7 @@
         android:paddingTop="50dp"
         android:paddingBottom="50dp"
         android:textSize="20sp"
-        android:background="@drawable/custom_save_button"
+        android:background="@drawable/custom_toast"
         android:textColor="@android:color/white"
         android:textAlignment="center"
         android:fontFamily="@font/roboto_medium"

@@ -31,7 +31,7 @@
                 android:textColor="@color/color_user_name_feed"
                 android:textSize="17sp" />
             <TextView
-                android:id="@+id/comment_view_author"
+                android:id="@+id/comment_view_author_title"
                 android:layout_width="wrap_content"
                 android:textAlignment="center"
                 android:layout_height="wrap_content"
