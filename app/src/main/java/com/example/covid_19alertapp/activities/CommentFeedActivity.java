@@ -3,6 +3,7 @@ package com.example.covid_19alertapp.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.content.SharedPreferences;
@@ -12,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.example.covid_19alertapp.R;
@@ -44,6 +46,7 @@ public class CommentFeedActivity extends AppCompatActivity {
     DatabaseReference view_reference,comment_reference,cCount_reference;
     RecyclerView recyclerView;
     ArrayList<Comment> commentList;
+    RelativeLayout relativeLayout;
     CommentFeedAdapter commentFeedAdapter;
     private Parcelable recyclerViewState;
 
@@ -56,6 +59,7 @@ public class CommentFeedActivity extends AppCompatActivity {
         comment_reference = FirebaseDatabase.getInstance().getReference().child("Posts").child(FeedAdapter.POST.getPostID());
         recyclerView = findViewById(R.id.recyclerView_comment_feed);
 
+        relativeLayout = findViewById(R.id.relief_line_commentfeed);
         btn_home = findViewById(R.id.home_button_comment_feed);
         post_body = findViewById(R.id.description_Text_comment_feed);
         post_auth = findViewById(R.id.textView_username_comment_feed);
@@ -66,6 +70,10 @@ public class CommentFeedActivity extends AppCompatActivity {
         //Set Post
         post_body.setText(FeedAdapter.POST.getPostBody());
         post_auth.setText(FeedAdapter.POST.getUserName());
+        if(FeedAdapter.POST.getPostType().equals("RELIEF"))
+        {
+            relativeLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.color_item_view_relief_line));
+        }
 
         String post_date = FeedAdapter.POST.getDate();
         if(post_date.equals(DateTimeHandler.DateToday()))
@@ -121,6 +129,14 @@ public class CommentFeedActivity extends AppCompatActivity {
                 comment.setUser_name(user_name);
                 comment.setUser_id(user_ID);
                 comment.setComment_id(comment_ID);
+                if(FeedAdapter.POST.getPostType().equals("RELIEF"))
+                {
+                    if(FeedAdapter.POST.getUserID().equals(user_ID))
+                    {
+                        comment.setUser_name("Anonymous");
+                    }
+                }
+
 
                 comment_reference.child("Comments").child(comment_ID).setValue(comment)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -196,9 +212,6 @@ public class CommentFeedActivity extends AppCompatActivity {
             @Override
             public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {}
         });
-
-
-
 
     }
 

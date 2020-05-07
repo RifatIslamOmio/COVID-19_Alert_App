@@ -156,7 +156,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:paddingBottom="65dp"
+                android:paddingBottom="50dp"
                 android:paddingTop="5dp"
                 android:gravity="center"
                 android:orientation="horizontal">

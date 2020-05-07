@@ -40,6 +40,7 @@
     </LinearLayout>
 
     <RelativeLayout
+        android:id="@+id/relief_line_commentfeed"
         android:layout_width="match_parent"
         android:layout_height="5dp"
         android:background="@color/color_yellow_line"/>
@@ -120,8 +121,8 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:layout_margin="18dp"
-            android:src="@drawable/ic_add_white_24dp"
-            app:backgroundTint="#FFC400" />
+            android:src="@drawable/ic_comment"
+            app:backgroundTint="#FF1744" />
     </RelativeLayout>
 
 
