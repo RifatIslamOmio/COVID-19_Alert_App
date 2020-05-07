@@ -47,7 +47,7 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class BackgroundWorker extends Worker {
 
-    // stop loop, Bangla niyome listener shorao
+    // stop loop, Bangla niyome listener shorao TODO: kaj korena
     private boolean matchFound;
 
     // firebase reference and listener
@@ -100,7 +100,7 @@ public class BackgroundWorker extends Worker {
     @Override
     public Result doWork() {
 
-        if(!SettingsSharedPreferences.getLocationTrackerState(getApplicationContext())) {
+        if(!SettingsSharedPreferences.getLocationTrackerState(getApplicationContext()) && isDayTime() ) {
             // tracker is off prompt notification
 
             Intent notificationIntent = new Intent(getApplicationContext(), TrackerSettingsActivity.class);
@@ -170,7 +170,7 @@ public class BackgroundWorker extends Worker {
             refToMatch.addListenerForSingleValueEvent(findMatch);
 
             try {
-                Thread.sleep(100);
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 Log.d(LogTags.Worker_TAG, "doWork: "+e.getMessage());
             }
@@ -181,6 +181,14 @@ public class BackgroundWorker extends Worker {
         Log.d(LogTags.Worker_TAG, "doWork: worker WORKED!");
 
         return Result.success();
+    }
+
+    private boolean isDayTime() {
+
+        int hour = Calendar.getInstance().get(Calendar.HOUR);
+
+        // 7AM to 11PM
+        return (hour>=7 && hour<=23);
     }
 
     private void queryHomeLocation() {

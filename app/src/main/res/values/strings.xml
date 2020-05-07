@@ -77,5 +77,6 @@
     <string name="internet_disconnected_text">Internet got disconnected. Connect and try again please.</string>
     <string name="title_activity_location_show_maps">Map</string>
     <string name="cant_upload_twice_message">You have already uploaded all your recent locations. Thank you.</string>
+    <string name="title_activity_my_locations_maps">Map</string>
 
 </resources>

@@ -113,9 +113,6 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
                         })
                         .show();
 
-
-
-
                 return false; //DO NOT REMOVE THIS
             }
         });

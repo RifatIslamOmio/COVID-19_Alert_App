@@ -48,11 +48,10 @@ public class MatchedLocation {
         // get meaningfulDateTime
         String[] splitDateTime = dateTime.split("-");
         // Month date, time
-        this.meaningfulDateTime = month(
-                Integer.parseInt(splitDateTime[0]))
-                + " "+splitDateTime[1]
-                +", "+time(Integer.parseInt(splitDateTime[2])
-        );
+        this.meaningfulDateTime =
+                month(Integer.parseInt(splitDateTime[0])) +
+                " "+splitDateTime[1] +
+                ", "+time(Integer.parseInt(splitDateTime[2]));
 
         this.verifiedCount = verifiedCount/4;
         if(this.verifiedCount==0 && verifiedCount!=0)
