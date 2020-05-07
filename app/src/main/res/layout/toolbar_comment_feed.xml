@@ -23,7 +23,7 @@
             android:textAlignment="center" />
 
         <Button
-            android:id="@+id/home_button_new_post_page"
+            android:id="@+id/home_button_comment_feed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawableStart="@drawable/ic_arrow_back_white"

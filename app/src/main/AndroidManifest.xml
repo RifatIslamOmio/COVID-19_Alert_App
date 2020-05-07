@@ -37,7 +37,7 @@
         <activity
             android:name=".activities.MyLocationsMapsActivity"
             android:label="@string/title_activity_my_locations_maps"></activity>
-        <activity android:name=".activities.PostActivity" />
+        <activity android:name=".activities.PostActivity" android:windowSoftInputMode="stateHidden"/>
         <activity android:name=".activities.NewsFeedActivity" />
         <activity
             android:name=".activities.LocationShowMapsActivity"

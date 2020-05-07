@@ -32,7 +32,6 @@ import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class CommentFeedActivity extends AppCompatActivity {
 
@@ -57,6 +56,7 @@ public class CommentFeedActivity extends AppCompatActivity {
         comment_reference = FirebaseDatabase.getInstance().getReference().child("Posts").child(FeedAdapter.POST.getPostID());
         recyclerView = findViewById(R.id.recyclerView_comment_feed);
 
+        btn_home = findViewById(R.id.home_button_comment_feed);
         post_body = findViewById(R.id.description_Text_comment_feed);
         post_auth = findViewById(R.id.textView_username_comment_feed);
         post_datetime = findViewById(R.id.textView_DatenTime_comment_feed);
@@ -76,8 +76,6 @@ public class CommentFeedActivity extends AppCompatActivity {
         post_datetime.setText(post_date_time);
 
 
-
-
         //Create Comment
         floatingActionButton = findViewById(R.id.floatingActionButton_comment_feed);
         dialogBuilder = new AlertDialog.Builder(this).create();
@@ -94,6 +92,13 @@ public class CommentFeedActivity extends AppCompatActivity {
             public void onClick(View v) {
                 comment_editText.setText("");
                 dialogBuilder.dismiss();
+            }
+        });
+
+        btn_home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
 
