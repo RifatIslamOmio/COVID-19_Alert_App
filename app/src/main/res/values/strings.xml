@@ -46,7 +46,7 @@
     <string name="login_failed">"Login failed"</string>
 
 
-    <string name="loading_progressbar_text">loading, please wait</string>
+    <string name="loading_progressbar_text">Loading, please wait</string>
     <string name="finished_progressbar_text">Loading finished, these infected locations match yours</string>
     <string name="retry_button_text">retry</string>
     <string name="no_match_found_text">No match found. Yay! you are safe.</string>
