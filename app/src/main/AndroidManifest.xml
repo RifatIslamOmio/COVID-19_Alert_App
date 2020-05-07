@@ -69,6 +69,7 @@
             android:exported="false" />
 
         <activity android:name=".activities.MenuActivity" />
+        <activity android:name=".activities.CommentFeedActivity"/>
 
         <service
             android:name=".extras.FetchAddress"
