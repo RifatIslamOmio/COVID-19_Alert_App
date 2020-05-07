@@ -71,7 +71,6 @@ public class PostActivity extends AppCompatActivity {
                     //Post It
                     sharedPreferences = getSharedPreferences(Constants.USER_INFO_SHARED_PREFERENCES,MODE_PRIVATE);
                      post_ID = reference.push().getKey();
-                     user_name = sharedPreferences.getString(Constants.username_preference,null);
                      user_ID = sharedPreferences.getString(Constants.uid_preference,null);
 
                      contact_NO = sharedPreferences.getString(Constants.user_phone_no_preference,null);
@@ -80,12 +79,14 @@ public class PostActivity extends AppCompatActivity {
                     radioID = radioGroup.getCheckedRadioButtonId();
                     if(radioID==reliefbtnID)
                     {
+                        user_name = "Anonymous";
                         postType = "RELIEF";
                         query = FirebaseDatabase.getInstance().getReference().child("Posts").orderByChild("userID").equalTo(user_ID);
                         query.addListenerForSingleValueEvent(valueEventListener);
                     }
                     else
                     {
+                        user_name = sharedPreferences.getString(Constants.username_preference,null);
                         postType= "QUERY";
                         makePost();
                     }

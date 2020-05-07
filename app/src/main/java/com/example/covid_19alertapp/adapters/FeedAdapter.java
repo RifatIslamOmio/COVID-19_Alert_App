@@ -67,8 +67,6 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
         });
 
         if (postList.get(position).getPostType().equals("RELIEF")) {
-            holder.comment.setVisibility(View.INVISIBLE);
-            holder.userName.setText("Anonymous");
             holder.relativeLayout1.setBackgroundColor(ContextCompat.getColor(context, R.color.color_item_view_relief_line));
             holder.relativeLayout2.setBackgroundColor(ContextCompat.getColor(context, R.color.color_item_view_relief_line));
             holder.contact.setVisibility(View.VISIBLE);
