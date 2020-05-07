@@ -2,7 +2,6 @@ package com.example.covid_19alertapp.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -26,7 +25,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-
 
 
 public class PostActivity extends AppCompatActivity {
@@ -88,6 +86,7 @@ public class PostActivity extends AppCompatActivity {
                     }
                     else
                     {
+                        postType= "QUERY";
                         makePost();
                     }
                 }
@@ -106,7 +105,7 @@ public class PostActivity extends AppCompatActivity {
         textView.setText(text);
         Toast toast = new Toast(context);
         toast.setView(toastView);
-        toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM,
+        toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL,
                 0, 0);
         toast.setDuration(Toast.LENGTH_LONG);
         toast.show();
