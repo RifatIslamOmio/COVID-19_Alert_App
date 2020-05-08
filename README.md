@@ -31,7 +31,7 @@ The block generation is similar to hashing function by providing a key that is t
 
 <br>
 
-&nbsp;&nbsp;&nbsp;&nbsp;![Locations of close contact with covid-19 positive person/s](https://github.com/ferdouszislam/COVID-19_Alert_App/blob/master/infected%20locations.png) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ![Infected person recorded location block](https://github.com/ferdouszislam/COVID-19_Alert_App/blob/master/infected%20location%20block.png)
+&nbsp;&nbsp;&nbsp;&nbsp;![Locations of close contact with covid-19 positive person/s](https://github.com/ferdouszislam/COVID-19_Alert_App/blob/master/screenshots/infected-locations.png) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ![Infected person recorded location block](https://github.com/ferdouszislam/COVID-19_Alert_App/blob/master/screenshots/map-boxed-area.png)
 
 <br>
 <br>
@@ -42,10 +42,8 @@ Through the app’s global news feed, relief requests can be posted without dire
 
 <br>
 
-
-&nbsp;&nbsp;&nbsp;&nbsp;![relief post window](https://github.com/ferdouszislam/COVID-19_Alert_App/blob/master/anonymous%20post%20typing.png) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ![anonymous relief posts](https://github.com/ferdouszislam/COVID-19_Alert_App/blob/master/anonymous%20post%20view.png)
+![relif request post](https://github.com/ferdouszislam/COVID-19_Alert_App/blob/master/screenshots/relief-post-typing.png) &nbsp;&nbsp;&nbsp; ![anonymous on newfeed](https://github.com/ferdouszislam/COVID-19_Alert_App/blob/master/screenshots/relief-post-newsfees.png) &nbsp;&nbsp;&nbsp;![relief request denied within 3 days](https://github.com/ferdouszislam/COVID-19_Alert_App/blob/master/screenshots/relief-post-3-days-message.png)
 
 <br>
-<br>
 
-#### For the full project report please [visit this link](google.com) 
+#### For the full project report please [visit this link](google.com)
