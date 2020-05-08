@@ -31,7 +31,7 @@ The block generation is similar to hashing function by providing a key that is t
 
 <br>
 
-&nbsp;&nbsp;&nbsp;&nbsp;![Locations of close contact with covid-19 positive person/s](https://github.com/ferdouszislam/COVID-19_Alert_App/blob/master/infected%20locations.png) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ![Infected person recorded location block](https://github.com/ferdouszislam/COVID-19_Alert_App/blob/master/infected%20location%20block.png)
+&nbsp;&nbsp;&nbsp;&nbsp;![Locations of close contact with covid-19 positive person/s](https://github.com/ferdouszislam/COVID-19_Alert_App/blob/master/screenshots/infected-locations.png) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ![Infected person recorded location block](https://github.com/ferdouszislam/COVID-19_Alert_App/blob/master/screenshots/map-boxed-area.png)
 
 <br>
 <br>
@@ -39,5 +39,11 @@ The block generation is similar to hashing function by providing a key that is t
 ### (3)	Anonymous Relief Posts:
 
 Through the app’s global news feed, relief requests can be posted without directly sharing personal or family information of a user. A contact button is attached to relief posts through which any other user can call and contact the relief request post’s author and reach out for help. This feature especially targets the middle-class families that are suffering greatly in silence and cannot seek help publicly. A user is allowed to make only one relief post every seven days, this is a measure taken to stop misuse of the feature. 
+
+<br>
+
+![relif request post](https://github.com/ferdouszislam/COVID-19_Alert_App/blob/master/screenshots/relief-post-typing.png) &nbsp;&nbsp; ![anonymous on newfeed](https://github.com/ferdouszislam/COVID-19_Alert_App/blob/master/screenshots/relief-post-newsfees.png) &nbsp;&nbsp;![relief request denied within 3 days](https://github.com/ferdouszislam/COVID-19_Alert_App/blob/master/screenshots/relief-post-3-days-message.png)
+
+<br>
 
 #### For the full project report please [visit this link](google.com)
