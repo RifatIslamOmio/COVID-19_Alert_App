@@ -40,12 +40,4 @@ The block generation is similar to hashing function by providing a key that is t
 
 Through the app’s global news feed, relief requests can be posted without directly sharing personal or family information of a user. A contact button is attached to relief posts through which any other user can call and contact the relief request post’s author and reach out for help. This feature especially targets the middle-class families that are suffering greatly in silence and cannot seek help publicly. A user is allowed to make only one relief post every seven days, this is a measure taken to stop misuse of the feature. 
 
-<br>
-
-
-&nbsp;&nbsp;&nbsp;&nbsp;![relief post window](https://github.com/ferdouszislam/COVID-19_Alert_App/blob/master/anonymous%20post%20typing.png) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ![anonymous relief posts](https://github.com/ferdouszislam/COVID-19_Alert_App/blob/master/anonymous%20post%20view.png)
-
-<br>
-<br>
-
-#### For the full project report please [visit this link](google.com) 
+#### For the full project report please [visit this link](google.com)
