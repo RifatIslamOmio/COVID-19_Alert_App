@@ -38,9 +38,11 @@ public abstract class Constants {
     public static final String username_preference = "name";
     public static final String uid_preference = "uid";
     public static final String user_dob_preference = "dob";
-    public static final String user_home_address_preference = "home";
+    public static final String user_home_address_preference = "homeAddress";
     public static final String user_work_address_preference = "workAddress";
     public static final String user_phone_no_preference = "contactNumber";
+    public static String user_home_address_latlng_preference = "homeLatLng";
+    public static String user_work_address_latlng_preference = "workLatLng";
 
 
     // session preference keys
@@ -54,7 +56,9 @@ public abstract class Constants {
     public static final String userInfo_node_name="name";
     public static final String userInfo_node_dob="dob";
     public static final String userInfo_node_workAddress="workAddress";
-    public static final String userInfo_node_home="home";
+    public static final String userInfo_node_homeAddress="homeAddress";
+    public static final String userInfo_node_workLatLng="workLatLng";
+    public static final String userInfo_node_homeLatLng="homeLatLng";
     public static final String userInfo_node_contactNumber="contactNumber";
 
 }

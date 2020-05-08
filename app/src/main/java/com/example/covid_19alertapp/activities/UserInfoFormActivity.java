@@ -7,14 +7,17 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.covid_19alertapp.R;
+import com.example.covid_19alertapp.extras.AddressReceiver;
 import com.example.covid_19alertapp.models.UserInfoData;
 import com.example.covid_19alertapp.extras.Constants;
 import com.example.covid_19alertapp.extras.LogTags;
@@ -22,7 +25,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class UserInfoFormActivity extends AppCompatActivity {
+public class UserInfoFormActivity extends AppCompatActivity implements AddressReceiver.AddressView {
 
 
     EditText dobText,userName;
@@ -36,7 +39,7 @@ public class UserInfoFormActivity extends AppCompatActivity {
     String path="UserInfo";
 
     public static SharedPreferences userInfo;
-    private String homeLatLng = "", workLatLng = "";
+    private String homeLatLng = "", workLatLng = "", homeAddressVariable = "", workAddressVariable = "";
 
     // address picker keys
     private static final int HOME_ADDRESS_PICKER = 829;
@@ -44,6 +47,9 @@ public class UserInfoFormActivity extends AppCompatActivity {
 
     // address picker icon
     Drawable checkedIcon;
+
+    // latLng to address fetcher
+    AddressReceiver addressReceiver = new AddressReceiver(new Handler(), this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,10 +90,16 @@ public class UserInfoFormActivity extends AppCompatActivity {
         save_profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(homeLatLng.equals("") || RequiredEditText(userName) || RequiredEditText(dobText))
+                if(homeLatLng.equals("") || homeAddressVariable.equals("") || RequiredEditText(userName) || RequiredEditText(dobText))
                 {
                     if(homeLatLng.equals(""))
                         homeAddress.setError("Required");
+                    else if(homeAddressVariable.equals("")) {
+                        Toast.makeText(UserInfoFormActivity.this,
+                                "please wait as we fetch your address",
+                                Toast.LENGTH_LONG)
+                                .show();
+                    }
 
                     return;
                 }
@@ -99,21 +111,25 @@ public class UserInfoFormActivity extends AppCompatActivity {
                 contactNumber=userInfo.getString(Constants.user_phone_no_preference,"Not Defined");
 
                 if(workLatLng.equals("")){
-                    userInfoData=new UserInfoData(name,dateOfBirth,homeLatLng,contactNumber);
+                    userInfoData=new UserInfoData(name,dateOfBirth,homeLatLng,contactNumber, homeAddressVariable);
 
                 }
                 else {
-                    userInfoData = new UserInfoData(name, dateOfBirth, workLatLng, homeLatLng, contactNumber);
-                    userInfo.edit().putString(Constants.user_work_address_preference,workLatLng).apply();
+                    userInfoData = new UserInfoData(name, dateOfBirth, workLatLng, homeLatLng, contactNumber, homeAddressVariable, workAddressVariable);
+                    userInfo.edit().putString(Constants.user_work_address_latlng_preference,workLatLng).apply();
+                    userInfo.edit().putString(Constants.user_work_address_preference,workAddressVariable).apply();
                 }
                 //applying values to the info names Shared Preference
 
                 userInfo.edit().putString(Constants.username_preference,name).apply();
                 userInfo.edit().putString(Constants.user_dob_preference,dateOfBirth).apply();
-                userInfo.edit().putString(Constants.user_home_address_preference,homeLatLng).apply();
+                userInfo.edit().putString(Constants.user_home_address_latlng_preference,homeLatLng).apply();
                 userInfo.edit().putString(Constants.uid_preference,uid).apply();
                 //userInfo.edit().putString(Constants.user_phone_no_preference,PHONE_NUMBER).apply();
                 userInfo.edit().putBoolean(Constants.user_exists_preference,true).apply();
+
+                // set the home address fetched using intent service
+                userInfo.edit().putString(Constants.user_home_address_preference, homeAddressVariable).apply();
 
                 database = FirebaseDatabase.getInstance();
                 userInfoRef = database.getReference(path).child(uid);
@@ -155,11 +171,19 @@ public class UserInfoFormActivity extends AppCompatActivity {
 
                     // set the home LatLng
                     homeLatLng = data.getStringExtra("latitude-longitude");
-                    Log.d(LogTags.Map_TAG, "onActivityResult: home address fetched = "+homeLatLng);
+                    Log.d(LogTags.Map_TAG, "onActivityResult: home latLng fetched = "+homeLatLng);
 
+                    // start address fetch intent service
+                    String[] latLng = homeLatLng.split(",");
+                    addressReceiver.startAddressFetchService(
+                            this,
+                            Double.valueOf(latLng[0]),
+                            Double.valueOf(latLng[1]),
+                            0
+                    );
 
                     //onSuccess
-                    homeAddress.setText(getText(R.string.address_picked_text));
+                    homeAddress.setText(getText(R.string.address_fetching_text));
                     homeAddress.setCompoundDrawables(null,null,checkedIcon,null);
 
                 }
@@ -171,11 +195,20 @@ public class UserInfoFormActivity extends AppCompatActivity {
 
                     // set the work address
                     workLatLng = data.getStringExtra("latitude-longitude");
-                    Log.d(LogTags.Map_TAG, "onActivityResult: work address fetched = "+workLatLng);
+                    Log.d(LogTags.Map_TAG, "onActivityResult: work latLng fetched = "+workLatLng);
+
+                    // start address fetch intent service
+                    String[] latLng = workLatLng.split(",");
+                    addressReceiver.startAddressFetchService(
+                            this,
+                            Double.valueOf(latLng[0]),
+                            Double.valueOf(latLng[1]),
+                            1
+                    );
 
                     //onSuccess
                     workAddress.setCompoundDrawables(null,null,checkedIcon,null);
-                    workAddress.setText(getText(R.string.address_picked_text));
+                    workAddress.setText(getText(R.string.address_fetching_text));
 
                 }
 
@@ -197,6 +230,26 @@ public class UserInfoFormActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void updateAddress(String address, int type) {
+        /*
+        address received callback
+         */
 
+        if(type == 0) {
+            // home address
 
+            homeAddressVariable = address;
+            homeAddress.setText(homeAddressVariable);
+        }
+
+        else if(type==1){
+            // work address
+
+            workAddressVariable = address;
+            workAddress.setText(workAddressVariable);
+
+        }
+
+    }
 }

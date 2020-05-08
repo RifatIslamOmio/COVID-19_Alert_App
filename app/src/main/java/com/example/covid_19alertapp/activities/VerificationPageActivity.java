@@ -18,6 +18,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.example.covid_19alertapp.R;
 import com.example.covid_19alertapp.extras.Constants;
+import com.example.covid_19alertapp.models.UserInfoData;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -25,6 +26,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -309,20 +311,26 @@ public class VerificationPageActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
 
-                    userInfoCheck.edit().putString(Constants.username_preference, String.valueOf(dataSnapshot.child(Constants.userInfo_node_name).getValue())).apply();
-                    userInfoCheck.edit().putString(Constants.user_dob_preference, String.valueOf(dataSnapshot.child(Constants.userInfo_node_dob).getValue())).apply();
-                    userInfoCheck.edit().putString(Constants.user_home_address_preference, String.valueOf(dataSnapshot.child(Constants.userInfo_node_home).getValue())).apply();
+                    UserInfoData user = dataSnapshot.getValue(UserInfoData.class);
+
+                    userInfoCheck.edit().putString(Constants.username_preference, user.getName()).apply();
+                    userInfoCheck.edit().putString(Constants.user_dob_preference, user.getDob()).apply();
+
+                    userInfoCheck.edit().putString(Constants.user_home_address_preference, user.getHomeAddress()).apply();
+
+                    userInfoCheck.edit().putString(Constants.user_home_address_latlng_preference, user.getHomeLatLng()).apply();
+
                     userInfoCheck.edit().putString(Constants.uid_preference,uid).apply();
-                    userInfoCheck.edit().putString(Constants.user_phone_no_preference, String.valueOf(dataSnapshot.child(Constants.userInfo_node_contactNumber).getValue())).apply();
+                    userInfoCheck.edit().putString(Constants.user_phone_no_preference, user.getContactNumber()).apply();
+
                     userInfoCheck.edit().putBoolean(Constants.user_exists_preference,true).apply();
 
 
-                    if(String.valueOf(dataSnapshot.child(Constants.userInfo_node_workAddress).getValue())!=null)
-                        userInfoCheck.edit()
-                                .putString(
-                                        Constants.user_work_address_preference,
-                                        String.valueOf(dataSnapshot.child(Constants.userInfo_node_workAddress
-                                ).getValue())).apply();
+                    if(String.valueOf(dataSnapshot.child(Constants.userInfo_node_workAddress).getValue())!=null) {
+
+                        userInfoCheck.edit().putString(Constants.user_work_address_preference, user.getWorkAddress()).apply();
+                        userInfoCheck.edit().putString(Constants.user_work_address_latlng_preference, user.getWorkLatLng()).apply();
+                    }
 
                     GoToMainActivity();
                 }

@@ -119,7 +119,7 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
 
         List<String> queryKeys;
 
-        final String homeLatLng = UserInfoSharedPreferences.getHomeAddress(this);
+        final String homeLatLng = UserInfoSharedPreferences.getHomeLatLng(this);
         if(homeLatLng.equals("")){
             Log.d(LogTags.Worker_TAG, "queryHomeAddress: why the hell is home null");
             return;

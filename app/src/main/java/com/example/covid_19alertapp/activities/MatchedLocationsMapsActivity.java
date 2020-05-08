@@ -16,7 +16,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 
-public class LocationShowMapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MatchedLocationsMapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private double blLatitude, blLongitude;

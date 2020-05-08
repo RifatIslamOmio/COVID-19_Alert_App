@@ -37,6 +37,22 @@ public abstract class UserInfoSharedPreferences {
 
     }
 
+    public static String getHomeLatLng(Context context){
+
+        userInfo = context.getSharedPreferences(Constants.USER_INFO_SHARED_PREFERENCES, MODE_PRIVATE);
+
+        return userInfo.getString(Constants.user_home_address_latlng_preference, "");
+
+    }
+
+    public static String getWorkLatLng(Context context){
+
+        userInfo = context.getSharedPreferences(Constants.USER_INFO_SHARED_PREFERENCES, MODE_PRIVATE);
+
+        return userInfo.getString(Constants.user_work_address_latlng_preference, "");
+
+    }
+
     public static String getHomeAddress(Context context){
 
         userInfo = context.getSharedPreferences(Constants.USER_INFO_SHARED_PREFERENCES, MODE_PRIVATE);
@@ -52,6 +68,5 @@ public abstract class UserInfoSharedPreferences {
         return userInfo.getString(Constants.user_work_address_preference, "");
 
     }
-
 
 }

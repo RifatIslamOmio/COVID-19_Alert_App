@@ -70,7 +70,7 @@ public class MyLocationsMapsActivity extends FragmentActivity implements
     private void moveCameraToHome() {
 
         // home = latitude,longitude
-        String[] home = UserInfoSharedPreferences.getHomeAddress(this).split(",");
+        String[] home = UserInfoSharedPreferences.getHomeLatLng(this).split(",");
 
         LatLng homeLatLng = new LatLng( Double.valueOf(home[0]), Double.valueOf(home[1]));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(homeLatLng, 16.5f));

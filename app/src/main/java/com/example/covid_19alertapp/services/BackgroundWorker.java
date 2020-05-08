@@ -204,7 +204,7 @@ public class BackgroundWorker extends Worker {
 
         List<String> queryKeys;
 
-        String homeLatLng = UserInfoSharedPreferences.getHomeAddress(getApplicationContext());
+        String homeLatLng = UserInfoSharedPreferences.getHomeLatLng(getApplicationContext());
         if(homeLatLng.equals("")){
             Log.d(LogTags.Worker_TAG, "queryHomeAddress: why the hell is home null");
             return;

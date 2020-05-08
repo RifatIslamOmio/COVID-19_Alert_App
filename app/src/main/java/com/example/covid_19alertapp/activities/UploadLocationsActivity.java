@@ -267,7 +267,7 @@ implement verification by medical report photo here
 
         List<String> entries;
 
-        String homeLatLng = UserInfoSharedPreferences.getHomeAddress(this);
+        String homeLatLng = UserInfoSharedPreferences.getHomeLatLng(this);
         if(homeLatLng.equals("")){
             Log.d(LogTags.Upload_TAG, "uploadHomeLocation: why the hell is home null");
             return;

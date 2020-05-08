@@ -16,10 +16,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.covid_19alertapp.R;
-import com.example.covid_19alertapp.activities.LocationShowMapsActivity;
+import com.example.covid_19alertapp.activities.MatchedLocationsMapsActivity;
 import com.example.covid_19alertapp.extras.LogTags;
 import com.example.covid_19alertapp.models.MatchedLocation;
-import com.example.covid_19alertapp.roomdatabase.VisitedLocations;
 import com.example.covid_19alertapp.roomdatabase.VisitedLocationsDao;
 import com.example.covid_19alertapp.roomdatabase.VisitedLocationsDatabase;
 
@@ -56,9 +55,9 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
             public void onClick(View v) {
                 //SHOW IN MAP FUNCTION
 
-                Intent intent = new Intent(context, LocationShowMapsActivity.class);
-                intent.putExtra(LocationShowMapsActivity.getBlLatitudeKey(), locationsList.get(position).getBlLatitude());
-                intent.putExtra(LocationShowMapsActivity.getBlLongitudeKey(), locationsList.get(position).getBlLongitude());
+                Intent intent = new Intent(context, MatchedLocationsMapsActivity.class);
+                intent.putExtra(MatchedLocationsMapsActivity.getBlLatitudeKey(), locationsList.get(position).getBlLatitude());
+                intent.putExtra(MatchedLocationsMapsActivity.getBlLongitudeKey(), locationsList.get(position).getBlLongitude());
                 context.startActivity(intent);
             }
         });

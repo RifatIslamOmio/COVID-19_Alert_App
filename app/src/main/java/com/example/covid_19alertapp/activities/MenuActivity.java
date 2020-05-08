@@ -140,4 +140,10 @@ public class MenuActivity extends AppCompatActivity {
         startActivity(intent);
 
     }
+
+    public void startMyLocationsMap(View view) {
+
+        startActivity( new Intent(this, MyLocationsMapsActivity.class) );
+
+    }
 }
