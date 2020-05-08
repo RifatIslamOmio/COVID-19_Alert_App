@@ -42,7 +42,7 @@ Through the app’s global news feed, relief requests can be posted without dire
 
 <br>
 
-![relif request post](https://github.com/ferdouszislam/COVID-19_Alert_App/blob/master/screenshots/relief-post-typing.png) &nbsp;&nbsp; ![anonymous on newfeed](https://github.com/ferdouszislam/COVID-19_Alert_App/blob/master/screenshots/relief-post-newsfees.png) &nbsp;&nbsp;![relief request denied within 3 days](https://github.com/ferdouszislam/COVID-19_Alert_App/blob/master/screenshots/relief-post-3-days-message.png)
+![relif request post](https://github.com/ferdouszislam/COVID-19_Alert_App/blob/master/screenshots/relief-post-typing.png) &nbsp;&nbsp;&nbsp; ![anonymous on newfeed](https://github.com/ferdouszislam/COVID-19_Alert_App/blob/master/screenshots/relief-post-newsfees.png) &nbsp;&nbsp;&nbsp;![relief request denied within 3 days](https://github.com/ferdouszislam/COVID-19_Alert_App/blob/master/screenshots/relief-post-3-days-message.png)
 
 <br>
 
