@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#fff"
+    android:background="#F6F6F6"
     tools:context=".activities.MenuActivity">
 
     <include layout="@layout/toolbar_menu"/>
@@ -20,107 +20,96 @@
             android:gravity="center"
             android:layout_gravity="center">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp"
-                android:layout_marginBottom="15dp">
-                <Button
-                    android:id="@+id/buttonProfile"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:onClick="startNewsFeed"
-                    android:padding="5dp"
-                    android:layout_marginEnd="21dp"
-                    android:drawablePadding="5dp"
-                    android:background="@drawable/menu_button"
-                    android:drawableTop="@drawable/ic_userprofile"
-                    android:text="Profile" />
-
-                <Button
-                    android:id="@+id/buttonTrackedLocations"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="18dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/menu_button"
-                    android:drawableTop="@drawable/ic_trackedlocation"
-                    android:drawablePadding="5dp"
-                    android:onClick="startMyLocationsMap"
-                    android:padding="5dp"
-                    android:text="Tracked Locations" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/linearLayout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp"
-                android:orientation="horizontal"
-                android:layout_marginBottom="15dp">
-
-                <Button
-                    android:id="@+id/button"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:onClick="startNewsFeed"
-                    android:padding="10dp"
-                    android:layout_marginEnd="20dp"
-                    android:drawablePadding="5dp"
-                    android:background="@drawable/menu_button"
-                    android:drawableTop="@drawable/newsfeed"
-                    android:text="News Feed" />
-
-                <Button
-                    android:id="@+id/button3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:onClick="showMatchedLocationsClick"
-                    android:text="matched locations"
-                    android:layout_marginStart="25dp"
-                    android:padding="5dp"
-                    android:drawablePadding="3dp"
-                    android:background="@drawable/menu_button"
-                    android:drawableTop="@drawable/ic_locations"/>
-
-            </LinearLayout>
-
-            <LinearLayout
+            <Button
+                android:id="@+id/buttonProfile"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp"
-                android:orientation="horizontal">
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginEnd="35dp"
+                android:layout_marginStart="35dp"                android:padding="5dp"
+                android:drawablePadding="5dp"
+                android:background="@drawable/menu_button"
+                android:drawableTop="@drawable/ic_userprofile"
+                android:onClick="startNewsFeed"
+                android:text="Profile" />
 
-                <Button
-                    android:id="@+id/button4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:onClick="uploadClick"
-                    android:text="Upload"
-                    android:padding="5dp"
-                    android:drawablePadding="3dp"
-                    android:background="@drawable/menu_button"
-                    android:drawableTop="@drawable/ic_upload"/>
+            <Button
+                android:id="@+id/buttonTrackedLocations"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:padding="5dp"
+                android:drawablePadding="5dp"
+                android:background="@drawable/menu_button"
+                android:drawableTop="@drawable/ic_trackedlocation"
+                android:onClick="startNewsFeed"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginEnd="35dp"
+                android:layout_marginStart="35dp"                android:text="Tracked Locations" />
 
-                <Button
-                    android:id="@+id/button2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:onClick="openSettingsClick"
-                    android:padding="5dp"
-                    android:drawablePadding="3dp"
-                    android:background="@drawable/menu_button"
-                    android:drawableTop="@drawable/settings"
-                    android:text="Settings" />
-            </LinearLayout>
+            <Button
+                android:id="@+id/button"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginEnd="35dp"
+                android:layout_marginStart="35dp"                android:padding="5dp"
+                android:drawablePadding="5dp"
+                android:background="@drawable/menu_button"
+                android:drawableTop="@drawable/newsfeed"
+                android:onClick="startNewsFeed"
+                android:text="News Feed" />
+
+            <Button
+                android:id="@+id/button3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginEnd="35dp"
+                android:layout_marginStart="35dp"                android:padding="5dp"
+                android:drawablePadding="5dp"
+                android:background="@drawable/menu_button"
+                android:drawableTop="@drawable/ic_locations"
+                android:onClick="showMatchedLocationsClick"
+                android:text="matched locations" />
+
+            <Button
+                android:id="@+id/button4"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginEnd="35dp"
+                android:layout_marginStart="35dp"                android:padding="5dp"
+                android:drawablePadding="5dp"
+                android:background="@drawable/menu_button"
+                android:drawableTop="@drawable/ic_upload"
+                android:onClick="uploadClick"
+                android:text="Upload" />
+
+            <Button
+                android:id="@+id/button2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginEnd="35dp"
+                android:layout_marginStart="35dp"
+                android:padding="5dp"
+                android:drawablePadding="5dp"
+                android:background="@drawable/menu_button"
+                android:drawableTop="@drawable/settings"
+                android:onClick="openSettingsClick"
+                android:text="Settings" />
+
         </LinearLayout>
     </ScrollView>
 
