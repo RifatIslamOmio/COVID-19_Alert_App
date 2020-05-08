@@ -43,7 +43,7 @@ Through the app’s global news feed, relief requests can be posted without dire
 <br>
 
 
-&nbsp;&nbsp;&nbsp;&nbsp;![relief post window](https://github.com/ferdouszislam/COVID-19_Alert_App/blob/master/relief%20post.png) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ![anonymous relief posts](https://github.com/ferdouszislam/COVID-19_Alert_App/blob/master/anonymous%20newsfeed.png)
+&nbsp;&nbsp;&nbsp;&nbsp;![relief post window](https://github.com/ferdouszislam/COVID-19_Alert_App/blob/master/anonymous%20post%20typing.png) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ![anonymous relief posts](https://github.com/ferdouszislam/COVID-19_Alert_App/blob/master/anonymous%20post%20view.png)
 
 <br>
 <br>

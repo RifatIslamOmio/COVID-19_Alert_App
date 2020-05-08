@@ -185,7 +185,7 @@ public class BackgroundWorker extends Worker {
 
     private boolean isDayTime() {
 
-        int hour = Calendar.getInstance().get(Calendar.HOUR);
+        int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
 
         // 7AM to 11PM
         return (hour>=7 && hour<=23);

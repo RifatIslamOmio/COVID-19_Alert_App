@@ -282,7 +282,7 @@ implement verification by medical report photo here
         //TODO: add year
         final String dateTime = (cal.get(Calendar.MONTH)+1) +"-" // Calender.MONTH is 0 based -_- why tf?
                 + cal.get(Calendar.DATE) +"-"
-                + cal.get(Calendar.HOUR);
+                + cal.get(Calendar.HOUR_OF_DAY);
 
         for (String entry: entries) {
 
