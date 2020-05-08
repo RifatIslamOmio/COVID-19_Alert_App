@@ -66,6 +66,7 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
     private Button retryButton;
     private RecyclerView locationRecyclerView, homeLocationRecyclerView;
     private LocationListAdapter locationListAdapter, homeLocationListAdapter;
+    private boolean internetAvailable = true;
 
     // flags
     private boolean localDbEmptyFlag = false;
@@ -132,6 +133,18 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
         final int querySize = queryKeys.size();
 
         for (String query: queryKeys) {
+
+            if(!Internet.isInternetAvailable(getApplicationContext())){
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        internetDisconncetedUI();
+
+                    }
+                });
+                return;
+            }
 
             // need '@' instead of '.'
             query = query.replaceAll("\\.","@");
@@ -207,9 +220,11 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
         locationsFetchFinishedFlag = false;
         matchedLocationPosition = 0;
         locationQueryCount = 0;
-        retryButton.setEnabled(false);
-        retryButton.setVisibility(View.GONE);
 
+        if(internetAvailable) {
+            retryButton.setVisibility(View.GONE);
+            retryButton.setEnabled(false);
+        }
         matchedLocations.clear();
         locationListAdapter = new LocationListAdapter(this, matchedLocations);
         locationRecyclerView.setAdapter(locationListAdapter);
@@ -367,13 +382,17 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
 
     private void internetDisconncetedUI() {
 
+        internetAvailable = false;
+
         progressBar.setVisibility(View.INVISIBLE);
         //linearLayout.setVisibility(View.INVISIBLE);
         progressBarText.setText(getText(R.string.internet_disconnected_text));
         progressBarText.setVisibility(View.VISIBLE);
 
         retryButton.setEnabled(true);
+
         retryButton.setVisibility(View.VISIBLE);
+        Log.d("removethis", "internetDisconncetedUI: visible");
 
         Toast.makeText(this, getText(R.string.no_internet_toast), Toast.LENGTH_LONG)
                 .show();
@@ -385,8 +404,10 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
         retryButton.setEnabled(false);
         progressBarText.setVisibility(View.GONE);
         progressBar.setVisibility(View.GONE);
-        retryButton.setVisibility(View.GONE);
-
+        if(internetAvailable) {
+            retryButton.setVisibility(View.GONE);
+            retryButton.setEnabled(false);
+        }
         Toast.makeText(this, getText(R.string.finished_progressbar_text), Toast.LENGTH_LONG)
                 .show();
 
@@ -395,9 +416,10 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
     private void noMatchFoundUI(){
 
         progressBar.setVisibility(View.INVISIBLE);
-        //linearLayout.setVisibility(View.INVISIBLE);
-        retryButton.setVisibility(View.GONE);
-        retryButton.setEnabled(false);
+        if(internetAvailable) {
+            retryButton.setVisibility(View.GONE);
+            retryButton.setEnabled(false);
+        }
         progressBarText.setVisibility(View.VISIBLE);
         progressBarText.setText(getText(R.string.no_match_found_text));
     }
@@ -406,8 +428,10 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
 
         progressBar.setVisibility(View.INVISIBLE);
         //linearLayout.setVisibility(View.INVISIBLE);
-        retryButton.setVisibility(View.GONE);
-        retryButton.setEnabled(false);
+        if(internetAvailable) {
+            retryButton.setVisibility(View.GONE);
+            retryButton.setEnabled(false);
+        }
         progressBarText.setVisibility(View.VISIBLE);
         progressBarText.setText(getText(R.string.local_db_empty_text));
 
@@ -415,8 +439,9 @@ public class ShowMatchedLocationsActivity extends AppCompatActivity implements A
 
     public void retryClicked(View view) {
 
+        internetAvailable = true;
+
         progressBar.setVisibility(View.VISIBLE);
-        //linearLayout.setVisibility(View.VISIBLE);
         progressBarText.setVisibility(View.VISIBLE);
         progressBarText.setText(getText(R.string.loading_progressbar_text));
 

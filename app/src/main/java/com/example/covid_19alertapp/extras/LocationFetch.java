@@ -99,7 +99,7 @@ public abstract class LocationFetch {
                             //TODO: add year
                             String dateTime = (cal.get(Calendar.MONTH)+1) +"-" // Calender.MONTH is 0 based -_- why tf?
                                     + cal.get(Calendar.DATE) +"-"
-                                    + cal.get(Calendar.HOUR);
+                                    + cal.get(Calendar.HOUR_OF_DAY);
 
                             Log.d(LogTags.Location_TAG,
                                     "addToLocalDB: location received at "
