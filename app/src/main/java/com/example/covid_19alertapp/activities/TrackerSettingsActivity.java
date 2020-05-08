@@ -13,6 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Switch;
 import android.widget.Toast;
 
@@ -29,7 +30,7 @@ public class TrackerSettingsActivity extends AppCompatActivity {
 settings (currently only contains location on/off)
  */
 
-    Toolbar toolbar;
+    Button home_btn;
     Switch notification_switch;
     private static boolean switch_status;
 
@@ -46,26 +47,23 @@ settings (currently only contains location on/off)
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tracker_settings);
 
+        home_btn= findViewById(R.id.home_button_settings);
+
         //start notification channel(do this is MainActivity
         Notifications.createNotificationChannel(this);
 
         notification_switch = findViewById(R.id.notification_switch);
-        toolbar = findViewById(R.id.settings_toolbar);
 
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_arrow_back));
-
-        notification_switch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        home_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
+
+        notification_switch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
                 save_preferences(notification_switch.isChecked());
                 if(notification_switch.isChecked())

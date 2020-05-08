@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 
 import com.example.covid_19alertapp.R;
 import com.example.covid_19alertapp.extras.Constants;
@@ -31,11 +32,19 @@ public class MenuActivity extends AppCompatActivity {
     overwrite or edit this later, keeping the permission codes
      */
 
+    Button home_btn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        home_btn = findViewById(R.id.home_button_menu);
+        home_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         // start background worker for always
         startWorker();
 
