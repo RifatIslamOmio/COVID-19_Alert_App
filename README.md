@@ -18,7 +18,7 @@ Location tracking is enabled by the user and is informed to the user via a fixed
 
 <br>
 
-&nbsp;&nbsp;&nbsp;&nbsp;![User Location Permission](https://github.com/ferdouszislam/COVID-19_Alert_App/blob/master/screenshots/permission.jpg) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ![Permission Explanation](https://github.com/ferdouszislam/COVID-19_Alert_App/blob/master/screenshots/95097272_270367091019594_5457582228261306368_n.png)
+&nbsp;&nbsp;&nbsp;&nbsp;![User Location Permission](https://github.com/ferdouszislam/COVID-19_Alert_App/blob/master/screenshots/permission.jpg) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ![Permission Explanation](https://github.com/ferdouszislam/COVID-19_Alert_App/blob/master/screenshots/permission-explanation.png)
 
 <br>
 <br>
