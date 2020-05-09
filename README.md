@@ -8,9 +8,13 @@
 5)	Users can view and post queries or relief requests through a global news feed, similar to other social media platforms.
 6)	Relief request posts are anonymous and provide only a post author contact number, which was used for verification. Other users willing to help can contact him through the app using the phone number.
 
-## App Specialties:
+<br>
+
+The strongest and the weakest point of this App is that it is <b>completely user based</b>. Without a positive tested user uploading their locations or, users allowing the app to track user location or, users  getting tested after being notified of probable close contact with covid positive person or, users helping relief seekers from the app’s newsfeed, functionality of this app would render useless. We have deliberately kept it this way as most other proposed apps focus on major authoritative control over monitoring users, having little or no regard for privacy.
 
 <br>
+
+## App Specialties:
 
 ### (1)	User Privacy Protection
 
