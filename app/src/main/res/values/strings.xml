@@ -7,7 +7,7 @@
     <string name="track_start_button_text">Turn On</string>
 
     <string name="trackingNotificationTitle">Location Tracker Active</string>
-    <string name="trackingNotificationContent">please keep your Location On</string>
+    <string name="trackingNotificationContent">Please keep your Location On</string>
 
     <string name="promptToTrackNotificationTitle">Location Tracking Off!</string>
     <string name="promptToTrackNotificationContent">Tap to enable location tracker</string>

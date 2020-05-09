@@ -73,7 +73,7 @@ public abstract class Notifications {
                 builder.setContentTitle(title)
                         .setContentText(content)
 
-                        .setSmallIcon(R.drawable.ic_notification_icon)
+                        .setSmallIcon(R.drawable.ic_location_off)
 
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
 
@@ -96,7 +96,7 @@ public abstract class Notifications {
                 //build notification
                 builder.setContentTitle(title)
                         .setContentText(content)
-                        .setSmallIcon(R.drawable.appicon)
+                        .setSmallIcon(R.drawable.ic_location_on)
                         .setLargeIcon(BitmapFactory.decodeResource(Resources.getSystem(), R.drawable.appicon))
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
                         // Intent(Activity) that will start when the user taps the button
@@ -119,7 +119,7 @@ public abstract class Notifications {
                 // build notification
                 builder.setContentTitle(title)
                         .setContentText(content)
-                        .setSmallIcon(R.drawable.ic_notification)
+                        .setSmallIcon(R.drawable.ic_infected_location)
                         .setLargeIcon(BitmapFactory.decodeResource(Resources.getSystem(), R.drawable.ic_notification))
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
                         // Intent(Activity) that will start when the user taps the button
