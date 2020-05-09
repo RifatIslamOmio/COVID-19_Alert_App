@@ -50,4 +50,4 @@ Through the app’s global news feed, relief requests can be posted without dire
 
 <br>
 
-#### For the full project report please [visit this link](google.com)
+#### For the full project report please [visit this link](https://drive.google.com/file/d/1YvfBob1OiTHEwugFXQWtB0ZgzQgJmjJR/view?usp=sharing)
